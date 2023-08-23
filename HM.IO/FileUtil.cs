@@ -2,6 +2,9 @@
 
 namespace HM.IO;
 
+/// <summary>
+/// A utility class for file-related operations.
+/// </summary>
 public static class FileUtil
 {
     /// <summary>

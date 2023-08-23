@@ -1,5 +1,8 @@
 ﻿namespace HM.IO;
 
+/// <summary>
+/// Default implemention for <see cref="IDirectoryIO"/>
+/// </summary>
 public sealed class DirectoryIO : IDirectoryIO
 {
     public IEnumerable<String> EnumerateDirectories(EntryPath path, EnumerationOptions enumerationOptions)

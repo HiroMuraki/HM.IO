@@ -1,7 +1,16 @@
 ﻿namespace HM.IO;
 
+/// <summary>
+/// Provides extension methods for <see cref="EntryPath"/> instances.
+/// </summary>
 public static class EntryPathExtensions
 {
+    /// <summary>
+    /// Determines whether the current <see cref="EntryPath"/> is a subpath of the specified path.
+    /// </summary>
+    /// <param name="self">The current <see cref="EntryPath"/> instance.</param>
+    /// <param name="path">The path to check if it contains the current path.</param>
+    /// <returns><c>true</c> if the current path is a subpath of the specified path; otherwise, <c>false</c>.</returns>
     public static Boolean IsSubPathOf(this EntryPath self, EntryPath path)
     {
         if (self.Routes.Length <= path.Routes.Length)

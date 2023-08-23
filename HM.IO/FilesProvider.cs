@@ -2,16 +2,44 @@
 
 namespace HM.IO;
 
+/// <summary>
+/// Provides file enumeration based on inclusion and exclusion filters.
+/// </summary>
 public sealed class FilesProvider : IFilesProvider
 {
+    /// <summary>
+    /// Gets or sets the directory I/O provider.
+    /// </summary>
     public IDirectoryIO DirectoryIO { get; set; } = new DirectoryIO();
+    /// <summary>
+    /// Gets the equality comparer for comparing <see cref="EntryPath"/> instances.
+    /// </summary>
     public IEqualityComparer<EntryPath> EntryPathEqualityComparer { get; } = IO.EntryPathEqualityComparer.Default;
+    /// <summary>
+    /// Gets the comparer for sorting <see cref="EntryPath"/> instances.
+    /// </summary>
     public IComparer<EntryPath> EntryPathComparer { get; } = IO.EntryPathComparer.Default;
+    /// <summary>
+    /// Gets the list of directory paths to include during enumeration.
+    /// </summary>
     public List<String> IncludingDirectories { get; init; } = new();
+    /// <summary>
+    /// Gets the list of file paths to include during enumeration.
+    /// </summary>
     public List<String> IncludingFiles { get; init; } = new();
+    /// <summary>
+    /// Gets the list of directory paths to exclude during enumeration.
+    /// </summary>
     public List<String> ExcludingDirectories { get; init; } = new();
+    /// <summary>
+    /// Gets the list of file paths to exclude during enumeration.
+    /// </summary>
     public List<String> ExcludingFiles { get; init; } = new();
 
+    /// <summary>
+    /// Enumerates files based on the provided inclusion and exclusion filters.
+    /// </summary>
+    /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
     public IEnumerable<EntryPath> EnumerateFiles()
     {
         var directoriesProvider = new DirectoriesProvider()
@@ -46,66 +74,13 @@ public sealed class FilesProvider : IFilesProvider
         }
     }
 
+    /// <summary>
+    /// Enumerates files based on the provided inclusion and exclusion filters.
+    /// </summary>
+    /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
     public IEnumerable<EntryPath> EnumerateItems()
     {
         return EnumerateFiles();
-    }
-
-    #region NonPublic
-    private static List<EntryPath> SelectAsEntryPath(IEnumerable<String> items)
-    {
-        return items
-            .Where(x => !String.IsNullOrWhiteSpace(x))
-            .Select(EntryPath.CreateFromPath)
-            .ToList();
-    }
-    #endregion
-}
-
-public sealed class DirectoriesProvider : IDiretoriesProvider
-{
-    public IDirectoryIO DirectoryIO { get; set; } = new DirectoryIO();
-    public IEqualityComparer<EntryPath> EntryPathEqualityComparer { get; } = IO.EntryPathEqualityComparer.Default;
-    public IComparer<EntryPath> EntryPathComparer { get; } = IO.EntryPathComparer.Default;
-    public List<String> IncludingDirectories { get; init; } = new();
-    public List<String> ExcludingDirectories { get; init; } = new();
-
-    public IEnumerable<EntryPath> EnumerateDirectories()
-    {
-        var includingDirectories = SelectAsEntryPath(IncludingDirectories);
-        var excludingDirectories = SelectAsEntryPath(ExcludingDirectories);
-
-        var directoryEnumerationOptions = new EnumerationOptions()
-        {
-            IgnoreInaccessible = true,
-            RecurseSubdirectories = true,
-            AttributesToSkip = FileAttributes.Normal,
-        };
-
-        // Get directories to search
-        var normalDirectories = includingDirectories
-            .Where(d => d.Routes[^1] != "*").ToList();
-        var recursiveDirectories = includingDirectories
-            .Except(normalDirectories, EntryPathEqualityComparer)
-            .Select(d => d[0..^1]);
-        var subDirectories = recursiveDirectories
-            .SelectMany(d => DirectoryIO.EnumerateDirectories(d, directoryEnumerationOptions))
-            .Select(EntryPath.CreateFromPath);
-        var directories = normalDirectories
-            .Concat(recursiveDirectories)
-            .Concat(subDirectories)
-            .Except(excludingDirectories, EntryPathEqualityComparer)
-            .ToImmutableHashSet(EntryPathEqualityComparer);
-
-        foreach (var directory in directories.Order(EntryPathComparer))
-        {
-            yield return directory;
-        }
-    }
-
-    public IEnumerable<EntryPath> EnumerateItems()
-    {
-        return EnumerateDirectories();
     }
 
     #region NonPublic

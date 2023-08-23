@@ -2,10 +2,19 @@
 
 namespace HM.IO;
 
+/// <summary>
+/// Provides an equality comparer for <see cref="EntryPath"/> instances.
+/// </summary>
 public sealed class EntryPathEqualityComparer : IEqualityComparer<EntryPath>
 {
+    /// <summary>
+    /// Gets the default instance of the <see cref="EntryPathEqualityComparer"/>.
+    /// </summary>
     public static EntryPathEqualityComparer Default { get; } = new();
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the comparison should be case-insensitive.
+    /// </summary>
     public Boolean IgnoreCase
     {
         get => _ignoreCase;
@@ -23,6 +32,12 @@ public sealed class EntryPathEqualityComparer : IEqualityComparer<EntryPath>
         }
     }
 
+    /// <summary>
+    /// Determines whether two <see cref="EntryPath"/> instances are equal.
+    /// </summary>
+    /// <param name="x">The first <see cref="EntryPath"/> to compare.</param>
+    /// <param name="y">The second <see cref="EntryPath"/> to compare.</param>
+    /// <returns><c>true</c> if the specified objects are equal; otherwise, <c>false</c>.</returns>
     public Boolean Equals(EntryPath x, EntryPath y)
     {
         if (x.Routes.Length != y.Routes.Length)
@@ -41,6 +56,11 @@ public sealed class EntryPathEqualityComparer : IEqualityComparer<EntryPath>
         return true;
     }
 
+    /// <summary>
+    /// Computes the hash code for a given <see cref="EntryPath"/> instance.
+    /// </summary>
+    /// <param name="obj">The <see cref="EntryPath"/> instance for which to compute the hash code.</param>
+    /// <returns>The hash code for the specified object.</returns>
     public Int32 GetHashCode([DisallowNull] EntryPath obj)
     {
         Int32 hashCode = obj.Routes.Length ^ 17;
@@ -55,6 +75,9 @@ public sealed class EntryPathEqualityComparer : IEqualityComparer<EntryPath>
         return hashCode;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EntryPathEqualityComparer"/> class.
+    /// </summary>
     public EntryPathEqualityComparer()
     {
         IgnoreCase = OperatingSystem.IsWindows();

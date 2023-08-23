@@ -60,16 +60,20 @@ public readonly struct EntryPath
     /// </summary>
     public override readonly Int32 GetHashCode()
     {
-        Int32 hashCode = Routes.Length ^ 17;
-        if (Routes.Length > 0)
+        throw new Exception("should not call this"); // debug only
+        unchecked
         {
-            hashCode = HashCode.Combine(hashCode, Routes[0]) * 31;
+            Int32 hashCode = Routes.Length ^ 17;
+            if (Routes.Length > 0)
+            {
+                hashCode = HashCode.Combine(hashCode, Routes[0]) * 31;
+            }
+            if (Routes.Length > 1)
+            {
+                hashCode = HashCode.Combine(hashCode, Routes[^1]) * 31;
+            }
+            return hashCode;
         }
-        if (Routes.Length > 1)
-        {
-            hashCode = HashCode.Combine(hashCode, Routes[^1]) * 31;
-        }
-        return hashCode;
     }
 
     /// <summary>
@@ -154,7 +158,7 @@ public readonly struct EntryPath
     /// <summary>
     /// Initializes a new instance of the EntryPath struct with an array of routes.
     /// </summary>
-    public EntryPath(String[] routes) 
+    public EntryPath(String[] routes)
     {
         Routes = routes.ToImmutableArray();
     }

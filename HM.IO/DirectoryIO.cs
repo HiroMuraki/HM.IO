@@ -5,13 +5,17 @@
 /// </summary>
 public sealed class DirectoryIO : IDirectoryIO
 {
-    public IEnumerable<String> EnumerateDirectories(EntryPath path, EnumerationOptions enumerationOptions)
+    public IEnumerable<EntryPath> EnumerateDirectories(EntryPath path, EnumerationOptions enumerationOptions)
     {
-        return Directory.EnumerateDirectories(path.StringPath, "*", enumerationOptions);
+        return Directory
+            .EnumerateDirectories(path.StringPath, "*", enumerationOptions)
+            .Select(EntryPath.CreateFromPath);
     }
 
-    public IEnumerable<String> EnumerateFiles(EntryPath path, EnumerationOptions enumerationOptions)
+    public IEnumerable<EntryPath> EnumerateFiles(EntryPath path, EnumerationOptions enumerationOptions)
     {
-        return Directory.EnumerateFiles(path.StringPath, "*", enumerationOptions);
+        return Directory
+            .EnumerateFiles(path.StringPath, "*", enumerationOptions)
+            .Select(EntryPath.CreateFromPath);
     }
 }

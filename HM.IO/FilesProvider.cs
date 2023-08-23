@@ -1,24 +1,11 @@
-﻿using System.Collections.Immutable;
-
-namespace HM.IO;
+﻿namespace HM.IO;
 
 /// <summary>
 /// Provides file enumeration based on inclusion and exclusion filters.
 /// </summary>
-public sealed class FilesProvider : IFilesProvider
+public sealed class FilesProvider
+    : EntryPathProvider, IFilesProvider
 {
-    /// <summary>
-    /// Gets or sets the directory I/O provider.
-    /// </summary>
-    public IDirectoryIO DirectoryIO { get; set; } = new DirectoryIO();
-    /// <summary>
-    /// Gets the equality comparer for comparing <see cref="EntryPath"/> instances.
-    /// </summary>
-    public IEqualityComparer<EntryPath> EntryPathEqualityComparer { get; } = IO.EntryPathEqualityComparer.Default;
-    /// <summary>
-    /// Gets the comparer for sorting <see cref="EntryPath"/> instances.
-    /// </summary>
-    public IComparer<EntryPath> EntryPathComparer { get; } = IO.EntryPathComparer.Default;
     /// <summary>
     /// Gets the list of directory paths to include during enumeration.
     /// </summary>
@@ -42,33 +29,31 @@ public sealed class FilesProvider : IFilesProvider
     /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
     public IEnumerable<EntryPath> EnumerateFiles()
     {
+        var includingFiles = SelectNotEmptyAsEntryPath(IncludingFiles);
+        var excludingFiles = SelectNotEmptyAsEntryPath(ExcludingFiles);
+        var enumeratioinOptons = new EnumerationOptions()
+        {
+            IgnoreInaccessible = true,
+            RecurseSubdirectories = false,
+            AttributesToSkip = FileAttributes.Normal,
+        };
         var directoriesProvider = new DirectoriesProvider()
         {
             IncludingDirectories = IncludingDirectories,
             ExcludingDirectories = ExcludingDirectories
         };
-        var searchingDirectories = directoriesProvider.EnumerateDirectories();
 
-        var includingFiles = SelectAsEntryPath(IncludingFiles);
-        var excludingFiles = SelectAsEntryPath(ExcludingFiles);
-        //Get files from searching directories
-        var files = searchingDirectories
-            .SelectMany(d =>
+        var selectedFiles = new HashSet<EntryPath>(includingFiles, EntryPathComparer);
+        foreach (var directory in directoriesProvider.EnumerateDirectories())
+        {
+            foreach (var file in DirectoryIO.EnumerateFiles(directory, enumeratioinOptons))
             {
-                return DirectoryIO
-                    .EnumerateFiles(d, new EnumerationOptions()
-                    {
-                        IgnoreInaccessible = false,
-                        RecurseSubdirectories = false,
-                        AttributesToSkip = FileAttributes.Normal,
-                    });
-            })
-            .Select(EntryPath.CreateFromPath)
-            .Concat(includingFiles)
-            .Except(excludingFiles, EntryPathEqualityComparer)
-            .ToImmutableHashSet(EntryPathEqualityComparer);
+                selectedFiles.Add(file);
+            }
+        }
+        selectedFiles.ExceptWith(excludingFiles);
 
-        foreach (var file in files.Order(EntryPathComparer))
+        foreach (var file in selectedFiles.Order(EntryPathComparer))
         {
             yield return file;
         }
@@ -78,18 +63,8 @@ public sealed class FilesProvider : IFilesProvider
     /// Enumerates files based on the provided inclusion and exclusion filters.
     /// </summary>
     /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
-    public IEnumerable<EntryPath> EnumerateItems()
+    public override IEnumerable<EntryPath> EnumerateItems()
     {
         return EnumerateFiles();
     }
-
-    #region NonPublic
-    private static List<EntryPath> SelectAsEntryPath(IEnumerable<String> items)
-    {
-        return items
-            .Where(x => !String.IsNullOrWhiteSpace(x))
-            .Select(EntryPath.CreateFromPath)
-            .ToList();
-    }
-    #endregion
 }

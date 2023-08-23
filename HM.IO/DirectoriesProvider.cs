@@ -1,60 +1,114 @@
 ﻿using System.Collections.Immutable;
+using System.IO;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HM.IO;
 
-public sealed class DirectoriesProvider : IDiretoriesProvider
+public sealed class DirectoriesProvider
+    : EntryPathProvider, IDiretoriesProvider
 {
-    public IDirectoryIO DirectoryIO { get; set; } = new DirectoryIO();
-    public IEqualityComparer<EntryPath> EntryPathEqualityComparer { get; } = IO.EntryPathEqualityComparer.Default;
-    public IComparer<EntryPath> EntryPathComparer { get; } = IO.EntryPathComparer.Default;
     public List<String> IncludingDirectories { get; init; } = new();
     public List<String> ExcludingDirectories { get; init; } = new();
 
     public IEnumerable<EntryPath> EnumerateDirectories()
     {
-        var includingDirectories = SelectAsEntryPath(IncludingDirectories);
-        var excludingDirectories = SelectAsEntryPath(ExcludingDirectories);
+        var includingDirectories = SelectNotEmptyAsEntryPath(IncludingDirectories)
+            .ToImmutableHashSet(EntryPathComparer);
+        var excludingDirectories = SelectNotEmptyAsEntryPath(ExcludingDirectories);
+        var recursiveExcludingDirectories = excludingDirectories
+            .Where(IsRecursiveDirectory)
+            .Select(GetRecursiveDirectory)
+            .ToImmutableHashSet(EntryPathComparer);
+        var normalExcludingDirectories = excludingDirectories
+            .Where(d => !IsRecursiveDirectory(d))
+            .Concat(recursiveExcludingDirectories)
+            .ToImmutableHashSet(EntryPathComparer);
 
-        var directoryEnumerationOptions = new EnumerationOptions()
+        var enumerationOptions = new EnumerationOptions()
         {
             IgnoreInaccessible = true,
             RecurseSubdirectories = true,
             AttributesToSkip = FileAttributes.Normal,
         };
 
-        // Get directories to search
-        var normalDirectories = includingDirectories
-            .Where(d => d.Routes[^1] != "*").ToList();
-        var recursiveDirectories = includingDirectories
-            .Except(normalDirectories, EntryPathEqualityComparer)
-            .Select(d => d[0..^1]);
-        var subDirectories = recursiveDirectories
-            .SelectMany(d => DirectoryIO.EnumerateDirectories(d, directoryEnumerationOptions))
-            .Select(EntryPath.CreateFromPath);
-        var directories = normalDirectories
-            .Concat(recursiveDirectories)
-            .Concat(subDirectories)
-            .Except(excludingDirectories, EntryPathEqualityComparer)
-            .ToImmutableHashSet(EntryPathEqualityComparer);
+        var selectedDirectories = new HashSet<EntryPath>(EntryPathComparer);
+        foreach (var directory in includingDirectories)
+        {
+            if (IsRecursiveDirectory(directory))
+            {
+                var recursivelyDirectory = GetRecursiveDirectory(directory);
+                if (CanIncluded(directory))
+                {
+                    selectedDirectories.Add(recursivelyDirectory);
+                }
 
-        foreach (var directory in directories.Order(EntryPathComparer))
+                var subDirectories = DirectoryIO.EnumerateDirectories(recursivelyDirectory, enumerationOptions);
+                foreach (var subDirectory in subDirectories)
+                {
+                    if (CanIncluded(subDirectory))
+                    {
+                        selectedDirectories.Add(subDirectory);
+                    }
+                }
+            }
+            else if (CanIncluded(directory))
+            {
+                selectedDirectories.Add(directory);
+            }
+        }
+
+        foreach (var directory in selectedDirectories.Order(EntryPathComparer))
         {
             yield return directory;
         }
+
+        Boolean CanIncluded(EntryPath path)
+        {
+            if (normalExcludingDirectories.Contains(path))
+            {
+                return false;
+            }
+            if (recursiveExcludingDirectories.Any(e => e == path || path.IsSubPathOf(e, EntryPathComparer.RouteComparer)))
+            {
+                return false;
+            }
+
+            return true;
+        }
+        //var includingDirectories = SelectNotEmptyAsEntryPath(IncludingDirectories)
+        //    .ToImmutableHashSet(EntryPathComparer);
+        //var excludingDirectories = SelectNotEmptyAsEntryPath(ExcludingDirectories)
+        //    .SelectMany(FetchDirectories)
+        //    .ToImmutableHashSet(EntryPathComparer);
+
+        //var selectedDirectories = includingDirectories
+        //    .SelectMany(FetchDirectories)
+        //    .ToHashSet(EntryPathComparer);
+        //selectedDirectories.ExceptWith(excludingDirectories);
+
+        //foreach (var directory in selectedDirectories.Order(EntryPathComparer))
+        //{
+        //    yield return directory;
+        //}
     }
 
-    public IEnumerable<EntryPath> EnumerateItems()
+    public override IEnumerable<EntryPath> EnumerateItems()
     {
         return EnumerateDirectories();
     }
 
     #region NonPublic
-    private static List<EntryPath> SelectAsEntryPath(IEnumerable<String> items)
+    private Boolean IsRecursiveDirectory(EntryPath path)
     {
-        return items
-            .Where(x => !String.IsNullOrWhiteSpace(x))
-            .Select(EntryPath.CreateFromPath)
-            .ToList();
+        // If last char of path is "*", indicating that should enumerate its sub directories.
+        return path[^1] == "*";
+    }
+    private EntryPath GetRecursiveDirectory(EntryPath path)
+    {
+        return path[0..(path.Routes.Length - 1)];
     }
     #endregion
 }

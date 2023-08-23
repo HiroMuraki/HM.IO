@@ -11,7 +11,7 @@ public interface IDirectoryIO
     /// <param name="path">The path to enumerate directories from.</param>
     /// <param name="enumerationOptions">Options to control the directory enumeration.</param>
     /// <returns>An enumerable collection of directory <see cref="EntryPath"/>.</returns>
-    IEnumerable<String> EnumerateFiles(EntryPath path, EnumerationOptions enumerationOptions);
+    IEnumerable<EntryPath> EnumerateFiles(EntryPath path, EnumerationOptions enumerationOptions);
 
     /// <summary>
     /// Enumerates files in the specified path with the given options.
@@ -19,5 +19,5 @@ public interface IDirectoryIO
     /// <param name="path">The path to enumerate files from.</param>
     /// <param name="enumerationOptions">Options to control the file enumeration.</param>
     /// <returns>An enumerable collection of file <see cref="EntryPath"/>.</returns>
-    IEnumerable<String> EnumerateDirectories(EntryPath path, EnumerationOptions enumerationOptions);
+    IEnumerable<EntryPath> EnumerateDirectories(EntryPath path, EnumerationOptions enumerationOptions);
 }

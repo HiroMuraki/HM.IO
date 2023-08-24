@@ -3,21 +3,25 @@
 /// <summary>
 /// Provides file enumeration based on inclusion and exclusion filters.
 /// </summary>
-public sealed class FilesProvider
-    : EntryPathProvider, IFilesProvider
+public sealed class FilesProvider :
+    EntryPathProvider,
+    IFilesProvider
 {
     /// <summary>
     /// Gets the list of directory paths to include during enumeration.
     /// </summary>
     public List<String> IncludingDirectories { get; init; } = new();
+
     /// <summary>
     /// Gets the list of file paths to include during enumeration.
     /// </summary>
     public List<String> IncludingFiles { get; init; } = new();
+
     /// <summary>
     /// Gets the list of directory paths to exclude during enumeration.
     /// </summary>
     public List<String> ExcludingDirectories { get; init; } = new();
+
     /// <summary>
     /// Gets the list of file paths to exclude during enumeration.
     /// </summary>
@@ -43,19 +47,24 @@ public sealed class FilesProvider
             ExcludingDirectories = ExcludingDirectories
         };
 
-        var selectedFiles = new HashSet<EntryPath>(includingFiles, EntryPathComparer);
+        var entryPathCompressor = new EntryPathCompressor();
+        var selectedFiles = new HashSet<CompressedEntryPath>();
+        foreach (var file in includingFiles)
+        {
+            selectedFiles.Add(entryPathCompressor.Compress(file));
+        }
         foreach (var directory in directoriesProvider.EnumerateDirectories())
         {
             foreach (var file in DirectoryIO.EnumerateFiles(directory, enumeratioinOptons))
             {
-                selectedFiles.Add(file);
+                selectedFiles.Add(entryPathCompressor.Compress(file));
             }
         }
-        selectedFiles.ExceptWith(excludingFiles);
+        selectedFiles.ExceptWith(excludingFiles.Select(entryPathCompressor.Compress));
 
-        foreach (var file in selectedFiles.Order(EntryPathComparer))
+        foreach (var file in selectedFiles)
         {
-            yield return file;
+            yield return entryPathCompressor.Restore(file);
         }
     }
 

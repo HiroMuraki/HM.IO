@@ -3,7 +3,8 @@
 /// <summary>
 /// Represents an interface for providing file paths.
 /// </summary>
-public interface IFilesProvider : IItemsProvider<EntryPath>
+public interface IFilesProvider :
+    IItemsProvider<EntryPath>
 {
     /// <summary>
     /// Enumerates and returns a collection of paths to files.

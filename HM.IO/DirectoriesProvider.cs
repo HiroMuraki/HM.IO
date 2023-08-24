@@ -1,16 +1,13 @@
 ﻿using System.Collections.Immutable;
-using System.IO;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 
 namespace HM.IO;
 
-public sealed class DirectoriesProvider
-    : EntryPathProvider, IDiretoriesProvider
+public sealed class DirectoriesProvider :
+    EntryPathProvider,
+    IDirectoriesProvider
 {
     public List<String> IncludingDirectories { get; init; } = new();
+
     public List<String> ExcludingDirectories { get; init; } = new();
 
     public IEnumerable<EntryPath> EnumerateDirectories()
@@ -34,7 +31,8 @@ public sealed class DirectoriesProvider
             AttributesToSkip = FileAttributes.Normal,
         };
 
-        var selectedDirectories = new HashSet<EntryPath>(EntryPathComparer);
+        var selectedDirectories = new HashSet<CompressedEntryPath>();
+        var entryPathCompressor = new EntryPathCompressor();
         foreach (var directory in includingDirectories)
         {
             if (IsRecursiveDirectory(directory))
@@ -42,7 +40,7 @@ public sealed class DirectoriesProvider
                 var recursivelyDirectory = GetRecursiveDirectory(directory);
                 if (CanIncluded(directory))
                 {
-                    selectedDirectories.Add(recursivelyDirectory);
+                    selectedDirectories.Add(entryPathCompressor.Compress(recursivelyDirectory));
                 }
 
                 var subDirectories = DirectoryIO.EnumerateDirectories(recursivelyDirectory, enumerationOptions);
@@ -50,19 +48,19 @@ public sealed class DirectoriesProvider
                 {
                     if (CanIncluded(subDirectory))
                     {
-                        selectedDirectories.Add(subDirectory);
+                        selectedDirectories.Add(entryPathCompressor.Compress(subDirectory));
                     }
                 }
             }
             else if (CanIncluded(directory))
             {
-                selectedDirectories.Add(directory);
+                selectedDirectories.Add(entryPathCompressor.Compress(directory));
             }
         }
 
-        foreach (var directory in selectedDirectories.Order(EntryPathComparer))
+        foreach (var directory in selectedDirectories)
         {
-            yield return directory;
+            yield return entryPathCompressor.Restore(directory);
         }
 
         Boolean CanIncluded(EntryPath path)
@@ -71,28 +69,13 @@ public sealed class DirectoriesProvider
             {
                 return false;
             }
-            if (recursiveExcludingDirectories.Any(e => e == path || path.IsSubPathOf(e, EntryPathComparer.RouteComparer)))
+            if (recursiveExcludingDirectories.Any(e => e == path || path.IsSubPathOf(e, EntryPathComparer.RouteEqualityComparer)))
             {
                 return false;
             }
 
             return true;
         }
-        //var includingDirectories = SelectNotEmptyAsEntryPath(IncludingDirectories)
-        //    .ToImmutableHashSet(EntryPathComparer);
-        //var excludingDirectories = SelectNotEmptyAsEntryPath(ExcludingDirectories)
-        //    .SelectMany(FetchDirectories)
-        //    .ToImmutableHashSet(EntryPathComparer);
-
-        //var selectedDirectories = includingDirectories
-        //    .SelectMany(FetchDirectories)
-        //    .ToHashSet(EntryPathComparer);
-        //selectedDirectories.ExceptWith(excludingDirectories);
-
-        //foreach (var directory in selectedDirectories.Order(EntryPathComparer))
-        //{
-        //    yield return directory;
-        //}
     }
 
     public override IEnumerable<EntryPath> EnumerateItems()
@@ -108,7 +91,7 @@ public sealed class DirectoriesProvider
     }
     private EntryPath GetRecursiveDirectory(EntryPath path)
     {
-        return path[0..(path.Routes.Length - 1)];
+        return path[0..(path.Length - 1)];
     }
     #endregion
 }

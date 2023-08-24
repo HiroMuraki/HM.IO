@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using HM.IO.RoutedItems;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HM.IO;
@@ -6,36 +7,45 @@ namespace HM.IO;
 /// <summary>
 /// Represents a path to a directory or file.
 /// </summary>
-public readonly struct EntryPath
-    : IEquatable<EntryPath>, IComparable<EntryPath>
+public readonly struct EntryPath :
+    IEquatable<EntryPath>
 {
     /// <summary>
     /// Gets the individual routes (components) that make up the path.
     /// </summary>
-    public readonly ImmutableArray<String> Routes { get; }
+    public readonly ImmutableArray<String> Routes => _routes;
+
+    /// <summary>
+    /// Get the number of routes in the EntryPath.
+    /// </summary>
+    public readonly Int32 Length => _routes.Length;
+
     /// <summary>
     /// Gets the route at the specified index.
     /// </summary>
-    public readonly String this[Int32 index] => Routes[index];
+    public readonly String this[Int32 index] => _routes[index];
+
     /// <summary>
     /// Gets the route at the specified index using an index object.
     /// </summary>
-    public readonly String this[Index index] => Routes[index];
+    public readonly String this[Index index] => _routes[index];
+
     /// <summary>
     /// Gets a subpath using the specified range.
     /// </summary>
-    public readonly EntryPath this[Range range] => new(Routes[range]);
+    public readonly EntryPath this[Range range] => new(RoutedItemHelper.Slice(in _routes, range));
+
     /// <summary>
     /// Gets the path as a string.
     /// </summary>
-    public readonly String StringPath => Path.Combine(Routes.ToArray());
+    public readonly String StringPath => Path.Combine(_routes.ToArray());
 
     /// <summary>
     /// Converts the EntryPath to a string representation.
     /// </summary>
     public override readonly String ToString()
     {
-        return String.Join("", Routes.Select(p => $"[{p}]"));
+        return RoutedItemHelper.ToString(in _routes);
     }
 
     /// <summary>
@@ -60,20 +70,7 @@ public readonly struct EntryPath
     /// </summary>
     public override readonly Int32 GetHashCode()
     {
-        throw new Exception("should not call this"); // debug only
-        unchecked
-        {
-            Int32 hashCode = Routes.Length ^ 17;
-            if (Routes.Length > 0)
-            {
-                hashCode = HashCode.Combine(hashCode, Routes[0]) * 31;
-            }
-            if (Routes.Length > 1)
-            {
-                hashCode = HashCode.Combine(hashCode, Routes[^1]) * 31;
-            }
-            return hashCode;
-        }
+        return RoutedItemHelper.GetHashCode(in _routes);
     }
 
     /// <summary>
@@ -85,56 +82,11 @@ public readonly struct EntryPath
     }
 
     /// <summary>
-    /// Compares this EntryPath with another EntryPath.
-    /// </summary>
-    public readonly Int32 CompareTo(EntryPath other)
-    {
-        Int32 minLength = Routes.Length < other.Routes.Length ? Routes.Length : other.Routes.Length;
-
-        for (Int32 i = 0; i < minLength; i++)
-        {
-            Int32 compareResult = String.Compare(Routes[i], other.Routes[i]);
-            if (compareResult < 0)
-            {
-                return -1;
-            }
-            else if (compareResult > 0)
-            {
-                return 1;
-            }
-        }
-
-        if (Routes.Length < other.Routes.Length)
-        {
-            return -1;
-        }
-        else if (Routes.Length > other.Routes.Length)
-        {
-            return 1;
-        }
-
-        return 0;
-    }
-
-    /// <summary>
     /// Checks if two EntryPath instances are equal.
     /// </summary>
     public static Boolean operator ==(EntryPath left, EntryPath right)
     {
-        if (left.Routes.Length != right.Routes.Length)
-        {
-            return false;
-        }
-
-        for (Int32 i = 0; i < right.Routes.Length; i++)
-        {
-            if (left.Routes[i] == right.Routes[i])
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return RoutedItemHelper.Equals(in left._routes, in right._routes, StringComparer.Ordinal);
     }
 
     /// <summary>
@@ -158,9 +110,9 @@ public readonly struct EntryPath
     /// <summary>
     /// Initializes a new instance of the EntryPath struct with an array of routes.
     /// </summary>
-    public EntryPath(String[] routes)
+    public EntryPath(params String[] routes)
     {
-        Routes = routes.ToImmutableArray();
+        _routes = routes.ToImmutableArray();
     }
 
     /// <summary>
@@ -168,6 +120,10 @@ public readonly struct EntryPath
     /// </summary>
     public EntryPath(IEnumerable<String> routes)
     {
-        Routes = routes.ToImmutableArray();
+        _routes = routes.ToImmutableArray();
     }
+
+    #region NonPublic
+    private readonly ImmutableArray<String> _routes;
+    #endregion
 }

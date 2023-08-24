@@ -3,7 +3,8 @@
 /// <summary>
 /// Represents an interface for providing directory paths.
 /// </summary>
-public interface IDiretoriesProvider : IItemsProvider<EntryPath>
+public interface IDirectoriesProvider :
+    IItemsProvider<EntryPath>
 {
     /// <summary>
     /// Enumerates and returns a collection of paths to directories.

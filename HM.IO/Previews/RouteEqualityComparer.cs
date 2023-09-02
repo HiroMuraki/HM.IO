@@ -1,13 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#if PREVIEW
+using System.Diagnostics.CodeAnalysis;
 
-namespace HM.IO;
+namespace HM.IO.Previews;
 
 public class RouteEqualityComparer :
     IEqualityComparer<String>
 {
-    /// <summary>
-    /// Gets the default instance of the <see cref="EntryPathEqualityComparer"/>.
-    /// </summary>
     public Boolean IgnoreCase
     {
         get => _ignoreCase;
@@ -35,9 +33,6 @@ public class RouteEqualityComparer :
         return _comparer.GetHashCode();
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EntryPathRouteComparer"/> class.
-    /// </summary>
     public RouteEqualityComparer()
     {
         IgnoreCase = OperatingSystem.IsWindows();
@@ -48,3 +43,11 @@ public class RouteEqualityComparer :
     private IEqualityComparer<String> _comparer = StringComparer.Ordinal;
     #endregion
 }
+
+public class CompressedEntryPathsInfo
+{
+    public List<String> CompressedEntryPaths { get; init; } = new();
+
+    public Dictionary<Int32, String> IdPathMap { get; init; } = new();
+}
+#endif

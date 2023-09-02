@@ -1,13 +1,13 @@
-﻿using System.Collections.Immutable;
+﻿#if PREVIEW
+using System.Collections.Immutable;
 
-namespace HM.IO;
-
+namespace HM.IO.Previews.Generic;
 /// <summary>
 /// Provides file enumeration based on inclusion and exclusion filters.
 /// </summary>
 public sealed class FilesProvider :
     EntryPathProvider,
-    IFilesProvider
+    IFilesProvider<EntryPath>
 {
     /// <summary>
     /// Gets the list of directory paths to include during enumeration.
@@ -82,3 +82,5 @@ public sealed class FilesProvider :
         return EnumerateFiles();
     }
 }
+
+#endif

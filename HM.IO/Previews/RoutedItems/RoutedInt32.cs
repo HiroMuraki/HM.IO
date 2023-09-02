@@ -1,4 +1,5 @@
-﻿namespace HM.IO.RoutedItems;
+﻿#if PREVIEW
+namespace HM.IO.Previews.RoutedItems;
 
 public sealed class RoutedInt32 : RoutedItem<Int32>
 {
@@ -6,3 +7,4 @@ public sealed class RoutedInt32 : RoutedItem<Int32>
     {
     }
 }
+#endif

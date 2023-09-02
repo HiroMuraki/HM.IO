@@ -1,7 +1,8 @@
-﻿using HM.IO.RoutedItems;
+﻿#if PREVIEW
+using HM.IO.RoutedItems;
 using System.Diagnostics.CodeAnalysis;
 
-namespace HM.IO;
+namespace HM.IO.Previews;
 
 /// <summary>
 /// Provides an equality comparer for <see cref="EntryPath"/> instances.
@@ -9,11 +10,6 @@ namespace HM.IO;
 public sealed class EntryPathEqualityComparer
     : IEntryPathEqualityComparer
 {
-    /// <summary>
-    /// Gets the default instance of the <see cref="EntryPathEqualityComparer"/>.
-    /// </summary>
-    public static EntryPathEqualityComparer Default { get; } = new();
-
     public IEqualityComparer<String> RouteEqualityComparer { get; set; } = new RouteEqualityComparer();
 
     public Boolean Equals(EntryPath x, EntryPath y)
@@ -26,3 +22,4 @@ public sealed class EntryPathEqualityComparer
         return RoutedItemHelper.GetHashCode(obj.Routes);
     }
 }
+#endif

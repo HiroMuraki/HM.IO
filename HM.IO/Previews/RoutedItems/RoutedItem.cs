@@ -1,7 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿#if PREVIEW
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
-namespace HM.IO.RoutedItems;
+namespace HM.IO.Previews.RoutedItems;
 
 public class RoutedItem<TRoute> :
     IEquatable<RoutedItem<TRoute>>,
@@ -178,3 +179,4 @@ public class RoutedItem<TRoute> :
     }
     #endregion
 }
+#endif

@@ -13,11 +13,11 @@ public sealed class DirectoriesProvider :
 
     public IEnumerable<EntryPath> EnumerateDirectories()
     {
-        var includingDirectories = EnumerateDirectories(SelectNotEmptyAsDistinctEntryPath(IncludingDirectories));
+        IEnumerable<EntryPath> includingDirectories = EnumerateDirectories(SelectNotEmptyAsDistinctEntryPath(IncludingDirectories));
         var excludingDirectories = EnumerateDirectories(SelectNotEmptyAsDistinctEntryPath(ExcludingDirectories))
             .ToImmutableHashSet();
 
-        foreach (var directory in includingDirectories)
+        foreach (EntryPath directory in includingDirectories)
         {
             if (!excludingDirectories.Contains(directory))
             {
@@ -52,14 +52,14 @@ public sealed class DirectoriesProvider :
             AttributesToSkip = FileAttributes.Normal,
         };
 
-        foreach (var directory in paths)
+        foreach (EntryPath directory in paths)
         {
             if (TryAsRecursiveDirectory(directory, out EntryPath? recursiveDirectory))
             {
                 yield return recursiveDirectory;
 
-                var subDirectories = DirectoryIO.EnumerateDirectories(recursiveDirectory, enumerationOptions);
-                foreach (var subDirectory in subDirectories)
+                IEnumerable<EntryPath> subDirectories = DirectoryIO.EnumerateDirectories(recursiveDirectory, enumerationOptions);
+                foreach (EntryPath subDirectory in subDirectories)
                 {
                     yield return subDirectory;
                 }

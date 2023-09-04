@@ -11,11 +11,6 @@ public class EntryPath :
     IEquatable<EntryPath>
 {
     /// <summary>
-    /// Gets the individual routes (components) that make up the path.
-    /// </summary>
-    public ImmutableArray<String> Routes => _routes;
-
-    /// <summary>
     /// Get the number of routes in the EntryPath.
     /// </summary>
     public Int32 Length => _routes.Length;
@@ -92,11 +87,11 @@ public class EntryPath :
             return 0;
         }
 
-        Int32 minLength = Routes.Length < other.Routes.Length ? Routes.Length : other.Routes.Length;
+        Int32 minLength = _routes.Length < other._routes.Length ? _routes.Length : other._routes.Length;
 
         for (Int32 i = 0; i < minLength; i++)
         {
-            Int32 compareResult = String.Compare(Routes[i], other.Routes[i], StringComparison.Ordinal);
+            Int32 compareResult = String.Compare(_routes[i], other._routes[i], StringComparison.Ordinal);
             if (compareResult < 0)
             {
                 return -1;
@@ -107,11 +102,11 @@ public class EntryPath :
             }
         }
 
-        if (Routes.Length < other.Routes.Length)
+        if (_routes.Length < other._routes.Length)
         {
             return -1;
         }
-        else if (Routes.Length > other.Routes.Length)
+        else if (_routes.Length > other._routes.Length)
         {
             return 1;
         }

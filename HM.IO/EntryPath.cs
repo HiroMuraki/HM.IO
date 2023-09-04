@@ -11,11 +11,6 @@ public class EntryPath :
     IEquatable<EntryPath>
 {
     /// <summary>
-    /// Get the number of routes in the EntryPath.
-    /// </summary>
-    public Int32 Length => _routes.Length;
-
-    /// <summary>
     /// Gets the route at the specified index.
     /// </summary>
     public String this[Int32 index] => _routes[index];
@@ -29,6 +24,11 @@ public class EntryPath :
     /// Gets a subpath using the specified range.
     /// </summary>
     public EntryPath this[Range range] => new(_routes[range]);
+
+    /// <summary>
+    /// Get the number of routes in the EntryPath.
+    /// </summary>
+    public Int32 Length => _routes.Length;
 
     /// <summary>
     /// Gets the path as a string.

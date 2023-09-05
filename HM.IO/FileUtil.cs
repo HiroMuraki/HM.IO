@@ -42,8 +42,8 @@ public static class FileUtil
 
         try
         {
-            using var fs1 = File.OpenRead(file1);
-            using var fs2 = File.OpenRead(file2);
+            using FileStream fs1 = File.OpenRead(file1);
+            using FileStream fs2 = File.OpenRead(file2);
             if (fs1.Length != fs2.Length)
             {
                 return false;
@@ -181,8 +181,8 @@ public static class FileUtil
             }
         }
 
-        using (var sourceFS = File.OpenRead(sourceFilePath))
-        using (var destinationFS = File.OpenWrite(destinationFilePath))
+        using (FileStream sourceFS = File.OpenRead(sourceFilePath))
+        using (FileStream destinationFS = File.OpenWrite(destinationFilePath))
         {
             await sourceFS.CopyToAsync(destinationFS, cancellationToken);
         }
@@ -239,6 +239,16 @@ public static class FileUtil
     /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
     public static async Task MoveAsync(String sourceFilePath, String destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
     {
+        if (!overwrite && File.Exists(destinationFilePath))
+        {
+            throw new ArgumentException($"Can't move `{sourceFilePath}` to `{destinationFilePath}` already existed.");
+        }
+
+        DateTime creationTime = File.GetCreationTime(sourceFilePath);
+        DateTime lastWriteTime = File.GetLastWriteTime(sourceFilePath);
+        DateTime lastAccessTime = File.GetLastAccessTime(sourceFilePath);
+        FileAttributes fileAttributes = File.GetAttributes(sourceFilePath);
+
         if (Path.GetPathRoot(sourceFilePath) == Path.GetPathRoot(destinationFilePath))
         {
             File.Move(sourceFilePath, destinationFilePath, overwrite);
@@ -246,9 +256,13 @@ public static class FileUtil
         else
         {
             await CopyAsync(sourceFilePath, destinationFilePath, overwrite, cancellationToken);
-            CopyTimestamps(sourceFilePath, destinationFilePath);
-            CopyAttributes(sourceFilePath, destinationFilePath);
+            File.Delete(sourceFilePath);
         }
+
+        File.SetCreationTime(destinationFilePath, creationTime);
+        File.SetLastWriteTime(destinationFilePath, lastWriteTime);
+        File.SetLastAccessTime(destinationFilePath, lastAccessTime);
+        File.SetAttributes(destinationFilePath, fileAttributes);
     }
     #endregion
 
@@ -269,7 +283,7 @@ public static class FileUtil
     /// <param name="destinationFilePath">The path of the destination file.</param>
     public static void CopyTimestamps(String sourceFilePath, String destinationFilePath)
     {
-        var attributes = File.GetAttributes(sourceFilePath);
+        FileAttributes attributes = File.GetAttributes(sourceFilePath);
         File.SetAttributes(destinationFilePath, attributes);
 
         File.SetCreationTimeUtc(destinationFilePath, File.GetCreationTimeUtc(sourceFilePath));
@@ -315,7 +329,7 @@ public static class FileUtil
     public static async Task<String> ComputeHashAsync(String filePath, CancellationToken cancellationToken)
     {
         using var sha256 = SHA256.Create();
-        using var reader = File.OpenRead(filePath);
+        using FileStream reader = File.OpenRead(filePath);
         return Convert.ToHexString(await sha256.ComputeHashAsync(reader, cancellationToken));
     }
     #endregion

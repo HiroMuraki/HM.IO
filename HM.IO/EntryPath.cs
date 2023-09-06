@@ -6,41 +6,41 @@ namespace HM.IO;
 /// <summary>
 /// Represents a path to a directory or file.
 /// </summary>
-public class EntryPath :
+public readonly struct EntryPath :
     IComparable<EntryPath>,
     IEquatable<EntryPath>
 {
     /// <summary>
     /// Gets the route at the specified index.
     /// </summary>
-    public String this[Int32 index] => _routes[index];
+    public readonly String this[Int32 index] => _routes[index];
 
     /// <summary>
     /// Gets the route at the specified index using an index object.
     /// </summary>
-    public String this[Index index] => _routes[index];
+    public readonly String this[Index index] => _routes[index];
 
     /// <summary>
     /// Gets a subpath using the specified range.
     /// </summary>
-    public EntryPath this[Range range] => new(_routes[range]);
+    public readonly EntryPath this[Range range] => new(_routes[range]);
 
     /// <summary>
     /// Get the number of routes in the EntryPath.
     /// </summary>
-    public Int32 Length => _routes.Length;
+    public readonly Int32 Length => _routes.Length;
 
     /// <summary>
     /// Gets the path as a string.
     /// </summary>
-    public String StringPath => Path.Combine(_routes.ToArray());
+    public readonly String StringPath => Path.Combine(_routes.ToArray());
 
-    public override String ToString()
+    public readonly override String ToString()
     {
         return String.Join("", _routes.Select(p => $"[{p}]"));
     }
 
-    public override Boolean Equals([NotNullWhen(true)] Object? obj)
+    public readonly override Boolean Equals([NotNullWhen(true)] Object? obj)
     {
         if (obj is null)
         {
@@ -54,7 +54,7 @@ public class EntryPath :
         return Equals((EntryPath)obj);
     }
 
-    public override Int32 GetHashCode()
+    public readonly override Int32 GetHashCode()
     {
         unchecked
         {
@@ -71,22 +71,13 @@ public class EntryPath :
         }
     }
 
-    public Boolean Equals(EntryPath? other)
+    public readonly Boolean Equals(EntryPath other)
     {
         return this == other;
     }
 
-    public Int32 CompareTo(EntryPath? other)
+    public readonly Int32 CompareTo(EntryPath other)
     {
-        if (other is null)
-        {
-            return 1;
-        }
-        if (ReferenceEquals(this, other))
-        {
-            return 0;
-        }
-
         Int32 minLength = _routes.Length < other._routes.Length ? _routes.Length : other._routes.Length;
 
         for (Int32 i = 0; i < minLength; i++)
@@ -114,25 +105,8 @@ public class EntryPath :
         return 0;
     }
 
-    public static Boolean operator ==(EntryPath? left, EntryPath? right)
+    public static Boolean operator ==(EntryPath left, EntryPath right)
     {
-        if (left is null && right is not null)
-        {
-            return false;
-        }
-        if (left is not null && right is null)
-        {
-            return false;
-        }
-        if (left is null && right is null)
-        {
-            return true;
-        }
-        if (ReferenceEquals(left, right))
-        {
-            return true;
-        }
-
         if (left!._routes.Length != right!._routes.Length)
         {
             return false;
@@ -149,7 +123,7 @@ public class EntryPath :
         return true;
     }
 
-    public static Boolean operator !=(EntryPath? left, EntryPath? right)
+    public static Boolean operator !=(EntryPath left, EntryPath right)
     {
         return left == right;
     }

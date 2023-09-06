@@ -56,9 +56,9 @@ public sealed class DirectoriesProvider :
         {
             if (TryAsRecursiveDirectory(directory, out EntryPath? recursiveDirectory))
             {
-                yield return recursiveDirectory;
+                yield return recursiveDirectory.Value;
 
-                IEnumerable<EntryPath> subDirectories = DirectoryIO.EnumerateDirectories(recursiveDirectory, enumerationOptions);
+                IEnumerable<EntryPath> subDirectories = DirectoryIO.EnumerateDirectories(recursiveDirectory.Value, enumerationOptions);
                 foreach (EntryPath subDirectory in subDirectories)
                 {
                     yield return subDirectory;

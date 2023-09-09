@@ -35,6 +35,15 @@ public static class FileUtil
     /// <returns>true if the files have the same contents; otherwise, false.</returns>
     public static async Task<Boolean> CompareEqualityAsync(String file1, String file2, CancellationToken cancellationToken)
     {
+        if (!File.Exists(file1))
+        {
+            throw new FileNotFoundException(file1);
+        }
+        if (!File.Exists(file2))
+        {
+            throw new FileNotFoundException(file2);
+        }
+
         if (file1 == file2)
         {
             return true;

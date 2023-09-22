@@ -57,13 +57,14 @@ public sealed class FilesProvider :
         {
             IgnoreInaccessible = true,
             RecurseSubdirectories = false,
+            AttributesToSkip = (FileAttributes)Int32.MinValue,
         };
-        var directoriesProvider = new DirectoriesProvider()
+
+        IEnumerable<EntryPath> directories = new DirectoriesProvider()
         {
             IncludingDirectories = IncludingDirectories,
             ExcludingDirectories = ExcludingDirectories
-        };
-        IEnumerable<EntryPath> directories = directoriesProvider.EnumerateDirectories();
+        }.EnumerateDirectories();
 
         foreach (EntryPath directory in directories)
         {

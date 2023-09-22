@@ -173,6 +173,11 @@ public static class FileUtil
             throw new FileNotFoundException($"Source file `{sourceFilePath}` not found", sourceFilePath);
         }
 
+        if (sourceFilePath == destinationFilePath)
+        {
+            throw new InvalidOperationException($"The `{destinationFilePath}` can be equal to `{sourceFilePath}`.");
+        }
+
         if (File.Exists(destinationFilePath))
         {
             Boolean fileEqual = await CompareEqualityAsync(sourceFilePath, destinationFilePath, cancellationToken);
@@ -251,6 +256,11 @@ public static class FileUtil
         if (!overwrite && File.Exists(destinationFilePath))
         {
             throw new ArgumentException($"Can't move `{sourceFilePath}` to `{destinationFilePath}` already existed.");
+        }
+
+        if (sourceFilePath == destinationFilePath)
+        {
+            throw new InvalidOperationException($"The `{destinationFilePath}` can be equal to `{sourceFilePath}`.");
         }
 
         DateTime creationTime = File.GetCreationTime(sourceFilePath);

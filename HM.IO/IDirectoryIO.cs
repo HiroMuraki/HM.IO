@@ -5,6 +5,8 @@
 /// </summary>
 public interface IDirectoryIO
 {
+    Boolean Exists(EntryPath entryPath);
+
     /// <summary>
     /// Enumerates directories in the specified path with the given options.
     /// </summary>

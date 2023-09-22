@@ -141,7 +141,7 @@ public readonly struct EntryPath :
     /// <summary>
     /// Initializes a new instance of the EntryPath struct with an array of routes.
     /// </summary>
-    public EntryPath(params String[] routes)
+    internal EntryPath(params String[] routes)
     {
         _routes = routes.ToImmutableArray();
     }
@@ -149,7 +149,7 @@ public readonly struct EntryPath :
     /// <summary>
     /// Initializes a new instance of the EntryPath struct with a collection of routes.
     /// </summary>
-    public EntryPath(IEnumerable<String> routes)
+    internal EntryPath(IEnumerable<String> routes)
     {
         _routes = routes.ToImmutableArray();
     }

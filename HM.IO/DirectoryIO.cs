@@ -6,6 +6,11 @@
 public sealed class DirectoryIO :
     IDirectoryIO
 {
+    public Boolean Exists(EntryPath entryPath)
+    {
+        return Directory.Exists(entryPath.StringPath);
+    }
+
     public IEnumerable<EntryPath> EnumerateDirectories(EntryPath path, EnumerationOptions enumerationOptions)
     {
         return Directory

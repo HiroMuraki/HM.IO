@@ -7,14 +7,21 @@ public sealed class DirectoriesProvider :
     EntryPathProvider,
     IDirectoriesProvider
 {
-    public List<String> IncludingDirectories { get; init; } = new();
+    public List<SearchingDirectory> IncludingDirectories { get; init; } = new();
 
-    public List<String> ExcludingDirectories { get; init; } = new();
+    public List<SearchingDirectory> ExcludingDirectories { get; init; } = new();
 
     public IEnumerable<EntryPath> EnumerateDirectories()
     {
-        IEnumerable<EntryPath> includingDirectories = EnumerateDirectories(SelectNotEmptyAsDistinctEntryPath(IncludingDirectories));
-        var excludingDirectories = EnumerateDirectories(SelectNotEmptyAsDistinctEntryPath(ExcludingDirectories))
+        IEnumerable<EntryPath> includingDirectories = IncludingDirectories
+            .Where(x => !String.IsNullOrWhiteSpace(x.BaseDirectroy.StringPath))
+            .DistinctBy(x => x.BaseDirectroy)
+            .SelectMany(EnumerateDirectories);
+
+        var excludingDirectories = ExcludingDirectories
+            .Where(x => !String.IsNullOrWhiteSpace(x.BaseDirectroy.StringPath))
+            .DistinctBy(x => x.BaseDirectroy)
+            .SelectMany(EnumerateDirectories)
             .ToImmutableHashSet();
 
         foreach (EntryPath directory in includingDirectories)
@@ -32,42 +39,31 @@ public sealed class DirectoriesProvider :
     }
 
     #region NonPublic
-    private static Boolean TryAsRecursiveDirectory(EntryPath path, [NotNullWhen(true)] out EntryPath? recursiveDirectory)
+    private IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory directory)
     {
-        if (path[^1] == "*")
+        if (!DirectoryIO.Exists(directory.BaseDirectroy))
         {
-            recursiveDirectory = path[0..(path.Length - 1)];
-            return true;
-        }
-
-        recursiveDirectory = null;
-        return false;
-    }
-    private IEnumerable<EntryPath> EnumerateDirectories(List<EntryPath> paths)
-    {
-        var enumerationOptions = new EnumerationOptions()
-        {
-            IgnoreInaccessible = true,
-            RecurseSubdirectories = true,
-            AttributesToSkip = FileAttributes.Normal,
-        };
-
-        foreach (EntryPath directory in paths)
-        {
-            if (TryAsRecursiveDirectory(directory, out EntryPath? recursiveDirectory))
+            if (directory.IgnoreIfNotExists)
             {
-                yield return recursiveDirectory.Value;
-
-                IEnumerable<EntryPath> subDirectories = DirectoryIO.EnumerateDirectories(recursiveDirectory.Value, enumerationOptions);
-                foreach (EntryPath subDirectory in subDirectories)
-                {
-                    yield return subDirectory;
-                }
+                yield break;
             }
             else
             {
-                yield return directory;
+                throw new DirectoryNotFoundException(directory.BaseDirectroy.StringPath);
             }
+        }
+
+        IEnumerable<EntryPath> directories = DirectoryIO.EnumerateDirectories(directory.BaseDirectroy, new EnumerationOptions
+        {
+            RecurseSubdirectories = directory.RecurseSubdirectories,
+            MaxRecursionDepth = directory.MaxRecursionDepth,
+        });
+
+        yield return directory.BaseDirectroy;
+
+        foreach (EntryPath item in directories)
+        {
+            yield return item;
         }
     }
     #endregion

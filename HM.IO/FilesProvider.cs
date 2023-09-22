@@ -12,22 +12,22 @@ public sealed class FilesProvider :
     /// <summary>
     /// Gets the list of directory paths to include during enumeration.
     /// </summary>
-    public List<String> IncludingDirectories { get; init; } = new();
-
-    /// <summary>
-    /// Gets the list of file paths to include during enumeration.
-    /// </summary>
-    public List<String> IncludingFiles { get; init; } = new();
+    public List<SearchingDirectory> IncludingDirectories { get; init; } = new();
 
     /// <summary>
     /// Gets the list of directory paths to exclude during enumeration.
     /// </summary>
-    public List<String> ExcludingDirectories { get; init; } = new();
+    public List<SearchingDirectory> ExcludingDirectories { get; init; } = new();
+
+    /// <summary>
+    /// Gets the list of file paths to include during enumeration.
+    /// </summary>
+    public List<SearchingFile> IncludingFiles { get; init; } = new();
 
     /// <summary>
     /// Gets the list of file paths to exclude during enumeration.
     /// </summary>
-    public List<String> ExcludingFiles { get; init; } = new();
+    public List<SearchingFile> ExcludingFiles { get; init; } = new();
 
     /// <summary>
     /// Enumerates files based on the provided inclusion and exclusion filters.
@@ -35,30 +35,38 @@ public sealed class FilesProvider :
     /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
     public IEnumerable<EntryPath> EnumerateFiles()
     {
-        var includingFiles = SelectNotEmptyAsDistinctEntryPath(IncludingFiles);
-        var excludingFiles = SelectNotEmptyAsDistinctEntryPath(ExcludingFiles).ToImmutableHashSet();
-        var enumeratioinOptons = new EnumerationOptions()
-        {
-            IgnoreInaccessible = true,
-            RecurseSubdirectories = false,
-            AttributesToSkip = FileAttributes.Normal,
-        };
-        var directoriesProvider = new DirectoriesProvider()
-        {
-            IncludingDirectories = IncludingDirectories,
-            ExcludingDirectories = ExcludingDirectories
-        };
+        IEnumerable<EntryPath> includingFiles = IncludingFiles
+            .Where(x => !String.IsNullOrEmpty(x.FilePath.StringPath))
+            .Select(x => x.FilePath)
+            .Distinct();
+        var excludingFiles = ExcludingFiles
+            .Where(x => !String.IsNullOrEmpty(x.FilePath.StringPath))
+            .Select(x => x.FilePath)
+            .ToImmutableHashSet();
 
-        foreach (var file in includingFiles)
+        foreach (EntryPath file in includingFiles)
         {
             if (CanInclude(file))
             {
                 yield return file;
             }
         }
-        foreach (var directory in directoriesProvider.EnumerateDirectories())
+
+        var enumeratioinOptons = new EnumerationOptions()
         {
-            foreach (var file in DirectoryIO.EnumerateFiles(directory, enumeratioinOptons))
+            IgnoreInaccessible = true,
+            RecurseSubdirectories = false,
+        };
+        var directoriesProvider = new DirectoriesProvider()
+        {
+            IncludingDirectories = IncludingDirectories,
+            ExcludingDirectories = ExcludingDirectories
+        };
+        var directotires = directoriesProvider.EnumerateDirectories().ToList();
+
+        foreach (EntryPath directory in directotires)
+        {
+            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory, enumeratioinOptons))
             {
                 if (CanInclude(file))
                 {

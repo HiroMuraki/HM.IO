@@ -1,7 +1,7 @@
 ﻿namespace HM.IO;
 
 /// <summary>
-/// Default implemention for <see cref="IDirectoryIO"/>
+/// Default implementation for <see cref="IDirectoryIO"/>
 /// </summary>
 public sealed class DirectoryIO :
     IDirectoryIO

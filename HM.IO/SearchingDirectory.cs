@@ -2,7 +2,7 @@
 
 public sealed class SearchingDirectory
 {
-    public EntryPath BaseDirectroy { get; init; }
+    public EntryPath BaseDirectory { get; init; }
 
     public Boolean RecurseSubdirectories { get; init; } = true;
 
@@ -12,6 +12,6 @@ public sealed class SearchingDirectory
 
     public SearchingDirectory(String path)
     {
-        BaseDirectroy = EntryPath.CreateFromPath(path);
+        BaseDirectory = EntryPath.CreateFromPath(path);
     }
 }

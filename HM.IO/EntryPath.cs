@@ -21,7 +21,7 @@ public readonly struct EntryPath :
     public readonly String this[Index index] => _routes[index];
 
     /// <summary>
-    /// Gets a subpath using the specified range.
+    /// Gets a sub path using the specified range.
     /// </summary>
     public readonly EntryPath this[Range range] => new(_routes[range]);
 

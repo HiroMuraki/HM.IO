@@ -2,6 +2,7 @@
 
 namespace HM.IO;
 
+
 /// <summary>
 /// Provides file enumeration based on inclusion and exclusion filters.
 /// </summary>
@@ -52,7 +53,7 @@ public sealed class FilesProvider :
             }
         }
 
-        var enumeratioinOptons = new EnumerationOptions()
+        var enumerationOptions = new EnumerationOptions()
         {
             IgnoreInaccessible = true,
             RecurseSubdirectories = false,
@@ -62,11 +63,11 @@ public sealed class FilesProvider :
             IncludingDirectories = IncludingDirectories,
             ExcludingDirectories = ExcludingDirectories
         };
-        var directotires = directoriesProvider.EnumerateDirectories().ToList();
+        IEnumerable<EntryPath> directories = directoriesProvider.EnumerateDirectories();
 
-        foreach (EntryPath directory in directotires)
+        foreach (EntryPath directory in directories)
         {
-            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory, enumeratioinOptons))
+            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory, enumerationOptions))
             {
                 if (CanInclude(file))
                 {

@@ -14,13 +14,13 @@ public sealed class DirectoriesProvider :
     public IEnumerable<EntryPath> EnumerateDirectories()
     {
         IEnumerable<EntryPath> includingDirectories = IncludingDirectories
-            .Where(x => !String.IsNullOrWhiteSpace(x.BaseDirectroy.StringPath))
-            .DistinctBy(x => x.BaseDirectroy)
+            .Where(x => !String.IsNullOrWhiteSpace(x.BaseDirectory.StringPath))
+            .DistinctBy(x => x.BaseDirectory)
             .SelectMany(EnumerateDirectories);
 
         var excludingDirectories = ExcludingDirectories
-            .Where(x => !String.IsNullOrWhiteSpace(x.BaseDirectroy.StringPath))
-            .DistinctBy(x => x.BaseDirectroy)
+            .Where(x => !String.IsNullOrWhiteSpace(x.BaseDirectory.StringPath))
+            .DistinctBy(x => x.BaseDirectory)
             .SelectMany(EnumerateDirectories)
             .ToImmutableHashSet();
 
@@ -41,7 +41,7 @@ public sealed class DirectoriesProvider :
     #region NonPublic
     private IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory directory)
     {
-        if (!DirectoryIO.Exists(directory.BaseDirectroy))
+        if (!DirectoryIO.Exists(directory.BaseDirectory))
         {
             if (directory.IgnoreIfNotExists)
             {
@@ -49,17 +49,17 @@ public sealed class DirectoriesProvider :
             }
             else
             {
-                throw new DirectoryNotFoundException(directory.BaseDirectroy.StringPath);
+                throw new DirectoryNotFoundException(directory.BaseDirectory.StringPath);
             }
         }
 
-        IEnumerable<EntryPath> directories = DirectoryIO.EnumerateDirectories(directory.BaseDirectroy, new EnumerationOptions
+        IEnumerable<EntryPath> directories = DirectoryIO.EnumerateDirectories(directory.BaseDirectory, new EnumerationOptions
         {
             RecurseSubdirectories = directory.RecurseSubdirectories,
             MaxRecursionDepth = directory.MaxRecursionDepth,
         });
 
-        yield return directory.BaseDirectroy;
+        yield return directory.BaseDirectory;
 
         foreach (EntryPath item in directories)
         {

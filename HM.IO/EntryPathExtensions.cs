@@ -5,7 +5,7 @@ public static class EntryPathExtensions
     #region Properties
     public static IDirectoryIO DirectoryIO { get; set; } = new DirectoryIO();
 
-    public static FileIO FileIO { get; set; } = new FileIO();
+    public static IFileIO FileIO { get; set; } = new FileIO();
     #endregion
 
     #region Methods

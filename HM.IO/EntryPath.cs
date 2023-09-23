@@ -1,47 +1,28 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace HM.IO;
 
-/// <summary>
-/// Represents a path to a directory or file.
-/// </summary>
+/// <include file='Docs/EntryPath.xml' path='EntryPath/Class[@name="EntryPath"]/*' />
 public readonly struct EntryPath :
     IComparable<EntryPath>,
     IEquatable<EntryPath>
 {
-    /// <summary>
-    /// Gets the route at the specified index.
-    /// </summary>
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="Indexer[Int32]"]/*' />
     public readonly String this[Int32 index] => _routes[index];
 
-    /// <summary>
-    /// Gets the route at the specified index using an index object.
-    /// </summary>
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="Indexer[Index]"]/*' />
     public readonly String this[Index index] => _routes[index];
 
-    /// <summary>
-    /// Gets a sub path using the specified range.
-    /// </summary>
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="Indexer[Range]"]/*' />
     public readonly EntryPath this[Range range] => new(_routes[range]);
 
-    /// <summary>
-    /// Get the number of routes in the EntryPath.
-    /// </summary>
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="Length"]/*' />
     public readonly Int32 Length => _routes.Length;
 
-    /// <summary>
-    /// Gets the path as a string.
-    /// </summary>
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="StringPath"]/*' />
     public readonly String StringPath => Path.Combine(_routes);
 
-    /// <summary>
-    /// Determines whether the current <see cref="EntryPath"/> is a sub path of the specified path.
-    /// </summary>
-    /// <param name="otherPath">The path to check if it contains the current path.</param>
-    /// <returns><c>true</c> if the current path is a sub path of the specified path; otherwise, <c>false</c>.</returns>
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="IsSubPathOf[EntryPath]"]/*' />
     public Boolean IsSubPathOf(EntryPath otherPath)
     {
         if (_routes.Length <= otherPath._routes.Length)
@@ -60,28 +41,22 @@ public readonly struct EntryPath :
         return true;
     }
 
-    /// <summary>
-    /// Determines whether the current <see cref="EntryPath"/> is a sub path of the specified path.
-    /// </summary>
-    /// <param name="otherPath">The path to check if it contains the current path.</param>
-    /// <param name="routeEqualityComparer">The comparer to compare equality of string.</param>
-    /// <returns><c>true</c> if the current path is a sub path of the specified path; otherwise, <c>false</c>.</returns>
-    public Boolean IsSubPathOf(EntryPath otherPath, IEqualityComparer<String> routeEqualityComparer)
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="IsParentPathOf[EntryPath]"]/*' />
+    public Boolean IsParentPathOf(EntryPath otherPath)
     {
-        if (_routes.Length <= otherPath._routes.Length)
-        {
-            return false;
-        }
+        return otherPath.IsParentPathOf(this);
+    }
 
-        for (Int32 i = 0; i < otherPath.Length; i++)
-        {
-            if (!routeEqualityComparer.Equals(_routes[i], otherPath[i]))
-            {
-                return false;
-            }
-        }
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="DirectoryName"]/*' />
+    public EntryPath DirectoryName()
+    {
+        return new EntryPath(_routes[0..(_routes.Length - 1)]);
+    }
 
-        return true;
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="EntryName"]/*' />
+    public EntryPath EntryName()
+    {
+        return new EntryPath(_routes[^1]);
     }
 
     public readonly override String ToString()
@@ -177,9 +152,7 @@ public readonly struct EntryPath :
         return left == right;
     }
 
-    /// <summary>
-    /// Creates an <see cref="EntryPath"/> instance from a string path.
-    /// </summary>
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="CreateFromPath[String]"]/*' />
     public static EntryPath CreateFromPath(String path)
     {
         if (String.IsNullOrWhiteSpace(path))

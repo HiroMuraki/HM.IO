@@ -8,7 +8,15 @@ public interface IFileIO
 
     Stream OpenWrite(EntryPath path);
 
-    void Move(EntryPath sourceFilePath, EntryPath destinationFilePath);
+    void Rename(EntryPath sourceFilePath, EntryPath destinationFilePath);
 
     void Delete(EntryPath path);
+
+    FileTimestamps GetFileTimestamps(EntryPath path);
+
+    void SetFileTimestamps(EntryPath path, FileTimestamps timestamps);
+
+    FileAttributes GetFileAttributes(EntryPath path);
+
+    void SetFileAttributes(EntryPath path, FileAttributes attributes);
 }

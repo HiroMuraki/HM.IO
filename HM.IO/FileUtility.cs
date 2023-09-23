@@ -17,7 +17,7 @@ public class FileUtility
     /// </summary>
     public const Int32 LargeFileBufferSize = 64 * 1024;
 
-    public static FileUtility Default { get; } = new(new FileIO(), new FileMetaDataManipulator());
+    public static FileUtility Default { get; } = new(new FileIO());
 
     #region Methods
     #region CompareEquality
@@ -267,10 +267,8 @@ public class FileUtility
             throw new InvalidOperationException($"The `{destinationFilePath.StringPath}` can be equal to `{sourceFilePath.StringPath}`.");
         }
 
-        DateTime creationTime = _fileMetaDataManipulator.GetCreationTime(sourceFilePath);
-        DateTime lastWriteTime = _fileMetaDataManipulator.GetLastWriteTime(sourceFilePath);
-        DateTime lastAccessTime = _fileMetaDataManipulator.GetLastAccessTime(sourceFilePath);
-        FileAttributes fileAttributes = _fileMetaDataManipulator.GetFileAttributes(sourceFilePath);
+        FileTimestamps sourceFileTimeStamps = _fileIO.GetFileTimestamps(sourceFilePath);
+        FileAttributes fileAttributes = _fileIO.GetFileAttributes(sourceFilePath);
 
         if (Path.GetPathRoot(sourceFilePath.StringPath) == Path.GetPathRoot(destinationFilePath.StringPath))
         {
@@ -286,19 +284,17 @@ public class FileUtility
                 }
             }
 
-            _fileIO.Move(sourceFilePath, destinationFilePath);
-
+            _fileIO.Rename(sourceFilePath, destinationFilePath);
+            _fileIO.SetFileTimestamps(destinationFilePath, sourceFileTimeStamps);
+            _fileIO.SetFileAttributes(destinationFilePath, fileAttributes);
         }
         else
         {
             await CopyAsync(sourceFilePath, destinationFilePath, overwrite, cancellationToken);
+            _fileIO.SetFileTimestamps(destinationFilePath, sourceFileTimeStamps);
+            _fileIO.SetFileAttributes(destinationFilePath, fileAttributes);
             _fileIO.Delete(sourceFilePath);
         }
-
-        _fileMetaDataManipulator.SetCreationTime(destinationFilePath, creationTime);
-        _fileMetaDataManipulator.SetLastWriteTime(destinationFilePath, lastWriteTime);
-        _fileMetaDataManipulator.SetLastAccessTime(destinationFilePath, lastAccessTime);
-        _fileMetaDataManipulator.SetFileAttributes(destinationFilePath, fileAttributes);
     }
     #endregion
 
@@ -310,9 +306,7 @@ public class FileUtility
     /// <param name="destinationFilePath">The path of the destination file.</param>
     public void CopyTimestamps(EntryPath sourceFilePath, EntryPath destinationFilePath)
     {
-        _fileMetaDataManipulator.SetCreationTime(destinationFilePath, _fileMetaDataManipulator.GetCreationTime(sourceFilePath));
-        _fileMetaDataManipulator.SetLastAccessTime(destinationFilePath, _fileMetaDataManipulator.GetLastAccessTime(sourceFilePath));
-        _fileMetaDataManipulator.SetLastWriteTime(destinationFilePath, _fileMetaDataManipulator.GetLastWriteTime(sourceFilePath));
+        _fileIO.SetFileTimestamps(destinationFilePath, _fileIO.GetFileTimestamps(sourceFilePath));
     }
 
     /// <summary>
@@ -322,8 +316,8 @@ public class FileUtility
     /// <param name="destinationFilePath">The path of the destination file.</param>
     public void CopyAttributes(EntryPath sourceFilePath, EntryPath destinationFilePath)
     {
-        FileAttributes attributes = _fileMetaDataManipulator.GetFileAttributes(sourceFilePath);
-        _fileMetaDataManipulator.SetFileAttributes(destinationFilePath, attributes);
+        FileAttributes attributes = _fileIO.GetFileAttributes(sourceFilePath);
+        _fileIO.SetFileAttributes(destinationFilePath, attributes);
     }
     #endregion
 
@@ -360,14 +354,12 @@ public class FileUtility
     #endregion
     #endregion
 
-    public FileUtility(IFileIO fileIO, IFileMetaDataManipulator fileMetaManipulator)
+    public FileUtility(IFileIO fileIO)
     {
         _fileIO = fileIO;
-        _fileMetaDataManipulator = fileMetaManipulator;
     }
 
     #region NonPublic
     private readonly IFileIO _fileIO;
-    private readonly IFileMetaDataManipulator _fileMetaDataManipulator;
     #endregion
 }

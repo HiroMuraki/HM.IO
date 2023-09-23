@@ -61,5 +61,4 @@ public sealed class FileSha256Computer : IFileHashComputer, IFileHashesComputer
             }
         }
     }
-
 }

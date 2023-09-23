@@ -1,4 +1,4 @@
-﻿namespace HM.IO;
+﻿namespace HM.IO.Providers;
 
 public abstract class EntryPathProvider :
     IItemsProvider<EntryPath>

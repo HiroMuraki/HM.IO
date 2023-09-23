@@ -203,9 +203,13 @@ dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = warning
 dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
 dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
 
-dotnet_naming_rule.private_or_internal_field_should_be_camel_case_begin_with__.severity = warning
-dotnet_naming_rule.private_or_internal_field_should_be_camel_case_begin_with__.symbols = private_or_internal_field
-dotnet_naming_rule.private_or_internal_field_should_be_camel_case_begin_with__.style = camel_case_begin_with__
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.severity = warning
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.symbols = private_or_internal_field
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.style = _camelcase
+
+dotnet_naming_rule.private_or_internal_static_field_should_be_s_camecase.severity = warning
+dotnet_naming_rule.private_or_internal_static_field_should_be_s_camecase.symbols = private_or_internal_static_field
+dotnet_naming_rule.private_or_internal_static_field_should_be_s_camecase.style = s_camecase
 
 # 符号规范
 
@@ -216,6 +220,10 @@ dotnet_naming_symbols.interface.required_modifiers =
 dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field
 dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = internal, private, private_protected
 dotnet_naming_symbols.private_or_internal_field.required_modifiers = 
+
+dotnet_naming_symbols.private_or_internal_static_field.applicable_kinds = field
+dotnet_naming_symbols.private_or_internal_static_field.applicable_accessibilities = internal, private, private_protected
+dotnet_naming_symbols.private_or_internal_static_field.required_modifiers = static
 
 dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
 dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
@@ -237,7 +245,12 @@ dotnet_naming_style.begins_with_i.required_suffix =
 dotnet_naming_style.begins_with_i.word_separator = 
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
-dotnet_naming_style.camel_case_begin_with__.required_prefix = _
-dotnet_naming_style.camel_case_begin_with__.required_suffix = 
-dotnet_naming_style.camel_case_begin_with__.word_separator = 
-dotnet_naming_style.camel_case_begin_with__.capitalization = camel_case
+dotnet_naming_style._camelcase.required_prefix = _
+dotnet_naming_style._camelcase.required_suffix = 
+dotnet_naming_style._camelcase.word_separator = 
+dotnet_naming_style._camelcase.capitalization = camel_case
+
+dotnet_naming_style.s_camecase.required_prefix = s_
+dotnet_naming_style.s_camecase.required_suffix = 
+dotnet_naming_style.s_camecase.word_separator = 
+dotnet_naming_style.s_camecase.capitalization = camel_case

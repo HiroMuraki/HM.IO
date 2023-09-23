@@ -1,4 +1,6 @@
-﻿namespace HM.IO;
+﻿using HM.IO.Providers;
+
+namespace HM.IO;
 
 /// <summary>
 /// Represents an interface for providing directory paths.

@@ -2,5 +2,5 @@
 
 public interface IFileHashComputer
 {
-    Task<String> ComputeHashAsync(String filePath);
+    Task<String> ComputeHashAsync(EntryPath filePath);
 }

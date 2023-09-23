@@ -1,56 +1,52 @@
 ﻿namespace HM.IO;
 
-/// <summary>
-/// Provides extension methods for <see cref="EntryPath"/> instances.
-/// </summary>
 public static class EntryPathExtensions
 {
-    /// <summary>
-    /// Determines whether the current <see cref="EntryPath"/> is a subpath of the specified path.
-    /// </summary>
-    /// <param name="self">The current <see cref="EntryPath"/> instance.</param>
-    /// <param name="path">The path to check if it contains the current path.</param>
-    /// <returns><c>true</c> if the current path is a subpath of the specified path; otherwise, <c>false</c>.</returns>
-    public static Boolean IsSubPathOf(this EntryPath self, EntryPath path)
+    #region Properties
+    public static IDirectoryIO DirectoryIO { get; set; } = new DirectoryIO();
+
+    public static FileIO FileIO { get; set; } = new FileIO();
+    #endregion
+
+    #region Methods
+    public static EntryType GetEntryType(this ref EntryPath self)
     {
-        if (self.Length <= path.Length)
+        if (FileIO.Exists(self))
         {
-            return false;
+            return EntryType.File;
         }
-
-        for (Int32 i = 0; i < path.Length; i++)
+        else if (DirectoryIO.Exists(self))
         {
-            if (self[i] != path[i])
-            {
-                return false;
-            }
+            return EntryType.Directory;
         }
-
-        return true;
+        else
+        {
+            return EntryType.Unknow;
+        }
     }
 
-    /// <summary>
-    /// Determines whether the current <see cref="EntryPath"/> is a sub path of the specified path.
-    /// </summary>
-    /// <param name="self">The current <see cref="EntryPath"/> instance.</param>
-    /// <param name="path">The path to check if it contains the current path.</param>
-    /// <param name="routeEqualityComparer">The comparer to compare equality of string.</param>
-    /// <returns><c>true</c> if the current path is a sub path of the specified path; otherwise, <c>false</c>.</returns>
-    public static Boolean IsSubPathOf(this EntryPath self, EntryPath path, IEqualityComparer<String> routeEqualityComparer)
+    public static FileInfo AsFileInfo(this ref EntryPath self)
     {
-        if (self.Length <= path.Length)
+        String filePath = self.StringPath;
+
+        if (!FileIO.Exists(self))
         {
-            return false;
+            throw new FileNotFoundException($"Can't open file `{filePath}` because file not exists.");
         }
 
-        for (Int32 i = 0; i < path.Length; i++)
-        {
-            if (!routeEqualityComparer.Equals(self[i], path[i]))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return new FileInfo(filePath);
     }
+
+    public static DirectoryInfo AsDirectoryInfo(this ref EntryPath self)
+    {
+        String directoryPath = self.StringPath;
+
+        if (!DirectoryIO.Exists(self))
+        {
+            throw new FileNotFoundException($"Can't open directory `{directoryPath}` because directory not exists.");
+        }
+
+        return new DirectoryInfo(directoryPath);
+    }
+    #endregion
 }

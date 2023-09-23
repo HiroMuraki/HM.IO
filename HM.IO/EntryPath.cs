@@ -1,5 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 
 namespace HM.IO;
 
@@ -33,7 +35,54 @@ public readonly struct EntryPath :
     /// <summary>
     /// Gets the path as a string.
     /// </summary>
-    public readonly String StringPath => Path.Combine(_routes.ToArray());
+    public readonly String StringPath => Path.Combine(_routes);
+
+    /// <summary>
+    /// Determines whether the current <see cref="EntryPath"/> is a sub path of the specified path.
+    /// </summary>
+    /// <param name="otherPath">The path to check if it contains the current path.</param>
+    /// <returns><c>true</c> if the current path is a sub path of the specified path; otherwise, <c>false</c>.</returns>
+    public Boolean IsSubPathOf(EntryPath otherPath)
+    {
+        if (_routes.Length <= otherPath._routes.Length)
+        {
+            return false;
+        }
+
+        for (Int32 i = 0; i < otherPath.Length; i++)
+        {
+            if (_routes[i] != otherPath[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Determines whether the current <see cref="EntryPath"/> is a sub path of the specified path.
+    /// </summary>
+    /// <param name="otherPath">The path to check if it contains the current path.</param>
+    /// <param name="routeEqualityComparer">The comparer to compare equality of string.</param>
+    /// <returns><c>true</c> if the current path is a sub path of the specified path; otherwise, <c>false</c>.</returns>
+    public Boolean IsSubPathOf(EntryPath otherPath, IEqualityComparer<String> routeEqualityComparer)
+    {
+        if (_routes.Length <= otherPath._routes.Length)
+        {
+            return false;
+        }
+
+        for (Int32 i = 0; i < otherPath.Length; i++)
+        {
+            if (!routeEqualityComparer.Equals(_routes[i], otherPath[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public readonly override String ToString()
     {
@@ -129,32 +178,30 @@ public readonly struct EntryPath :
     }
 
     /// <summary>
-    /// Creates an EntryPath instance from a string path.
+    /// Creates an <see cref="EntryPath"/> instance from a string path.
     /// </summary>
     public static EntryPath CreateFromPath(String path)
     {
+        if (String.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentException($"{nameof(path)} can't be null, empty or white space-only");
+        }
+
         String normalizedPath = Path.TrimEndingDirectorySeparator(path);
-        String[] routes = normalizedPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        String[] routes = normalizedPath.Split(s_pathSeparatorChar);
         return new EntryPath(routes);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the EntryPath struct with an array of routes.
-    /// </summary>
-    internal EntryPath(params String[] routes)
-    {
-        _routes = routes.ToImmutableArray();
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the EntryPath struct with a collection of routes.
-    /// </summary>
-    internal EntryPath(IEnumerable<String> routes)
-    {
-        _routes = routes.ToImmutableArray();
-    }
-
     #region NonPublic
-    private readonly ImmutableArray<String> _routes;
+    private readonly String[] _routes;
+    private static readonly Char[] s_pathSeparatorChar =
+    {
+        Path.DirectorySeparatorChar,
+        Path.AltDirectorySeparatorChar
+    };
+    private EntryPath(params String[] routes)
+    {
+        _routes = routes;
+    }
     #endregion
 }

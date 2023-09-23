@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
-namespace HM.IO;
+namespace HM.IO.Providers;
 
 public sealed class DirectoriesProvider :
     EntryPathProvider,

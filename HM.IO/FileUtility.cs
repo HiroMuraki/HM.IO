@@ -1,11 +1,12 @@
-﻿using System.Security.Cryptography;
+﻿using System.Reflection.Metadata;
+using System.Security.Cryptography;
 
 namespace HM.IO;
 
 /// <summary>
-/// A utility class for file-related operations.
+/// A utility class for file-related operations. This is not a static class for providing a more flexible class.
 /// </summary>
-public static class FileUtil
+public class FileUtility
 {
     /// <summary>
     /// The threshold size in bytes for a file to be considered large.
@@ -16,15 +17,18 @@ public static class FileUtil
     /// </summary>
     public const Int32 LargeFileBufferSize = 64 * 1024;
 
-    #region CompareEqualityAsync
+    public static FileUtility Default { get; } = new(new FileIO(), new FileMetaDataManipulator());
+
+    #region Methods
+    #region CompareEquality
     /// <summary>
     /// Compares the contents of two files for equality.
     /// </summary>
-    /// <param name="file1">The first file to compare.</param>
-    /// <param name="file2">The second file to compare.</param>
+    /// <param name="filePath1">The first file to compare.</param>
+    /// <param name="filePath2">The second file to compare.</param>
     /// <returns>true if the files have the same contents; otherwise, false.</returns>
-    public static async Task<Boolean> CompareEqualityAsync(String file1, String file2)
-        => await CompareEqualityAsync(file1, file2, CancellationToken.None);
+    public async Task<Boolean> CompareEqualityAsync(EntryPath filePath1, EntryPath filePath2)
+        => await CompareEqualityAsync(filePath1, filePath2, CancellationToken.None);
 
     /// <summary>
     /// Compares the contents of two files for equality, with support for cancellation.
@@ -33,26 +37,26 @@ public static class FileUtil
     /// <param name="file2">The second file to compare.</param>
     /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
     /// <returns>true if the files have the same contents; otherwise, false.</returns>
-    public static async Task<Boolean> CompareEqualityAsync(String file1, String file2, CancellationToken cancellationToken)
+    public async Task<Boolean> CompareEqualityAsync(EntryPath filePath1, EntryPath filePath2, CancellationToken cancellationToken)
     {
-        if (!File.Exists(file1))
+        if (!_fileIO.Exists(filePath1))
         {
-            throw new FileNotFoundException(file1);
+            throw new FileNotFoundException($"{nameof(filePath1)} not found", filePath1.StringPath);
         }
-        if (!File.Exists(file2))
+        if (!_fileIO.Exists(filePath2))
         {
-            throw new FileNotFoundException(file2);
+            throw new FileNotFoundException($"{nameof(filePath2)} not found", filePath2.StringPath);
         }
 
-        if (file1 == file2)
+        if (filePath1 == filePath2)
         {
             return true;
         }
 
         try
         {
-            using FileStream fs1 = File.OpenRead(file1);
-            using FileStream fs2 = File.OpenRead(file2);
+            using Stream fs1 = _fileIO.OpenRead(filePath1);
+            using Stream fs2 = _fileIO.OpenRead(filePath2);
             if (fs1.Length != fs2.Length)
             {
                 return false;
@@ -123,7 +127,7 @@ public static class FileUtil
     }
     #endregion
 
-    #region CopyAsync
+    #region Copy
     /// <summary>
     /// Copies a file from the source path to the destination path, with options to overwrite the destination file and support for cancellation.
     /// </summary>
@@ -131,7 +135,7 @@ public static class FileUtil
     /// <param name="destinationFilePath">The path of the destination file.</param>
     /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
     /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
-    public static async Task CopyAsync(String sourceFilePath, String destinationFilePath)
+    public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
         => await CopyAsync(sourceFilePath, destinationFilePath, false, CancellationToken.None);
 
     /// <summary>
@@ -142,7 +146,7 @@ public static class FileUtil
     /// <param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
     /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
     /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
-    public static async Task CopyAsync(String sourceFilePath, String destinationFilePath, Boolean overwrite)
+    public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite)
         => await CopyAsync(sourceFilePath, destinationFilePath, overwrite, CancellationToken.None);
 
     /// <summary>
@@ -154,7 +158,7 @@ public static class FileUtil
     /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
     /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
     /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
-    public static async Task CopyAsync(String sourceFilePath, String destinationFilePath, CancellationToken cancellationToken)
+    public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
         => await CopyAsync(sourceFilePath, destinationFilePath, false, cancellationToken);
 
     /// <summary>
@@ -166,19 +170,19 @@ public static class FileUtil
     /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
     /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
     /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
-    public static async Task CopyAsync(String sourceFilePath, String destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
+    public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
     {
-        if (!File.Exists(sourceFilePath))
+        if (!_fileIO.Exists(sourceFilePath))
         {
-            throw new FileNotFoundException($"Source file `{sourceFilePath}` not found", sourceFilePath);
+            throw new FileNotFoundException($"Source file `{sourceFilePath.StringPath}` not found", sourceFilePath.StringPath);
         }
 
         if (sourceFilePath == destinationFilePath)
         {
-            throw new InvalidOperationException($"The `{destinationFilePath}` can be equal to `{sourceFilePath}`.");
+            throw new InvalidOperationException($"The `{destinationFilePath.StringPath}` can be equal to `{sourceFilePath.StringPath}`.");
         }
 
-        if (File.Exists(destinationFilePath))
+        if (_fileIO.Exists(destinationFilePath))
         {
             Boolean fileEqual = await CompareEqualityAsync(sourceFilePath, destinationFilePath, cancellationToken);
             if (fileEqual)
@@ -187,7 +191,7 @@ public static class FileUtil
             }
             else if (overwrite)
             {
-                File.Delete(destinationFilePath);
+                _fileIO.Delete(destinationFilePath);
             }
             else
             {
@@ -195,8 +199,8 @@ public static class FileUtil
             }
         }
 
-        using (FileStream sourceFS = File.OpenRead(sourceFilePath))
-        using (FileStream destinationFS = File.OpenWrite(destinationFilePath))
+        using (Stream sourceFS = _fileIO.OpenRead(sourceFilePath))
+        using (Stream destinationFS = _fileIO.OpenWrite(destinationFilePath))
         {
             await sourceFS.CopyToAsync(destinationFS, cancellationToken);
         }
@@ -209,7 +213,7 @@ public static class FileUtil
     }
     #endregion
 
-    #region MoveAsync
+    #region Move
     /// <summary>
     /// Moves a file from the source path to the destination path.
     /// </summary>
@@ -217,7 +221,7 @@ public static class FileUtil
     /// <param name="destinationFilePath">The path of the destination file.</param>
     /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
     /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
-    public static async Task MoveAsync(String sourceFilePath, String destinationFilePath)
+    public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
         => await MoveAsync(sourceFilePath, destinationFilePath, false, CancellationToken.None);
 
     /// <summary>
@@ -228,7 +232,7 @@ public static class FileUtil
     /// <param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
     /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
     /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
-    public static async Task MoveAsync(String sourceFilePath, String destinationFilePath, Boolean overwrite)
+    public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite)
         => await MoveAsync(sourceFilePath, destinationFilePath, overwrite, CancellationToken.None);
 
     /// <summary>
@@ -239,7 +243,7 @@ public static class FileUtil
     /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
     /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
     /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
-    public static async Task MoveAsync(String sourceFilePath, String destinationFilePath, CancellationToken cancellationToken)
+    public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
         => await MoveAsync(sourceFilePath, destinationFilePath, false, cancellationToken);
 
     /// <summary>
@@ -251,46 +255,50 @@ public static class FileUtil
     /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
     /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
     /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
-    public static async Task MoveAsync(String sourceFilePath, String destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
+    public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
     {
-        if (!overwrite && File.Exists(destinationFilePath))
+        if (!overwrite && _fileIO.Exists(destinationFilePath))
         {
-            throw new ArgumentException($"Can't move `{sourceFilePath}` to `{destinationFilePath}` already existed.");
+            throw new ArgumentException($"Can't move `{sourceFilePath.StringPath}` to `{destinationFilePath.StringPath}` already existed.");
         }
 
         if (sourceFilePath == destinationFilePath)
         {
-            throw new InvalidOperationException($"The `{destinationFilePath}` can be equal to `{sourceFilePath}`.");
+            throw new InvalidOperationException($"The `{destinationFilePath.StringPath}` can be equal to `{sourceFilePath.StringPath}`.");
         }
 
-        DateTime creationTime = File.GetCreationTime(sourceFilePath);
-        DateTime lastWriteTime = File.GetLastWriteTime(sourceFilePath);
-        DateTime lastAccessTime = File.GetLastAccessTime(sourceFilePath);
-        FileAttributes fileAttributes = File.GetAttributes(sourceFilePath);
+        DateTime creationTime = _fileMetaDataManipulator.GetCreationTime(sourceFilePath);
+        DateTime lastWriteTime = _fileMetaDataManipulator.GetLastWriteTime(sourceFilePath);
+        DateTime lastAccessTime = _fileMetaDataManipulator.GetLastAccessTime(sourceFilePath);
+        FileAttributes fileAttributes = _fileMetaDataManipulator.GetFileAttributes(sourceFilePath);
 
-        if (Path.GetPathRoot(sourceFilePath) == Path.GetPathRoot(destinationFilePath))
+        if (Path.GetPathRoot(sourceFilePath.StringPath) == Path.GetPathRoot(destinationFilePath.StringPath))
         {
-            File.Move(sourceFilePath, destinationFilePath, overwrite);
+            if (_fileIO.Exists(destinationFilePath))
+            {
+                if (overwrite)
+                {
+                    _fileIO.Delete(destinationFilePath);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"`Can't move `{sourceFilePath.StringPath}` to `{destinationFilePath.StringPath}` because `{destinationFilePath.StringPath}` already existed but `{nameof(overwrite)}` set to false.");
+                }
+            }
+
+            _fileIO.Move(sourceFilePath, destinationFilePath);
+
         }
         else
         {
             await CopyAsync(sourceFilePath, destinationFilePath, overwrite, cancellationToken);
-            File.Delete(sourceFilePath);
+            _fileIO.Delete(sourceFilePath);
         }
 
-        File.SetCreationTime(destinationFilePath, creationTime);
-        File.SetLastWriteTime(destinationFilePath, lastWriteTime);
-        File.SetLastAccessTime(destinationFilePath, lastAccessTime);
-        File.SetAttributes(destinationFilePath, fileAttributes);
-    }
-    #endregion
-
-    #region Rename
-    public static void Rename(String filePath, String newName)
-    {
-        String? directoryName = Path.GetDirectoryName(filePath);
-        String name = Path.Combine(directoryName ?? String.Empty, newName);
-        File.Move(filePath, name);
+        _fileMetaDataManipulator.SetCreationTime(destinationFilePath, creationTime);
+        _fileMetaDataManipulator.SetLastWriteTime(destinationFilePath, lastWriteTime);
+        _fileMetaDataManipulator.SetLastAccessTime(destinationFilePath, lastAccessTime);
+        _fileMetaDataManipulator.SetFileAttributes(destinationFilePath, fileAttributes);
     }
     #endregion
 
@@ -300,14 +308,11 @@ public static class FileUtil
     /// </summary>
     /// <param name="sourceFilePath">The path of the source file.</param>
     /// <param name="destinationFilePath">The path of the destination file.</param>
-    public static void CopyTimestamps(String sourceFilePath, String destinationFilePath)
+    public void CopyTimestamps(EntryPath sourceFilePath, EntryPath destinationFilePath)
     {
-        FileAttributes attributes = File.GetAttributes(sourceFilePath);
-        File.SetAttributes(destinationFilePath, attributes);
-
-        File.SetCreationTimeUtc(destinationFilePath, File.GetCreationTimeUtc(sourceFilePath));
-        File.SetLastAccessTimeUtc(destinationFilePath, File.GetLastAccessTimeUtc(sourceFilePath));
-        File.SetLastWriteTimeUtc(destinationFilePath, File.GetLastWriteTimeUtc(sourceFilePath));
+        _fileMetaDataManipulator.SetCreationTime(destinationFilePath, _fileMetaDataManipulator.GetCreationTime(sourceFilePath));
+        _fileMetaDataManipulator.SetLastAccessTime(destinationFilePath, _fileMetaDataManipulator.GetLastAccessTime(sourceFilePath));
+        _fileMetaDataManipulator.SetLastWriteTime(destinationFilePath, _fileMetaDataManipulator.GetLastWriteTime(sourceFilePath));
     }
 
     /// <summary>
@@ -315,9 +320,10 @@ public static class FileUtil
     /// </summary>
     /// <param name="sourceFilePath">The path of the source file.</param>
     /// <param name="destinationFilePath">The path of the destination file.</param>
-    public static void CopyAttributes(String sourceFilePath, String destinationFilePath)
+    public void CopyAttributes(EntryPath sourceFilePath, EntryPath destinationFilePath)
     {
-        File.SetAttributes(destinationFilePath, File.GetAttributes(sourceFilePath));
+        FileAttributes attributes = _fileMetaDataManipulator.GetFileAttributes(sourceFilePath);
+        _fileMetaDataManipulator.SetFileAttributes(destinationFilePath, attributes);
     }
     #endregion
 
@@ -330,7 +336,7 @@ public static class FileUtil
     /// A task representing the asynchronous operation. The task will return a string
     /// containing the computed hash value of the file, represented as a hexadecimal string.
     /// </returns>
-    public static async Task<String> ComputeHashAsync(String filePath)
+    public async Task<String> ComputeHashAsync(EntryPath filePath)
         => await ComputeHashAsync(filePath, CancellationToken.None);
 
     /// <summary>
@@ -345,11 +351,23 @@ public static class FileUtil
     /// A task representing the asynchronous operation. The task will return a string
     /// containing the computed hash value of the file, represented as a hexadecimal string.
     /// </returns>
-    public static async Task<String> ComputeHashAsync(String filePath, CancellationToken cancellationToken)
+    public async Task<String> ComputeHashAsync(EntryPath filePath, CancellationToken cancellationToken)
     {
         using var sha256 = SHA256.Create();
-        using FileStream reader = File.OpenRead(filePath);
+        using Stream reader = _fileIO.OpenRead(filePath);
         return Convert.ToHexString(await sha256.ComputeHashAsync(reader, cancellationToken));
     }
+    #endregion
+    #endregion
+
+    public FileUtility(IFileIO fileIO, IFileMetaDataManipulator fileMetaManipulator)
+    {
+        _fileIO = fileIO;
+        _fileMetaDataManipulator = fileMetaManipulator;
+    }
+
+    #region NonPublic
+    private readonly IFileIO _fileIO;
+    private readonly IFileMetaDataManipulator _fileMetaDataManipulator;
     #endregion
 }

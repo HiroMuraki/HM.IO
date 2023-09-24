@@ -32,7 +32,7 @@ public readonly struct EntryPath :
     #endregion
 
     #region Methods
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Methods/Method[@name="IsSubPathOf[EntryPath]"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Methods/Instance[@name="IsSubPathOf[EntryPath]"]/*' />
     public Boolean IsSubPathOf(EntryPath otherPath)
     {
         if (_routes.Length <= otherPath._routes.Length)
@@ -51,10 +51,10 @@ public readonly struct EntryPath :
         return true;
     }
 
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Methods/Method[@name="IsParentPathOf[EntryPath]"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Methods/Instance[@name="IsParentPathOf[EntryPath]"]/*' />
     public Boolean IsParentPathOf(EntryPath otherPath)
     {
-        return otherPath.IsParentPathOf(this);
+        return otherPath.IsSubPathOf(this);
     }
 
     public readonly override String ToString()
@@ -150,7 +150,7 @@ public readonly struct EntryPath :
         return left == right;
     }
 
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Methods/Method[@name="CreateFromPath[String]"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Methods/Class[@name="CreateFromPath[String]"]/*' />
     public static EntryPath CreateFromPath(String path)
     {
         if (String.IsNullOrWhiteSpace(path))

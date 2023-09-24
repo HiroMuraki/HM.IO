@@ -5,82 +5,88 @@
         </summary>
     </Class>
 
-    <Property name="Indexer[Int32]">
-        <summary>
-            Gets the route at the specified index.
-        </summary>
-        <param name="index">The index of the route to retrieve.</param>
-        <returns>The route at the specified index.</returns>
-    </Property>
+    <Properties>
+        <Instance name="Indexer[Int32]">
+            <summary>
+                Gets the route at the specified index.
+            </summary>
+            <param name="index">The index of the route to retrieve.</param>
+            <returns>The route at the specified index.</returns>
+        </Instance>
 
-    <Property name="Indexer[Index]">
-        <summary>
-            Gets the route at the specified index using an index object.
-        </summary>
-        <param name="index">The index object indicating the route to retrieve.</param>
-        <returns>The route at the specified index.</returns>
-    </Property>
+        <Instance name="Indexer[Index]">
+            <summary>
+                Gets the route at the specified index using an index object.
+            </summary>
+            <param name="index">The index object indicating the route to retrieve.</param>
+            <returns>The route at the specified index.</returns>
+        </Instance>
 
-    <Property name="Indexer[Range]">
-        <summary>
-            Gets a sub path using the specified range.
-        </summary>
-        <param name="range">The range specifying the sub path.</param>
-        <returns>An EntryPath representing the sub path.</returns>
-    </Property>
+        <Instance name="Indexer[Range]">
+            <summary>
+                Gets a sub path using the specified range.
+            </summary>
+            <param name="range">The range specifying the sub path.</param>
+            <returns>An EntryPath representing the sub path.</returns>
+        </Instance>
 
-    <Property name="Length">
-        <summary>
-            Gets the number of routes in the EntryPath.
-        </summary>
-        <returns>The number of routes in the EntryPath.</returns>
-    </Property>
+        <Instance name="Length">
+            <summary>
+                Gets the number of routes in the EntryPath.
+            </summary>
+            <returns>The number of routes in the EntryPath.</returns>
+        </Instance>
 
-    <Property name="StringPath">
-        <summary>
-            Gets the path as a string.
-        </summary>
-    </Property>
+        <Instance name="StringPath">
+            <summary>
+                Gets the path as a string.
+            </summary>
+        </Instance>
 
-    <Method name="IsSubPathOf[EntryPath]">
-        <summary>
-            Determines if the current entry path is a subpath of the specified other path.
-        </summary>
-        <param name="otherPath">The other entry path to compare against.</param>
-        <returns>
-            <c>true</c> if the current entry path is a subpath of the other path; otherwise, <c>
-            false</c>.</returns>
-    </Method>
+        <Instance name="DirectoryName">
+            <summary>
+                Gets the directory name part of the current entry path.
+            </summary>
+            <returns> An <see cref="EntryPath" /> representing the directory name part of the
+                current entry path. </returns>
+        </Instance>
 
-    <Method name="IsParentPathOf[EntryPath]">
-        <summary>
-            Determines if the current entry path is a parent path of the specified other path.
-        </summary>
-        <param name="otherPath">The other entry path to compare against.</param>
-        <returns>
-            <c>true</c> if the current entry path is a parent path of the other path; otherwise, <c>
-            false</c>. </returns>
-    </Method>
+        <Instance name="EntryName">
+            <summary>
+                Gets the entry name part of the current entry path.
+            </summary>
+            <returns> An <see cref="EntryPath" /> representing the entry name part of the current
+                entry path. </returns>
+        </Instance>
 
-    <Method name="DirectoryName">
-        <summary>
-            Gets the directory name part of the current entry path.
-        </summary>
-        <returns> An <see cref="EntryPath" /> representing the directory name part of the current
-            entry path. </returns>
-    </Method>
+    </Properties>
 
-    <Method name="EntryName">
-        <summary>
-            Gets the entry name part of the current entry path.
-        </summary>
-        <returns> An <see cref="EntryPath" /> representing the entry name part of the current entry
-            path. </returns>
-    </Method>
+    <Methods>
+        <Instance name="IsSubPathOf[EntryPath]">
+            <summary>
+                Determines if the current entry path is a subpath of the specified other path.
+            </summary>
+            <param name="otherPath">The other entry path to compare against.</param>
+            <returns>
+                <c>true</c> if the current entry path is a subpath of the other path; otherwise, <c>
+                false</c>.</returns>
+        </Instance>
 
-    <Method name="CreateFromPath[String]">
-        <summary> Creates an <see cref="EntryPath" /> instance from the specified path. </summary>
-        <param name="path">The path <keywords cref="String"/> to create an <see cref="EntryPath" /> from.</param>
-        <returns>An <see cref="EntryPath" /> instance representing the specified path.</returns>
-    </Method>
+        <Instance name="IsParentPathOf[EntryPath]">
+            <summary>
+                Determines if the current entry path is a parent path of the specified other path.
+            </summary>
+            <param name="otherPath">The other entry path to compare against.</param>
+            <returns>
+                <c>true</c> if the current entry path is a parent path of the other path; otherwise, <c>
+                false</c>. </returns>
+        </Instance>
+
+        <Class name="CreateFromPath[String]">
+            <summary> Creates an <see cref="EntryPath" /> instance from the specified path. </summary>
+            <param name="path">The path <keywords cref="String" /> to create an <see
+                    cref="EntryPath" /> from.</param>
+            <returns>An <see cref="EntryPath" /> instance representing the specified path.</returns>
+        </Class>
+    </Methods>
 </EntryPath>

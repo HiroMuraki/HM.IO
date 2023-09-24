@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#define PLATFORM_WINDOWS
+using System.Diagnostics.CodeAnalysis;
 
 namespace HM.IO;
 
@@ -7,22 +8,31 @@ public readonly struct EntryPath :
     IComparable<EntryPath>,
     IEquatable<EntryPath>
 {
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="Indexer[Int32]"]/*' />
+    #region Properties
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Properties/Instance[@name="Indexer[Int32]"]/*' />
     public readonly String this[Int32 index] => _routes[index];
 
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="Indexer[Index]"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Properties/Instance[@name="Indexer[Index]"]/*' />
     public readonly String this[Index index] => _routes[index];
 
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="Indexer[Range]"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Properties/Instance[@name="Indexer[Range]"]/*' />
     public readonly EntryPath this[Range range] => new(_routes[range]);
 
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="Length"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Properties/Instance[@name="Length"]/*' />
     public readonly Int32 Length => _routes.Length;
 
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Property[@name="StringPath"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Properties/Instance[@name="StringPath"]/*' />
     public readonly String StringPath => Path.Combine(_routes);
 
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="IsSubPathOf[EntryPath]"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Properties/Instance[@name="DirectoryName"]/*' />
+    public EntryPath DirectoryName => new(_routes[0..(_routes.Length - 1)]);
+
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Properties/Instance[@name="EntryName"]/*' />
+    public EntryPath EntryName => new(_routes[^1]);
+    #endregion
+
+    #region Methods
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Methods/Method[@name="IsSubPathOf[EntryPath]"]/*' />
     public Boolean IsSubPathOf(EntryPath otherPath)
     {
         if (_routes.Length <= otherPath._routes.Length)
@@ -41,22 +51,10 @@ public readonly struct EntryPath :
         return true;
     }
 
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="IsParentPathOf[EntryPath]"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Methods/Method[@name="IsParentPathOf[EntryPath]"]/*' />
     public Boolean IsParentPathOf(EntryPath otherPath)
     {
         return otherPath.IsParentPathOf(this);
-    }
-
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="DirectoryName"]/*' />
-    public EntryPath DirectoryName()
-    {
-        return new EntryPath(_routes[0..(_routes.Length - 1)]);
-    }
-
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="EntryName"]/*' />
-    public EntryPath EntryName()
-    {
-        return new EntryPath(_routes[^1]);
     }
 
     public readonly override String ToString()
@@ -152,7 +150,7 @@ public readonly struct EntryPath :
         return left == right;
     }
 
-    /// <include file='Docs/EntryPath.xml' path='EntryPath/Method[@name="CreateFromPath[String]"]/*' />
+    /// <include file='Docs/EntryPath.xml' path='EntryPath/Methods/Method[@name="CreateFromPath[String]"]/*' />
     public static EntryPath CreateFromPath(String path)
     {
         if (String.IsNullOrWhiteSpace(path))
@@ -164,6 +162,7 @@ public readonly struct EntryPath :
         String[] routes = normalizedPath.Split(s_pathSeparatorChar);
         return new EntryPath(routes);
     }
+    #endregion
 
     #region NonPublic
     private readonly String[] _routes;

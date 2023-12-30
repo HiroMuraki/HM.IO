@@ -24,7 +24,7 @@ public class FileIO : IFileIO
 
     public Stream OpenWrite(EntryPath filePath)
     {
-        return File.OpenRead(filePath.StringPath);
+        return File.OpenWrite(filePath.StringPath);
     }
 
     public FileTimestamps GetFileTimestamps(EntryPath path)

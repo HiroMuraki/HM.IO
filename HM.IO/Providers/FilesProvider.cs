@@ -1,4 +1,6 @@
 ﻿using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
 
 namespace HM.IO.Providers;
 
@@ -91,4 +93,189 @@ public sealed class FilesProvider :
     {
         return EnumerateFiles();
     }
+}
+
+public class FilesProviderX :
+    EntryPathProvider,
+    IFilesProvider
+{
+    public static FilesProviderX Create()
+    {
+        return new FilesProviderX();
+    }
+
+    public FilesProviderX IncludeDirectory(EntryPath entryPath)
+    {
+        return AddPathHelper(_includingDirectories, ref entryPath);
+    }
+
+    public FilesProviderX ExcludeDirectory(EntryPath entryPath)
+    {
+        return AddPathHelper(_excludingDirectories, ref entryPath);
+    }
+
+    public FilesProviderX IncludeFile(EntryPath entryPath)
+    {
+        return AddPathHelper(_includingFiles, ref entryPath);
+    }
+
+    public FilesProviderX ExcludeFile(EntryPath entryPath)
+    {
+        return AddPathHelper(_excludingFiles, ref entryPath);
+    }
+
+    public IEnumerable<EntryPath> EnumerateFiles()
+    {
+        // Yield from files
+        var includingFiles = _includingFiles
+             .Where(x => !String.IsNullOrEmpty(x.StringPath))
+             .ToList();
+        var excludingFiles = _excludingFiles
+            .Where(x => !String.IsNullOrEmpty(x.StringPath))
+            .ToImmutableHashSet();
+
+        foreach (EntryPath file in includingFiles)
+        {
+            if (CanInclude(file))
+            {
+                yield return file;
+            }
+        }
+
+        // yield from directories
+        var directories = _includingDirectories
+            .Except(_excludingDirectories)
+            .ToList();
+
+        var enumerationOptions = new EnumerationOptions()
+        {
+            IgnoreInaccessible = true,
+            RecurseSubdirectories = false,
+            AttributesToSkip = (FileAttributes)Int32.MinValue,
+        };
+
+        foreach (EntryPath directory in directories)
+        {
+            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory, enumerationOptions))
+            {
+                if (CanInclude(file))
+                {
+                    yield return file;
+                }
+            }
+        }
+
+        Boolean CanInclude(EntryPath entryPath)
+        {
+            return !excludingFiles.Any(e => e == entryPath);
+        }
+    }
+
+    public override IEnumerable<EntryPath> EnumerateItems()
+    {
+        return EnumerateFiles();
+    }
+
+    #region NonPublic
+    private readonly List<EntryPath> _includingDirectories = [];
+    private readonly List<EntryPath> _excludingDirectories = [];
+    private readonly List<EntryPath> _includingFiles = [];
+    private readonly List<EntryPath> _excludingFiles = [];
+    private FilesProviderX()
+    {
+
+    }
+    private FilesProviderX AddPathHelper(List<EntryPath> list, ref EntryPath entryPath)
+    {
+        if (!list.Contains(entryPath))
+        {
+            list.Add(entryPath);
+        }
+
+        return this;
+    }
+    #endregion
+}
+
+public static class FilesProviderExtensions
+{
+    #region IncludeDirectory
+    public static FilesProviderX IncludeDirectory(this FilesProviderX self, String path)
+    {
+        return self.IncludeDirectory(EntryPath.CreateFromPath(path));
+    }
+
+    public static FilesProviderX IncludeDirectories(this FilesProviderX self, IEnumerable<EntryPath> entryPaths)
+    {
+        foreach (EntryPath item in entryPaths)
+        {
+            self.IncludeDirectory(item);
+        }
+
+        return self;
+    }
+
+    public static FilesProviderX IncludeDirectories(this FilesProviderX self, IEnumerable<String> paths)
+        => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
+    #endregion
+
+    #region IncludeFile
+    public static FilesProviderX IncludeFile(this FilesProviderX self, String path)
+    {
+        return self.IncludeFile(EntryPath.CreateFromPath(path));
+    }
+
+    public static FilesProviderX IncludeFiles(this FilesProviderX self, IEnumerable<EntryPath> entryPaths)
+    {
+        foreach (EntryPath item in entryPaths)
+        {
+            self.IncludeFile(item);
+        }
+
+        return self;
+    }
+
+    public static FilesProviderX IncludeFiles(this FilesProviderX self, IEnumerable<String> paths)
+        => IncludeFiles(self, paths.Select(EntryPath.CreateFromPath));
+    #endregion
+
+    #region ExcludeDirectory
+    public static FilesProviderX ExcludeDirectory(this FilesProviderX self, String path)
+    {
+        return self.ExcludeDirectory(EntryPath.CreateFromPath(path));
+    }
+
+    public static FilesProviderX ExcludeDirectories(this FilesProviderX self, IEnumerable<EntryPath> entryPaths)
+    {
+        foreach (EntryPath item in entryPaths)
+        {
+            self.ExcludeDirectory(item);
+        }
+
+        return self;
+    }
+
+    public static FilesProviderX ExcludeDirectories(this FilesProviderX self, IEnumerable<String> paths)
+        => ExcludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
+    #endregion
+
+    #region ExcludeFile
+    public static FilesProviderX ExcludeFile(this FilesProviderX self, String path)
+    {
+        return self.ExcludeFile(EntryPath.CreateFromPath(path));
+    }
+
+    public static FilesProviderX ExcludeFiles(this FilesProviderX self, IEnumerable<EntryPath> entryPaths)
+    {
+        foreach (EntryPath item in entryPaths)
+        {
+            self.ExcludeFile(item);
+        }
+
+        return self;
+    }
+
+    public static FilesProviderX ExcludeFiles(this FilesProviderX self, IEnumerable<String> paths)
+        => ExcludeFiles(self, paths.Select(EntryPath.CreateFromPath));
+    #endregion
 }

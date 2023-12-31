@@ -2,7 +2,6 @@
 
 public static class DirectoriesProviderExtensions
 {
-
     #region IncludeDirectory
     public static DirectoriesProvider IncludeDirectory(this DirectoriesProvider self, EntryPath path)
     {
@@ -68,5 +67,4 @@ public static class DirectoriesProviderExtensions
     public static DirectoriesProvider ExcludeDirectories(this DirectoriesProvider self, IEnumerable<String> paths)
         => ExcludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
-
 }

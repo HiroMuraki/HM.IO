@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace HM.IO.Providers;
 
+/// <summary>
+/// Represents a sealed class for providing directory-related operations and implements the <see cref="EntryPathsProvider"/> base class.
+/// </summary>
 public sealed class DirectoriesProvider :
     EntryPathsProvider,
     IDirectoriesProvider

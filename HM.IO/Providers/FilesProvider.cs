@@ -3,7 +3,7 @@
 namespace HM.IO.Providers;
 
 /// <summary>
-/// Provides file enumeration based on inclusion and exclusion filters.
+/// Represents a sealed class for providing file-related operations and implements the <see cref="EntryPathsProvider"/> base class.
 /// </summary>
 public sealed class FilesProvider :
     EntryPathsProvider,

@@ -93,6 +93,7 @@ public sealed class FilesProvider :
         var directories = _includingDirectories
             .Except(_excludingDirectories)
             .ToList();
+        throw new Exception();
 
         var enumerationOptions = new EnumerationOptions()
         {

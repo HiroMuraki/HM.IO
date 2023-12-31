@@ -38,14 +38,14 @@ public static class FilesProviderExtensions
     {
         foreach (EntryPath path in entryPaths)
         {
-            IncludeDirectory(self, path);
+            IncludeFile(self, path);
         }
 
         return self;
     }
 
     public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<String> paths)
-        => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
+        => IncludeFiles(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 
     #region ExcludeDirectory
@@ -68,7 +68,7 @@ public static class FilesProviderExtensions
     }
 
     public static FilesProvider ExcludeDirectories(this FilesProvider self, IEnumerable<String> paths)
-        => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
+        => ExcludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 
     #region ExcludeFile
@@ -84,13 +84,13 @@ public static class FilesProviderExtensions
     {
         foreach (EntryPath path in entryPaths)
         {
-            IncludeDirectory(self, path);
+            IncludeFile(self, path);
         }
 
         return self;
     }
 
     public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<String> paths)
-        => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
+        => ExcludeFiles(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 }

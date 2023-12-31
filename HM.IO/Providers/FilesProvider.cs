@@ -4,7 +4,6 @@ using System.Security.AccessControl;
 
 namespace HM.IO.Providers;
 
-
 /// <summary>
 /// Provides file enumeration based on inclusion and exclusion filters.
 /// </summary>
@@ -12,31 +11,59 @@ public sealed class FilesProvider :
     EntryPathProvider,
     IFilesProvider
 {
+    /// <summary>
+    /// Creates a new instance of <see cref="FilesProvider"/> with default directory input/output operations.
+    /// </summary>
+    /// <returns>A new <see cref="FilesProvider"/> instance.</returns>
     public static FilesProvider Create()
     {
         return Create(new DirectoryIO());
     }
 
+    /// Creates a new instance of <see cref="FilesProvider"/> with custom directory input/output operations.
+    /// </summary>
+    /// <param name="directoryIO">Custom directory input/output operations implementation.</param>
+    /// <returns>A new <see cref="FilesProvider"/> instance with the specified <paramref name="directoryIO"/> implementation.</returns>
     public static FilesProvider Create(IDirectoryIO directoryIO)
     {
         return new FilesProvider { DirectoryIO = directoryIO };
     }
 
+    /// <summary>
+    /// Includes a directory for processing by the <see cref="FilesProvider"/>.
+    /// </summary>
+    /// <param name="entryPath">Path of the directory to be included.</param>
+    /// <returns>The updated <see cref="FilesProvider"/> instance.</returns>
     public FilesProvider IncludeDirectory(EntryPath entryPath)
     {
         return AddPathHelper(_includingDirectories, ref entryPath);
     }
 
+    /// <summary>
+    /// Excludes a directory from processing by the <see cref="FilesProvider"/>.
+    /// </summary>
+    /// <param name="entryPath">Path of the directory to be excluded.</param>
+    /// <returns>The updated <see cref="FilesProvider"/> instance.</returns>
     public FilesProvider ExcludeDirectory(EntryPath entryPath)
     {
         return AddPathHelper(_excludingDirectories, ref entryPath);
     }
 
+    /// <summary>
+    /// Includes a file for processing by the <see cref="FilesProvider"/>.
+    /// </summary>
+    /// <param name="entryPath">Path of the file to be included.</param>
+    /// <returns>The updated <see cref="FilesProvider"/> instance.</returns>
     public FilesProvider IncludeFile(EntryPath entryPath)
     {
         return AddPathHelper(_includingFiles, ref entryPath);
     }
 
+    /// <summary>
+    /// Excludes a file from processing by the <see cref="FilesProvider"/>.
+    /// </summary>
+    /// <param name="entryPath">Path of the file to be excluded.</param>
+    /// <returns>The updated <see cref="FilesProvider"/> instance.</returns>
     public FilesProvider ExcludeFile(EntryPath entryPath)
     {
         return AddPathHelper(_excludingFiles, ref entryPath);
@@ -102,7 +129,6 @@ public sealed class FilesProvider :
         return EnumerateFiles();
     }
 
-
     #region NonPublic
     private readonly List<EntryPath> _includingDirectories = [];
     private readonly List<EntryPath> _excludingDirectories = [];
@@ -121,88 +147,5 @@ public sealed class FilesProvider :
 
         return this;
     }
-    #endregion
-}
-
-public static class FilesProviderExtensions
-{
-    #region IncludeDirectory
-    public static FilesProvider IncludeDirectory(this FilesProvider self, String path)
-    {
-        return self.IncludeDirectory(EntryPath.CreateFromPath(path));
-    }
-
-    public static FilesProvider IncludeDirectories(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
-    {
-        foreach (EntryPath item in entryPaths)
-        {
-            self.IncludeDirectory(item);
-        }
-
-        return self;
-    }
-
-    public static FilesProvider IncludeDirectories(this FilesProvider self, IEnumerable<String> paths)
-        => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
-    #endregion
-
-    #region IncludeFile
-    public static FilesProvider IncludeFile(this FilesProvider self, String path)
-    {
-        return self.IncludeFile(EntryPath.CreateFromPath(path));
-    }
-
-    public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
-    {
-        foreach (EntryPath item in entryPaths)
-        {
-            self.IncludeFile(item);
-        }
-
-        return self;
-    }
-
-    public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<String> paths)
-        => IncludeFiles(self, paths.Select(EntryPath.CreateFromPath));
-    #endregion
-
-    #region ExcludeDirectory
-    public static FilesProvider ExcludeDirectory(this FilesProvider self, String path)
-    {
-        return self.ExcludeDirectory(EntryPath.CreateFromPath(path));
-    }
-
-    public static FilesProvider ExcludeDirectories(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
-    {
-        foreach (EntryPath item in entryPaths)
-        {
-            self.ExcludeDirectory(item);
-        }
-
-        return self;
-    }
-
-    public static FilesProvider ExcludeDirectories(this FilesProvider self, IEnumerable<String> paths)
-        => ExcludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
-    #endregion
-
-    #region ExcludeFile
-    public static FilesProvider ExcludeFile(this FilesProvider self, String path)
-    {
-        return self.ExcludeFile(EntryPath.CreateFromPath(path));
-    }
-
-    public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
-    {
-        foreach (EntryPath item in entryPaths)
-        {
-            self.ExcludeFile(item);
-        }
-
-        return self;
-    }
-
-    public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<String> paths)
-        => ExcludeFiles(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 }

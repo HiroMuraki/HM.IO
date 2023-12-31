@@ -2,6 +2,7 @@
 
 public static class DirectoriesProviderExtensions
 {
+
     #region IncludeDirectory
     public static DirectoriesProvider IncludeDirectory(this DirectoriesProvider self, EntryPath path)
     {
@@ -38,17 +39,17 @@ public static class DirectoriesProviderExtensions
     #region ExcludeDirectory
     public static DirectoriesProvider ExcludeDirectory(this DirectoriesProvider self, EntryPath path)
     {
-        return self.IncludeDirectory(new SearchingDirectory(path));
+        return self.ExcludeDirectory(new SearchingDirectory(path));
     }
 
     public static DirectoriesProvider ExcludeDirectory(this DirectoriesProvider self, String path)
-        => IncludeDirectory(self, EntryPath.CreateFromPath(path));
+        => ExcludeDirectory(self, EntryPath.CreateFromPath(path));
 
     public static DirectoriesProvider ExcludeDirectories(this DirectoriesProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
     {
         foreach (SearchingDirectory dir in searchingDirectories)
         {
-            self.IncludeDirectory(dir);
+            self.ExcludeDirectory(dir);
         }
 
         return self;
@@ -58,7 +59,7 @@ public static class DirectoriesProviderExtensions
     {
         foreach (EntryPath path in entryPaths)
         {
-            IncludeDirectory(self, path);
+            ExcludeDirectory(self, path);
         }
 
         return self;
@@ -67,4 +68,5 @@ public static class DirectoriesProviderExtensions
     public static DirectoriesProvider ExcludeDirectories(this DirectoriesProvider self, IEnumerable<String> paths)
         => ExcludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
+
 }

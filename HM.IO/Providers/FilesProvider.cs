@@ -75,25 +75,30 @@ public sealed class FilesProvider :
     {
         // Yield from files
         var includingFiles = _includingFiles
-             .Where(x => !String.IsNullOrEmpty(x.Path.StringPath))
-             .ToList();
+            .Where(x => !String.IsNullOrEmpty(x.Path.StringPath))
+            .Select(x => x.Path)
+            .ToList();
         var excludingFiles = _excludingFiles
             .Where(x => !String.IsNullOrEmpty(x.Path.StringPath))
+            .Select(x => x.Path)
             .ToImmutableHashSet();
 
-        foreach (SearchingFile file in includingFiles)
+        foreach (EntryPath file in includingFiles)
         {
-            if (CanInclude(file.Path))
+            if (CanInclude(file))
             {
-                yield return file.Path;
+                yield return file;
             }
         }
 
         // yield from directories
-        var directories = DirectoriesProvider.Create(DirectoryIO)
-            .IncludeDirectories(_includingDirectories)
-            .ExcludeDirectories(_excludingDirectories)
-            .EnumerateDirectories()
+        var excludedDirectories = _excludingDirectories
+            .SelectMany(EnumerateDirectories)
+            .ToImmutableHashSet();
+
+        var includedDirectories = _includingDirectories
+            .SelectMany(EnumerateDirectories)
+            .Where(d => !excludedDirectories.Contains(d))
             .ToList();
 
         var enumerationOptions = new EnumerationOptions()
@@ -103,9 +108,7 @@ public sealed class FilesProvider :
             AttributesToSkip = (FileAttributes)Int32.MinValue,
         };
 
-        throw new Exception();
-
-        foreach (EntryPath directory in directories)
+        foreach (EntryPath directory in includedDirectories)
         {
             foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory, enumerationOptions))
             {
@@ -118,7 +121,7 @@ public sealed class FilesProvider :
 
         Boolean CanInclude(EntryPath entryPath)
         {
-            return !excludingFiles.Any(e => e.Path == entryPath);
+            return !excludingFiles.Contains(entryPath);
         }
     }
 
@@ -136,6 +139,22 @@ public sealed class FilesProvider :
     private readonly List<SearchingDirectory> _excludingDirectories = [];
     private readonly List<SearchingFile> _includingFiles = [];
     private readonly List<SearchingFile> _excludingFiles = [];
+    private IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory searchingDirectory)
+    {
+        yield return searchingDirectory.Path;
+
+        if (searchingDirectory.RecurseSubdirectories)
+        {
+            IEnumerable<EntryPath> subdirectories = DirectoriesProvider.Create(DirectoryIO)
+                .IncludeDirectory(searchingDirectory)
+                .EnumerateDirectories();
+
+            foreach (EntryPath directory in subdirectories)
+            {
+                yield return directory;
+            }
+        }
+    }
     private FilesProvider()
     {
 

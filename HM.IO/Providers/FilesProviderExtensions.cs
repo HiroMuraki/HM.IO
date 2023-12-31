@@ -44,11 +44,11 @@ public static class FilesProviderExtensions
     public static FilesProvider IncludeFile(this FilesProvider self, String path)
         => IncludeFile(self, EntryPath.CreateFromPath(path));
 
-    public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<SearchingDirectory> searchingFiles)
+    public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<SearchingFile> searchingFiles)
     {
-        foreach (SearchingDirectory dir in searchingFiles)
+        foreach (SearchingFile dir in searchingFiles)
         {
-            self.IncludeDirectory(dir);
+            self.IncludeFile(dir);
         }
 
         return self;
@@ -71,17 +71,17 @@ public static class FilesProviderExtensions
     #region ExcludeDirectory
     public static FilesProvider ExcludeDirectory(this FilesProvider self, EntryPath path)
     {
-        return self.IncludeDirectory(new SearchingDirectory(path));
+        return self.ExcludeDirectory(new SearchingDirectory(path));
     }
 
     public static FilesProvider ExcludeDirectory(this FilesProvider self, String path)
-        => IncludeDirectory(self, EntryPath.CreateFromPath(path));
+        => ExcludeDirectory(self, EntryPath.CreateFromPath(path));
 
     public static FilesProvider ExcludeDirectories(this FilesProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
     {
         foreach (SearchingDirectory dir in searchingDirectories)
         {
-            self.IncludeDirectory(dir);
+            self.ExcludeDirectory(dir);
         }
 
         return self;
@@ -91,7 +91,7 @@ public static class FilesProviderExtensions
     {
         foreach (EntryPath path in entryPaths)
         {
-            IncludeDirectory(self, path);
+            ExcludeDirectory(self, path);
         }
 
         return self;
@@ -104,17 +104,17 @@ public static class FilesProviderExtensions
     #region ExcludeFile
     public static FilesProvider ExcludeFile(this FilesProvider self, EntryPath path)
     {
-        return self.IncludeFile(new SearchingFile(path));
+        return self.ExcludeFile(new SearchingFile(path));
     }
 
     public static FilesProvider ExcludeFile(this FilesProvider self, String path)
-        => IncludeFile(self, EntryPath.CreateFromPath(path));
+        => ExcludeFile(self, EntryPath.CreateFromPath(path));
 
-    public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<SearchingDirectory> searchingFiles)
+    public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<SearchingFile> searchingFiles)
     {
-        foreach (SearchingDirectory dir in searchingFiles)
+        foreach (SearchingFile dir in searchingFiles)
         {
-            self.IncludeDirectory(dir);
+            self.ExcludeFile(dir);
         }
 
         return self;
@@ -124,7 +124,7 @@ public static class FilesProviderExtensions
     {
         foreach (EntryPath path in entryPaths)
         {
-            IncludeFile(self, path);
+            ExcludeFile(self, path);
         }
 
         return self;

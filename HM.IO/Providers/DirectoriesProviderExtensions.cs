@@ -11,6 +11,16 @@ public static class DirectoriesProviderExtensions
     public static DirectoriesProvider IncludeDirectory(this DirectoriesProvider self, String path)
         => IncludeDirectory(self, EntryPath.CreateFromPath(path));
 
+    public static DirectoriesProvider IncludeDirectories(this DirectoriesProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
+    {
+        foreach (SearchingDirectory dir in searchingDirectories)
+        {
+            self.IncludeDirectory(dir);
+        }
+
+        return self;
+    }
+
     public static DirectoriesProvider IncludeDirectories(this DirectoriesProvider self, IEnumerable<EntryPath> entryPaths)
     {
         foreach (EntryPath path in entryPaths)
@@ -33,6 +43,16 @@ public static class DirectoriesProviderExtensions
 
     public static DirectoriesProvider ExcludeDirectory(this DirectoriesProvider self, String path)
         => IncludeDirectory(self, EntryPath.CreateFromPath(path));
+
+    public static DirectoriesProvider ExcludeDirectories(this DirectoriesProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
+    {
+        foreach (SearchingDirectory dir in searchingDirectories)
+        {
+            self.IncludeDirectory(dir);
+        }
+
+        return self;
+    }
 
     public static DirectoriesProvider ExcludeDirectories(this DirectoriesProvider self, IEnumerable<EntryPath> entryPaths)
     {

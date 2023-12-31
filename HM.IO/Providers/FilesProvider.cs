@@ -90,10 +90,11 @@ public sealed class FilesProvider :
         }
 
         // yield from directories
-        var directories = _includingDirectories
-            .Except(_excludingDirectories)
+        var directories = DirectoriesProvider.Create(DirectoryIO)
+            .IncludeDirectories(_includingDirectories)
+            .ExcludeDirectories(_excludingDirectories)
+            .EnumerateDirectories()
             .ToList();
-        throw new Exception();
 
         var enumerationOptions = new EnumerationOptions()
         {
@@ -102,9 +103,11 @@ public sealed class FilesProvider :
             AttributesToSkip = (FileAttributes)Int32.MinValue,
         };
 
-        foreach (SearchingDirectory directory in directories)
+        throw new Exception();
+
+        foreach (EntryPath directory in directories)
         {
-            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory.Path, enumerationOptions))
+            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory, enumerationOptions))
             {
                 if (CanInclude(file))
                 {

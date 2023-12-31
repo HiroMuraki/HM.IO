@@ -8,7 +8,7 @@ namespace HM.IO.Providers;
 /// Provides file enumeration based on inclusion and exclusion filters.
 /// </summary>
 public sealed class FilesProvider :
-    EntryPathProvider,
+    EntryPathsProvider,
     IFilesProvider
 {
     /// <summary>

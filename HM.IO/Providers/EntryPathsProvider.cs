@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides an abstract base class for generating entry paths and implements the <see cref="IItemsProvider{T}"/> interface.
 /// </summary>
-public abstract class EntryPathProvider :
+public abstract class EntryPathsProvider :
     IItemsProvider<EntryPath>
 {
     /// <summary>

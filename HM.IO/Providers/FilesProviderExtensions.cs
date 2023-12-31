@@ -9,7 +9,7 @@ public static class FilesProviderExtensions
     }
 
     public static FilesProvider IncludeDirectory(this FilesProvider self, String path)
-        => IncludeDirectory(self, path);
+        => IncludeDirectory(self, EntryPath.CreateFromPath(path));
 
     public static FilesProvider IncludeDirectories(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
@@ -32,7 +32,7 @@ public static class FilesProviderExtensions
     }
 
     public static FilesProvider IncludeFile(this FilesProvider self, String path)
-        => IncludeFile(self, path);
+        => IncludeFile(self, EntryPath.CreateFromPath(path));
 
     public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
@@ -55,7 +55,7 @@ public static class FilesProviderExtensions
     }
 
     public static FilesProvider ExcludeDirectory(this FilesProvider self, String path)
-        => IncludeDirectory(self, path);
+        => IncludeDirectory(self, EntryPath.CreateFromPath(path));
 
     public static FilesProvider ExcludeDirectories(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
@@ -78,7 +78,7 @@ public static class FilesProviderExtensions
     }
 
     public static FilesProvider ExcludeFile(this FilesProvider self, String path)
-        => IncludeFile(self, path);
+        => IncludeFile(self, EntryPath.CreateFromPath(path));
 
     public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {

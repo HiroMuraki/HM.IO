@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace HM.IO.Providers;
 
@@ -7,38 +8,72 @@ public sealed class DirectoriesProvider :
     EntryPathsProvider,
     IDirectoriesProvider
 {
-    public List<SearchingDirectory> IncludingDirectories { get; init; } = new();
+    /// <summary>
+    /// Creates a new instance of <see cref="DirectoriesProvider"/> with default directory input/output operations.
+    /// </summary>
+    /// <returns>A new <see cref="DirectoriesProvider"/> instance.</returns>
+    public static DirectoriesProvider Create()
+    {
+        return Create(new DirectoryIO());
+    }
 
-    public List<SearchingDirectory> ExcludingDirectories { get; init; } = new();
+    /// <summary>
+    /// Creates a new instance of <see cref="DirectoriesProvider"/> with custom directory input/output operations.
+    /// </summary>
+    /// <param name="directoryIO">Custom directory input/output operations implementation.</param>
+    /// <returns>A new <see cref="DirectoriesProvider"/> instance with the specified <paramref name="directoryIO"/> implementation.</returns>
+    public static DirectoriesProvider Create(IDirectoryIO directoryIO)
+    {
+        return new DirectoriesProvider() { DirectoryIO = directoryIO };
+    }
 
+    /// <summary>
+    /// Includes a directory for processing by the <see cref="DirectoriesProvider"/>.
+    /// </summary>
+    /// <param name="path">Path of the directory to be included.</param>
+    /// <returns>The updated <see cref="DirectoriesProvider"/> instance.</returns>
+    public DirectoriesProvider IncludeDirectory(SearchingDirectory path)
+    {
+        return (DirectoriesProvider)AddOptionHelper(_includingDirectories, ref path);
+    }
+
+    /// <summary>
+    /// Excludes a directory from processing by the <see cref="DirectoriesProvider"/>.
+    /// </summary>
+    /// <param name="path">Path of the directory to be excluded.</param>
+    /// <returns>The updated <see cref="DirectoriesProvider"/> instance.</returns>
+    public DirectoriesProvider ExcludeDirectory(SearchingDirectory path)
+    {
+        return (DirectoriesProvider)AddOptionHelper(_excludingDirectories, ref path);
+    }
+
+    /// <summary>
+    /// Enumerates and returns a collection of directories processed by the <see cref="DirectoriesProvider"/>.
+    /// </summary>
+    /// <returns>An <see cref="IEnumerable{T}"/> of directory paths.</returns>
     public IEnumerable<EntryPath> EnumerateDirectories()
     {
-        IEnumerable<EntryPath> includingDirectories = IncludingDirectories
-            .Where(x => !String.IsNullOrWhiteSpace(x.Path.StringPath))
-            .DistinctBy(x => x.Path)
-            .SelectMany(EnumerateDirectories);
-
-        var excludingDirectories = ExcludingDirectories
-            .Where(x => !String.IsNullOrWhiteSpace(x.Path.StringPath))
-            .DistinctBy(x => x.Path)
+        var excludedDirectories = _excludingDirectories
             .SelectMany(EnumerateDirectories)
             .ToImmutableHashSet();
 
-        foreach (EntryPath directory in includingDirectories)
-        {
-            if (!excludingDirectories.Contains(directory))
-            {
-                yield return directory;
-            }
-        }
+        return _includingDirectories
+            .SelectMany(EnumerateDirectories)
+            .SkipWhile(excludedDirectories.Contains);
     }
 
+    /// <summary>
+    /// Overrides the base class method to enumerate and return a collection of directories processed by the <see cref="DirectoriesProvider"/>.
+    /// </summary>
+    /// <returns>An <see cref="IEnumerable{T}"/> of directory paths.</returns>
     public override IEnumerable<EntryPath> EnumerateItems()
     {
         return EnumerateDirectories();
     }
 
     #region NonPublic
+    private readonly List<SearchingDirectory> _includingDirectories = [];
+    private readonly List<SearchingDirectory> _excludingDirectories = [];
     private IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory directory)
     {
         if (!DirectoryIO.Exists(directory.Path))
@@ -55,46 +90,20 @@ public sealed class DirectoriesProvider :
 
         IEnumerable<EntryPath> directories = DirectoryIO.EnumerateDirectories(directory.Path, new EnumerationOptions
         {
+            IgnoreInaccessible = true,
             RecurseSubdirectories = directory.RecurseSubdirectories,
             MaxRecursionDepth = directory.MaxRecursionDepth,
+            AttributesToSkip = (FileAttributes)Int32.MinValue,
         });
 
-        yield return directory.Path;
-
-        foreach (EntryPath item in directories)
+        foreach (EntryPath dir in directories)
         {
-            yield return item;
+            yield return dir;
         }
     }
-    #endregion
-}
-
-public sealed class DirectoriesProviderX :
-    EntryPathsProvider,
-    IDirectoriesProvider
-{
-    public DirectoriesProviderX IncludeDirectory(SearchingDirectory path)
+    private DirectoriesProvider()
     {
-        return (DirectoriesProviderX)AddOptionHelper(_includingDirectories, ref path);
-    }
 
-    public DirectoriesProviderX ExcludeDirectory(SearchingDirectory path)
-    {
-        return (DirectoriesProviderX)AddOptionHelper(_excludingDirectories, ref path);
     }
-
-    public IEnumerable<EntryPath> EnumerateDirectories()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override IEnumerable<EntryPath> EnumerateItems()
-    {
-        return EnumerateDirectories();
-    }
-
-    #region NonPublic
-    private readonly List<SearchingDirectory> _includingDirectories = [];
-    private readonly List<SearchingDirectory> _excludingDirectories = [];
     #endregion
 }

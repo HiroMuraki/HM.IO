@@ -5,7 +5,7 @@
 
 # Test
 Benchmark/
-LibraryTest/
+# LibraryTest/
 
 # User-specific files
 *.rsuser

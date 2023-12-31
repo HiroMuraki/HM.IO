@@ -12,118 +12,40 @@ public sealed class FilesProvider :
     EntryPathProvider,
     IFilesProvider
 {
-    /// <summary>
-    /// Gets the list of directory paths to include during enumeration.
-    /// </summary>
-    public List<SearchingDirectory> IncludingDirectories { get; init; } = new();
-
-    /// <summary>
-    /// Gets the list of directory paths to exclude during enumeration.
-    /// </summary>
-    public List<SearchingDirectory> ExcludingDirectories { get; init; } = new();
-
-    /// <summary>
-    /// Gets the list of file paths to include during enumeration.
-    /// </summary>
-    public List<SearchingFile> IncludingFiles { get; init; } = new();
-
-    /// <summary>
-    /// Gets the list of file paths to exclude during enumeration.
-    /// </summary>
-    public List<SearchingFile> ExcludingFiles { get; init; } = new();
-
-    /// <summary>
-    /// Enumerates files based on the provided inclusion and exclusion filters.
-    /// </summary>
-    /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
-    public IEnumerable<EntryPath> EnumerateFiles()
+    public static FilesProvider Create()
     {
-        IEnumerable<EntryPath> includingFiles = IncludingFiles
-            .Where(x => !String.IsNullOrEmpty(x.FilePath.StringPath))
-            .Select(x => x.FilePath)
-            .Distinct();
-        var excludingFiles = ExcludingFiles
-            .Where(x => !String.IsNullOrEmpty(x.FilePath.StringPath))
-            .Select(x => x.FilePath)
-            .ToImmutableHashSet();
-
-        foreach (EntryPath file in includingFiles)
-        {
-            if (CanInclude(file))
-            {
-                yield return file;
-            }
-        }
-
-        var enumerationOptions = new EnumerationOptions()
-        {
-            IgnoreInaccessible = true,
-            RecurseSubdirectories = false,
-            AttributesToSkip = (FileAttributes)Int32.MinValue,
-        };
-
-        IEnumerable<EntryPath> directories = new DirectoriesProvider()
-        {
-            IncludingDirectories = IncludingDirectories,
-            ExcludingDirectories = ExcludingDirectories
-        }.EnumerateDirectories();
-
-        foreach (EntryPath directory in directories)
-        {
-            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory, enumerationOptions))
-            {
-                if (CanInclude(file))
-                {
-                    yield return file;
-                }
-            }
-        }
-
-        Boolean CanInclude(EntryPath path)
-        {
-            return !excludingFiles.Any(e => e == path);
-        }
+        return Create(new DirectoryIO());
     }
 
-    /// <summary>
-    /// Enumerates files based on the provided inclusion and exclusion filters.
-    /// </summary>
-    /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
-    public override IEnumerable<EntryPath> EnumerateItems()
+    public static FilesProvider Create(IDirectoryIO directoryIO)
     {
-        return EnumerateFiles();
-    }
-}
-
-public class FilesProviderX :
-    EntryPathProvider,
-    IFilesProvider
-{
-    public static FilesProviderX Create()
-    {
-        return new FilesProviderX();
+        return new FilesProvider { DirectoryIO = directoryIO };
     }
 
-    public FilesProviderX IncludeDirectory(EntryPath entryPath)
+    public FilesProvider IncludeDirectory(EntryPath entryPath)
     {
         return AddPathHelper(_includingDirectories, ref entryPath);
     }
 
-    public FilesProviderX ExcludeDirectory(EntryPath entryPath)
+    public FilesProvider ExcludeDirectory(EntryPath entryPath)
     {
         return AddPathHelper(_excludingDirectories, ref entryPath);
     }
 
-    public FilesProviderX IncludeFile(EntryPath entryPath)
+    public FilesProvider IncludeFile(EntryPath entryPath)
     {
         return AddPathHelper(_includingFiles, ref entryPath);
     }
 
-    public FilesProviderX ExcludeFile(EntryPath entryPath)
+    public FilesProvider ExcludeFile(EntryPath entryPath)
     {
         return AddPathHelper(_excludingFiles, ref entryPath);
     }
 
+    /// <summary>
+    /// Enumerates files based on the provided inclusion and exclusion filters.
+    /// </summary>
+    /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
     public IEnumerable<EntryPath> EnumerateFiles()
     {
         // Yield from files
@@ -171,21 +93,26 @@ public class FilesProviderX :
         }
     }
 
+    /// <summary>
+    /// Enumerates files based on the provided inclusion and exclusion filters.
+    /// </summary>
+    /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
     public override IEnumerable<EntryPath> EnumerateItems()
     {
         return EnumerateFiles();
     }
+
 
     #region NonPublic
     private readonly List<EntryPath> _includingDirectories = [];
     private readonly List<EntryPath> _excludingDirectories = [];
     private readonly List<EntryPath> _includingFiles = [];
     private readonly List<EntryPath> _excludingFiles = [];
-    private FilesProviderX()
+    private FilesProvider()
     {
 
     }
-    private FilesProviderX AddPathHelper(List<EntryPath> list, ref EntryPath entryPath)
+    private FilesProvider AddPathHelper(List<EntryPath> list, ref EntryPath entryPath)
     {
         if (!list.Contains(entryPath))
         {
@@ -200,12 +127,12 @@ public class FilesProviderX :
 public static class FilesProviderExtensions
 {
     #region IncludeDirectory
-    public static FilesProviderX IncludeDirectory(this FilesProviderX self, String path)
+    public static FilesProvider IncludeDirectory(this FilesProvider self, String path)
     {
         return self.IncludeDirectory(EntryPath.CreateFromPath(path));
     }
 
-    public static FilesProviderX IncludeDirectories(this FilesProviderX self, IEnumerable<EntryPath> entryPaths)
+    public static FilesProvider IncludeDirectories(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
         foreach (EntryPath item in entryPaths)
         {
@@ -215,17 +142,17 @@ public static class FilesProviderExtensions
         return self;
     }
 
-    public static FilesProviderX IncludeDirectories(this FilesProviderX self, IEnumerable<String> paths)
+    public static FilesProvider IncludeDirectories(this FilesProvider self, IEnumerable<String> paths)
         => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 
     #region IncludeFile
-    public static FilesProviderX IncludeFile(this FilesProviderX self, String path)
+    public static FilesProvider IncludeFile(this FilesProvider self, String path)
     {
         return self.IncludeFile(EntryPath.CreateFromPath(path));
     }
 
-    public static FilesProviderX IncludeFiles(this FilesProviderX self, IEnumerable<EntryPath> entryPaths)
+    public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
         foreach (EntryPath item in entryPaths)
         {
@@ -235,17 +162,17 @@ public static class FilesProviderExtensions
         return self;
     }
 
-    public static FilesProviderX IncludeFiles(this FilesProviderX self, IEnumerable<String> paths)
+    public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<String> paths)
         => IncludeFiles(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 
     #region ExcludeDirectory
-    public static FilesProviderX ExcludeDirectory(this FilesProviderX self, String path)
+    public static FilesProvider ExcludeDirectory(this FilesProvider self, String path)
     {
         return self.ExcludeDirectory(EntryPath.CreateFromPath(path));
     }
 
-    public static FilesProviderX ExcludeDirectories(this FilesProviderX self, IEnumerable<EntryPath> entryPaths)
+    public static FilesProvider ExcludeDirectories(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
         foreach (EntryPath item in entryPaths)
         {
@@ -255,17 +182,17 @@ public static class FilesProviderExtensions
         return self;
     }
 
-    public static FilesProviderX ExcludeDirectories(this FilesProviderX self, IEnumerable<String> paths)
+    public static FilesProvider ExcludeDirectories(this FilesProvider self, IEnumerable<String> paths)
         => ExcludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 
     #region ExcludeFile
-    public static FilesProviderX ExcludeFile(this FilesProviderX self, String path)
+    public static FilesProvider ExcludeFile(this FilesProvider self, String path)
     {
         return self.ExcludeFile(EntryPath.CreateFromPath(path));
     }
 
-    public static FilesProviderX ExcludeFiles(this FilesProviderX self, IEnumerable<EntryPath> entryPaths)
+    public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
         foreach (EntryPath item in entryPaths)
         {
@@ -275,7 +202,7 @@ public static class FilesProviderExtensions
         return self;
     }
 
-    public static FilesProviderX ExcludeFiles(this FilesProviderX self, IEnumerable<String> paths)
+    public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<String> paths)
         => ExcludeFiles(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 }

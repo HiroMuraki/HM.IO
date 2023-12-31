@@ -3,16 +3,19 @@
 public static class FilesProviderExtensions
 {
     #region IncludeDirectory
-    public static FilesProvider IncludeDirectory(this FilesProvider self, String path)
+    public static FilesProvider IncludeDirectory(this FilesProvider self, EntryPath path)
     {
-        return self.IncludeDirectory(EntryPath.CreateFromPath(path));
+        return self.IncludeDirectory(new SearchingDirectory(path));
     }
+
+    public static FilesProvider IncludeDirectory(this FilesProvider self, String path)
+        => IncludeDirectory(self, path);
 
     public static FilesProvider IncludeDirectories(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
-        foreach (EntryPath item in entryPaths)
+        foreach (EntryPath path in entryPaths)
         {
-            self.IncludeDirectory(item);
+            IncludeDirectory(self, path);
         }
 
         return self;
@@ -23,62 +26,71 @@ public static class FilesProviderExtensions
     #endregion
 
     #region IncludeFile
-    public static FilesProvider IncludeFile(this FilesProvider self, String path)
+    public static FilesProvider IncludeFile(this FilesProvider self, EntryPath path)
     {
-        return self.IncludeFile(EntryPath.CreateFromPath(path));
+        return self.IncludeFile(new SearchingFile(path));
     }
+
+    public static FilesProvider IncludeFile(this FilesProvider self, String path)
+        => IncludeFile(self, path);
 
     public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
-        foreach (EntryPath item in entryPaths)
+        foreach (EntryPath path in entryPaths)
         {
-            self.IncludeFile(item);
+            IncludeDirectory(self, path);
         }
 
         return self;
     }
 
     public static FilesProvider IncludeFiles(this FilesProvider self, IEnumerable<String> paths)
-        => IncludeFiles(self, paths.Select(EntryPath.CreateFromPath));
+        => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 
     #region ExcludeDirectory
-    public static FilesProvider ExcludeDirectory(this FilesProvider self, String path)
+    public static FilesProvider ExcludeDirectory(this FilesProvider self, EntryPath path)
     {
-        return self.ExcludeDirectory(EntryPath.CreateFromPath(path));
+        return self.IncludeDirectory(new SearchingDirectory(path));
     }
+
+    public static FilesProvider ExcludeDirectory(this FilesProvider self, String path)
+        => IncludeDirectory(self, path);
 
     public static FilesProvider ExcludeDirectories(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
-        foreach (EntryPath item in entryPaths)
+        foreach (EntryPath path in entryPaths)
         {
-            self.ExcludeDirectory(item);
+            IncludeDirectory(self, path);
         }
 
         return self;
     }
 
     public static FilesProvider ExcludeDirectories(this FilesProvider self, IEnumerable<String> paths)
-        => ExcludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
+        => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 
     #region ExcludeFile
-    public static FilesProvider ExcludeFile(this FilesProvider self, String path)
+    public static FilesProvider ExcludeFile(this FilesProvider self, EntryPath path)
     {
-        return self.ExcludeFile(EntryPath.CreateFromPath(path));
+        return self.IncludeFile(new SearchingFile(path));
     }
+
+    public static FilesProvider ExcludeFile(this FilesProvider self, String path)
+        => IncludeFile(self, path);
 
     public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<EntryPath> entryPaths)
     {
-        foreach (EntryPath item in entryPaths)
+        foreach (EntryPath path in entryPaths)
         {
-            self.ExcludeFile(item);
+            IncludeDirectory(self, path);
         }
 
         return self;
     }
 
     public static FilesProvider ExcludeFiles(this FilesProvider self, IEnumerable<String> paths)
-        => ExcludeFiles(self, paths.Select(EntryPath.CreateFromPath));
+        => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 }

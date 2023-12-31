@@ -1,6 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
 
 namespace HM.IO.Providers;
 
@@ -34,9 +32,9 @@ public sealed class FilesProvider :
     /// </summary>
     /// <param name="entryPath">Path of the directory to be included.</param>
     /// <returns>The updated <see cref="FilesProvider"/> instance.</returns>
-    public FilesProvider IncludeDirectory(EntryPath entryPath)
+    public FilesProvider IncludeDirectory(SearchingDirectory entryPath)
     {
-        return AddPathHelper(_includingDirectories, ref entryPath);
+        return (FilesProvider)AddOptionHelper(_includingDirectories, ref entryPath);
     }
 
     /// <summary>
@@ -44,9 +42,9 @@ public sealed class FilesProvider :
     /// </summary>
     /// <param name="entryPath">Path of the directory to be excluded.</param>
     /// <returns>The updated <see cref="FilesProvider"/> instance.</returns>
-    public FilesProvider ExcludeDirectory(EntryPath entryPath)
+    public FilesProvider ExcludeDirectory(SearchingDirectory entryPath)
     {
-        return AddPathHelper(_excludingDirectories, ref entryPath);
+        return (FilesProvider)AddOptionHelper(_excludingDirectories, ref entryPath);
     }
 
     /// <summary>
@@ -54,9 +52,9 @@ public sealed class FilesProvider :
     /// </summary>
     /// <param name="entryPath">Path of the file to be included.</param>
     /// <returns>The updated <see cref="FilesProvider"/> instance.</returns>
-    public FilesProvider IncludeFile(EntryPath entryPath)
+    public FilesProvider IncludeFile(SearchingFile entryPath)
     {
-        return AddPathHelper(_includingFiles, ref entryPath);
+        return (FilesProvider)AddOptionHelper(_includingFiles, ref entryPath);
     }
 
     /// <summary>
@@ -64,9 +62,9 @@ public sealed class FilesProvider :
     /// </summary>
     /// <param name="entryPath">Path of the file to be excluded.</param>
     /// <returns>The updated <see cref="FilesProvider"/> instance.</returns>
-    public FilesProvider ExcludeFile(EntryPath entryPath)
+    public FilesProvider ExcludeFile(SearchingFile entryPath)
     {
-        return AddPathHelper(_excludingFiles, ref entryPath);
+        return (FilesProvider)AddOptionHelper(_excludingFiles, ref entryPath);
     }
 
     /// <summary>
@@ -77,17 +75,17 @@ public sealed class FilesProvider :
     {
         // Yield from files
         var includingFiles = _includingFiles
-             .Where(x => !String.IsNullOrEmpty(x.StringPath))
+             .Where(x => !String.IsNullOrEmpty(x.Path.StringPath))
              .ToList();
         var excludingFiles = _excludingFiles
-            .Where(x => !String.IsNullOrEmpty(x.StringPath))
+            .Where(x => !String.IsNullOrEmpty(x.Path.StringPath))
             .ToImmutableHashSet();
 
-        foreach (EntryPath file in includingFiles)
+        foreach (SearchingFile file in includingFiles)
         {
-            if (CanInclude(file))
+            if (CanInclude(file.Path))
             {
-                yield return file;
+                yield return file.Path;
             }
         }
 
@@ -103,9 +101,9 @@ public sealed class FilesProvider :
             AttributesToSkip = (FileAttributes)Int32.MinValue,
         };
 
-        foreach (EntryPath directory in directories)
+        foreach (SearchingDirectory directory in directories)
         {
-            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory, enumerationOptions))
+            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory.Path, enumerationOptions))
             {
                 if (CanInclude(file))
                 {
@@ -116,7 +114,7 @@ public sealed class FilesProvider :
 
         Boolean CanInclude(EntryPath entryPath)
         {
-            return !excludingFiles.Any(e => e == entryPath);
+            return !excludingFiles.Any(e => e.Path == entryPath);
         }
     }
 
@@ -130,22 +128,13 @@ public sealed class FilesProvider :
     }
 
     #region NonPublic
-    private readonly List<EntryPath> _includingDirectories = [];
-    private readonly List<EntryPath> _excludingDirectories = [];
-    private readonly List<EntryPath> _includingFiles = [];
-    private readonly List<EntryPath> _excludingFiles = [];
+    private readonly List<SearchingDirectory> _includingDirectories = [];
+    private readonly List<SearchingDirectory> _excludingDirectories = [];
+    private readonly List<SearchingFile> _includingFiles = [];
+    private readonly List<SearchingFile> _excludingFiles = [];
     private FilesProvider()
     {
 
-    }
-    private FilesProvider AddPathHelper(List<EntryPath> list, ref EntryPath entryPath)
-    {
-        if (!list.Contains(entryPath))
-        {
-            list.Add(entryPath);
-        }
-
-        return this;
     }
     #endregion
 }

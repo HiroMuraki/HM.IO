@@ -14,13 +14,13 @@ public sealed class DirectoriesProvider :
     public IEnumerable<EntryPath> EnumerateDirectories()
     {
         IEnumerable<EntryPath> includingDirectories = IncludingDirectories
-            .Where(x => !String.IsNullOrWhiteSpace(x.BaseDirectory.StringPath))
-            .DistinctBy(x => x.BaseDirectory)
+            .Where(x => !String.IsNullOrWhiteSpace(x.Path.StringPath))
+            .DistinctBy(x => x.Path)
             .SelectMany(EnumerateDirectories);
 
         var excludingDirectories = ExcludingDirectories
-            .Where(x => !String.IsNullOrWhiteSpace(x.BaseDirectory.StringPath))
-            .DistinctBy(x => x.BaseDirectory)
+            .Where(x => !String.IsNullOrWhiteSpace(x.Path.StringPath))
+            .DistinctBy(x => x.Path)
             .SelectMany(EnumerateDirectories)
             .ToImmutableHashSet();
 
@@ -41,7 +41,7 @@ public sealed class DirectoriesProvider :
     #region NonPublic
     private IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory directory)
     {
-        if (!DirectoryIO.Exists(directory.BaseDirectory))
+        if (!DirectoryIO.Exists(directory.Path))
         {
             if (directory.IgnoreIfNotExists)
             {
@@ -49,17 +49,17 @@ public sealed class DirectoriesProvider :
             }
             else
             {
-                throw new DirectoryNotFoundException(directory.BaseDirectory.StringPath);
+                throw new DirectoryNotFoundException(directory.Path.StringPath);
             }
         }
 
-        IEnumerable<EntryPath> directories = DirectoryIO.EnumerateDirectories(directory.BaseDirectory, new EnumerationOptions
+        IEnumerable<EntryPath> directories = DirectoryIO.EnumerateDirectories(directory.Path, new EnumerationOptions
         {
             RecurseSubdirectories = directory.RecurseSubdirectories,
             MaxRecursionDepth = directory.MaxRecursionDepth,
         });
 
-        yield return directory.BaseDirectory;
+        yield return directory.Path;
 
         foreach (EntryPath item in directories)
         {
@@ -73,14 +73,14 @@ public sealed class DirectoriesProviderX :
     EntryPathsProvider,
     IDirectoriesProvider
 {
-    public DirectoriesProviderX IncludeDirectory(EntryPath path)
+    public DirectoriesProviderX IncludeDirectory(SearchingDirectory path)
     {
-        return AddPathHelper(_includingDirectories, ref path);
+        return (DirectoriesProviderX)AddOptionHelper(_includingDirectories, ref path);
     }
 
-    public DirectoriesProviderX ExcludeDirectory(EntryPath path)
+    public DirectoriesProviderX ExcludeDirectory(SearchingDirectory path)
     {
-        return AddPathHelper(_excludingDirectories, ref path);
+        return (DirectoriesProviderX)AddOptionHelper(_excludingDirectories, ref path);
     }
 
     public IEnumerable<EntryPath> EnumerateDirectories()
@@ -94,16 +94,7 @@ public sealed class DirectoriesProviderX :
     }
 
     #region NonPublic
-    private readonly List<EntryPath> _includingDirectories = [];
-    private readonly List<EntryPath> _excludingDirectories = [];
-    private DirectoriesProviderX AddPathHelper(List<EntryPath> list, ref EntryPath entryPath)
-    {
-        if (!list.Contains(entryPath))
-        {
-            list.Add(entryPath);
-        }
-
-        return this;
-    }
+    private readonly List<SearchingDirectory> _includingDirectories = [];
+    private readonly List<SearchingDirectory> _excludingDirectories = [];
     #endregion
 }

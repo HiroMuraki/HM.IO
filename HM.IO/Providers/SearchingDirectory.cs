@@ -1,17 +1,17 @@
 ﻿namespace HM.IO;
 
-public sealed class SearchingDirectory
+public readonly struct SearchingDirectory
 {
-    public EntryPath BaseDirectory { get; init; }
+    public EntryPath Path { get; init; }
 
-    public Boolean RecurseSubdirectories { get; init; } = true;
+    public Boolean RecurseSubdirectories { get; init; } = false;
 
     public Int32 MaxRecursionDepth { get; init; } = Int32.MaxValue;
 
-    public Boolean IgnoreIfNotExists { get; init; } = true;
+    public Boolean IgnoreIfNotExists { get; init; } = false;
 
-    public SearchingDirectory(String path)
+    public SearchingDirectory(EntryPath path)
     {
-        BaseDirectory = EntryPath.CreateFromPath(path);
+        Path = path;
     }
 }

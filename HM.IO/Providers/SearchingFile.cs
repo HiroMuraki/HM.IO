@@ -1,13 +1,13 @@
 ﻿namespace HM.IO;
 
-public sealed class SearchingFile
+public readonly struct SearchingFile
 {
-    public EntryPath FilePath { get; init; }
+    public EntryPath Path { get; init; }
 
-    public Boolean IgnoreIfNotExists { get; init; } = true;
+    public Boolean IgnoreIfNotExists { get; init; } = false;
 
-    public SearchingFile(String filePath)
+    public SearchingFile(EntryPath path)
     {
-        FilePath = EntryPath.CreateFromPath(filePath);
+        Path = path;
     }
 }

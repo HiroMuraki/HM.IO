@@ -8,16 +8,33 @@ using System.Runtime.CompilerServices;
 namespace LibraryTest;
 
 [TestClass]
-public class FilesProviderTest : TestClass
+public partial class FilesProviderTest : TestClass
 {
-    public string TestCasesBaseDirectory => Path.Combine(Environment.CurrentDirectory, "TestCases");
+    public static string TestCasesBaseDirectory => Path.Combine(Environment.CurrentDirectory, "TestCases");
 
     public FilesProviderTest()
     {
         System.Diagnostics.Debug.WriteLine($"[{GetType()}] TestTime: {DateTime.Now}"); // debug output
     }
 
-    #region SubTest
+    [TestMethod]
+    public void MyTestMethod()
+    {
+        var sdir = new SearchingDirectory()
+        {
+            Path = EntryPath.CreateFromPath(Path.Combine(TestCasesBaseDirectory, @"B")),
+            RecurseSubdirectories = true,
+            MaxRecursionDepth = 1
+        };
+
+        FilesProvider fp = FilesProvider.Create().IncludeDirectory(sdir);
+
+        foreach (var item in fp.EnumerateFiles())
+        {
+            System.Diagnostics.Debug.WriteLine($"{item}"); // debug output
+        }
+    }
+
     [TestMethod]
     public void SubTest1_IncludedDirecoriesOnly()
     {
@@ -170,8 +187,81 @@ public class FilesProviderTest : TestClass
             Path.Combine(TestCasesBaseDirectory, @"b.txt"),
         ]);
     }
-    #endregion
 
+    [TestMethod]
+    public void SubTest6_Recursive()
+    {
+        TestHelper_Recursive(new()
+        {
+            IncDirs = [
+                new(Path.Combine(TestCasesBaseDirectory, @"A"), true, Int32.MaxValue),
+                new(Path.Combine(TestCasesBaseDirectory, @"B"), true, 1),
+                new(Path.Combine(TestCasesBaseDirectory, @"C"), true, 3),
+            ],
+            ExcDirs = [
+                new(Path.Combine(TestCasesBaseDirectory, @"A\A1_r"), true, Int32.MaxValue),
+                Path.Combine(TestCasesBaseDirectory, @"C\C1\C2"),
+            ],
+            IncFiles = [
+                Path.Combine(TestCasesBaseDirectory, @"a.txt"),
+                Path.Combine(TestCasesBaseDirectory, @"c.txt"),
+            ],
+            ExcFiles = [
+                Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_1"),
+                Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_2"),
+                Path.Combine(TestCasesBaseDirectory, @"C\C1\C-C1-FILE_1"),
+            ]
+        }, [
+            Path.Combine(TestCasesBaseDirectory, @"a.txt"),
+            //Path.Combine(TestCasesBaseDirectory, @"b.txt"),
+            Path.Combine(TestCasesBaseDirectory, @"c.txt"),
+
+            //Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_3"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A-A1-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A-A1-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A-A1-FILE_3"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A2\A-A1-A2-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A2\A-A1-A2-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A2\A-A1-A2-FILE_3"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A2\A3\A-A1-A2-A3-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A2\A3\A-A1-A2-A3-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A2\A3\A4\A-A1-A2-A3-A4-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A2\A3\A4\A-A1-A2-A3-A4-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A1\A2\A3\A4\A5\A-A1-A2-A3-A4-A5-FILE_1"),
+            //Path.Combine(TestCasesBaseDirectory, @"A\A1_r\A-A1_r-FILE_1"),
+            //Path.Combine(TestCasesBaseDirectory, @"A\A1_r\A-A1_r-FILE_2"),
+            //Path.Combine(TestCasesBaseDirectory, @"A\A1_r\A-A1_r-FILE_3"),
+            //Path.Combine(TestCasesBaseDirectory, @"A\A1_r\A2_r\A-A1_r-A2_r-FILE_1"),
+
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_1"),
+            //Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_3"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B1\B-B1-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B1\B-B1-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B1\B-B1-FILE_3"),
+            //Path.Combine(TestCasesBaseDirectory, @"B\B1\B2\B-B1-B2-FILE_1"),
+            //Path.Combine(TestCasesBaseDirectory, @"B\B1\B2\B-B1-B2-FILE_2"),
+            //Path.Combine(TestCasesBaseDirectory, @"B\B1\B2\B-B1-B2-FILE_3"),
+            //Path.Combine(TestCasesBaseDirectory, @"B\B1\B2\B3\B-B1-B2-B3-FILE_1"),
+
+            Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_2"),
+            //Path.Combine(TestCasesBaseDirectory, @"C\C1\C-C1-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"C\C1\C-C1-FILE_2"),
+            //Path.Combine(TestCasesBaseDirectory, @"C\C1\C2\C-C1-C2-FILE_1"),
+            //Path.Combine(TestCasesBaseDirectory, @"C\C1\C2\C-C1-C2-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"C\C1\C2\C3\C-C1-C2-C3-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"C\C1\C2\C3\C-C1-C2-C3-FILE_2"),
+            //Path.Combine(TestCasesBaseDirectory, @"C\C1\C2\C3\C4\C-C1-C2-C3-C4-FILE_1"),
+            //Path.Combine(TestCasesBaseDirectory, @"C\C1\C2\C3\C4\C-C1-C2-C3-C4-FILE_2"),
+        ]);
+    }
+}
+
+public partial class FilesProviderTest
+{
     static void TestHelper(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
     {
         System.Diagnostics.Debug.WriteLine(caller); // debug output
@@ -221,16 +311,16 @@ public class FilesProviderTest : TestClass
                 case 2:
                     fp = FilesProvider.Create()
                        .IncludeDirectories(
-                           option.IncDirs.Select(x => x)
+                           option.IncDirs.Select(x => x.Path)
                        )
                        .ExcludeDirectories(
-                           option.ExcDirs.Select(x => x)
+                           option.ExcDirs.Select(x => x.Path)
                        )
                        .IncludeFiles(
-                           option.IncFiles.Select(x => x)
+                           option.IncFiles.Select(x => x.Path)
                        )
                        .ExcludeFiles(
-                           option.ExcFiles.Select(x => x)
+                           option.ExcFiles.Select(x => x.Path)
                        );
                     break;
             }
@@ -288,19 +378,19 @@ public class FilesProviderTest : TestClass
                 // StringType
                 case 2:
                     fp = FilesProvider.Create();
-                    foreach (var item in option.IncDirs.Select(x => x))
+                    foreach (var item in option.IncDirs.Select(x => x.Path))
                     {
                         fp.IncludeDirectory(item);
                     }
-                    foreach (var item in option.ExcDirs.Select(x => x))
+                    foreach (var item in option.ExcDirs.Select(x => x.Path))
                     {
                         fp.ExcludeDirectory(item);
                     }
-                    foreach (var item in option.IncFiles.Select(x => x))
+                    foreach (var item in option.IncFiles.Select(x => x.Path))
                     {
                         fp.IncludeFile(item);
                     }
-                    foreach (var item in option.ExcFiles.Select(x => x))
+                    foreach (var item in option.ExcFiles.Select(x => x.Path))
                     {
                         fp.ExcludeFile(item);
                     }
@@ -315,12 +405,103 @@ public class FilesProviderTest : TestClass
 #pragma warning restore IDE0008 // 使用显式类型
     }
 
+    static void TestHelper_Recursive(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
+    {
+        System.Diagnostics.Debug.WriteLine(caller); // debug output
+#pragma warning disable IDE0200
+#pragma warning disable IDE0008 // 使用显式类型
+        FilesProvider fp = null!;
+        var orderExpectedFiles = expectedFiles.Order().ToList();
+
+        // By once
+        fp = FilesProvider.Create()
+            .IncludeDirectories(
+                option.IncDirs.Select(x => x.AsSearchingDirectory())
+            )
+            .ExcludeDirectories(
+                option.ExcDirs.Select(x => x.AsSearchingDirectory())
+            )
+            .IncludeFiles(
+                option.IncFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+            )
+            .ExcludeFiles(
+                option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+            );
+
+        var files = fp.EnumerateFiles().Select(x => x.StringPath).Order().ToList();
+        files = fp.EnumerateFiles().Select(x => x.StringPath).Order().ToList();
+        foreach (var item in files.ToHashSet().Except(orderExpectedFiles))
+        {
+            System.Diagnostics.Debug.WriteLine($"?? {item}"); // debug output
+        }
+        Assert.AreEqual(orderExpectedFiles.Count, files.Count);
+        Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
+
+        // By each
+        fp = FilesProvider.Create();
+        foreach (var item in option.IncDirs.Select(x => x.AsSearchingDirectory()))
+        {
+            fp.IncludeDirectory(item);
+        }
+        foreach (var item in option.ExcDirs.Select(x => x.AsSearchingDirectory()))
+        {
+            fp.ExcludeDirectory(item);
+        }
+        foreach (var item in option.IncFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x))))
+        {
+            fp.IncludeFile(item);
+        }
+        foreach (var item in option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x))))
+        {
+            fp.ExcludeFile(item);
+        }
+
+        Assert.AreEqual(orderExpectedFiles.Count, files.Count);
+        Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
+#pragma warning restore IDE0200
+#pragma warning restore IDE0008 // 使用显式类型
+    }
+
     class SearchingOption
     {
-        public string[] IncDirs { get; set; } = [];
-        public string[] IncFiles { get; set; } = [];
-        public string[] ExcDirs { get; set; } = [];
-        public string[] ExcFiles { get; set; } = [];
+        public PathOption[] IncDirs { get; set; } = [];
+        public PathOption[] IncFiles { get; set; } = [];
+        public PathOption[] ExcDirs { get; set; } = [];
+        public PathOption[] ExcFiles { get; set; } = [];
+    }
+
+    class PathOption
+    {
+        public string Path { get; }
+        public bool IncSub { get; }
+        public int MaxRecDepth { get; }
+
+        public PathOption(string path, bool incSub, int maxRecDepth)
+        {
+            Path = path;
+            IncSub = incSub;
+            MaxRecDepth = maxRecDepth;
+        }
+
+        public static implicit operator PathOption(string path)
+        {
+            return new PathOption(path, false, Int32.MinValue);
+        }
+
+        public static implicit operator string(PathOption option)
+        {
+            return option.Path;
+        }
+
+        public SearchingDirectory AsSearchingDirectory()
+        {
+            return new SearchingDirectory
+            {
+                Path = EntryPath.CreateFromPath(Path),
+                RecurseSubdirectories = IncSub,
+                MaxRecursionDepth = MaxRecDepth,
+            };
+        }
     }
 }
 

@@ -143,10 +143,15 @@ public sealed class FilesProvider :
     {
         yield return searchingDirectory.Path;
 
-        if (searchingDirectory.RecurseSubdirectories)
+        if (searchingDirectory.RecurseSubdirectories && searchingDirectory.MaxRecursionDepth > 0)
         {
+            Int32 fixedRecursionDepth = searchingDirectory.MaxRecursionDepth - 1;
+
             IEnumerable<EntryPath> subdirectories = DirectoriesProvider.Create(DirectoryIO)
-                .IncludeDirectory(searchingDirectory)
+                .IncludeDirectory(searchingDirectory with
+                {
+                    MaxRecursionDepth = fixedRecursionDepth,
+                })
                 .EnumerateDirectories();
 
             foreach (EntryPath directory in subdirectories)

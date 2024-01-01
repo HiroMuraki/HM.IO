@@ -6,8 +6,6 @@
 public abstract class EntryPathsProvider :
     IItemsProvider<EntryPath>
 {
-
-
     /// <summary>
     /// Enumerates and returns a collection of entry paths.
     /// </summary>

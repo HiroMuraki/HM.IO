@@ -17,17 +17,17 @@ public sealed class DirectoriesProvider :
     /// <returns>A new <see cref="DirectoriesProvider"/> instance.</returns>
     public static DirectoriesProvider Create()
     {
-        return Create(new DirectoryIO());
+        return new DirectoriesProvider();
     }
 
-    /// <summary>
-    /// Creates a new instance of <see cref="DirectoriesProvider"/> with custom directory input/output operations.
-    /// </summary>
-    /// <param name="directoryIO">Custom directory input/output operations implementation.</param>
-    /// <returns>A new <see cref="DirectoriesProvider"/> instance with the specified <paramref name="directoryIO"/> implementation.</returns>
-    public static DirectoriesProvider Create(IDirectoryIO directoryIO)
+    public DirectoriesProvider UseDirectoryIO(IDirectoryIO directoryIO)
     {
-        return new DirectoriesProvider() { DirectoryIO = directoryIO };
+        return UseDirectoryIO<DirectoriesProvider>(directoryIO);
+    }
+
+    public DirectoriesProvider UseErrorHandler(IErrorHandler errorHandler)
+    {
+        return UseErrorHandler<DirectoriesProvider>(errorHandler);
     }
 
     /// <summary>

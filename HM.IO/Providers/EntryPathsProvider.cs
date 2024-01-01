@@ -6,10 +6,7 @@
 public abstract class EntryPathsProvider :
     IItemsProvider<EntryPath>
 {
-    /// <summary>
-    /// Gets or sets the directory input/output operations for the entry path provider.
-    /// </summary>
-    public IDirectoryIO DirectoryIO { get; protected set; } = new DirectoryIO();
+
 
     /// <summary>
     /// Enumerates and returns a collection of entry paths.
@@ -18,6 +15,11 @@ public abstract class EntryPathsProvider :
     public abstract IEnumerable<EntryPath> EnumerateItems();
 
     #region NonPublic
+    /// <summary>
+    /// Gets or sets the directory input/output operations for the entry path provider.
+    /// </summary>
+    protected IDirectoryIO DirectoryIO { get; private set; } = new DirectoryIO();
+    protected IErrorHandler? ErrorHandler { get; private set; }
     /// <summary>
     /// Helper method for adding an option to a list and updating the reference to the selected item.
     /// </summary>
@@ -33,6 +35,20 @@ public abstract class EntryPathsProvider :
         }
 
         return this;
+    }
+    protected T UseDirectoryIO<T>(IDirectoryIO directoryIO)
+        where T : EntryPathsProvider
+    {
+        DirectoryIO = directoryIO;
+
+        return (T)this;
+    }
+    protected T UseErrorHandler<T>(IErrorHandler errorHandler)
+        where T : EntryPathsProvider
+    {
+        ErrorHandler = errorHandler;
+
+        return (T)this;
     }
     #endregion
 }

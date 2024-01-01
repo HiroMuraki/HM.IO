@@ -15,16 +15,17 @@ public sealed class FilesProvider :
     /// <returns>A new <see cref="FilesProvider"/> instance.</returns>
     public static FilesProvider Create()
     {
-        return Create(new DirectoryIO());
+        return new FilesProvider();
     }
 
-    /// Creates a new instance of <see cref="FilesProvider"/> with custom directory input/output operations.
-    /// </summary>
-    /// <param name="directoryIO">Custom directory input/output operations implementation.</param>
-    /// <returns>A new <see cref="FilesProvider"/> instance with the specified <paramref name="directoryIO"/> implementation.</returns>
-    public static FilesProvider Create(IDirectoryIO directoryIO)
+    public FilesProvider UseDirectoryIO(IDirectoryIO directoryIO)
     {
-        return new FilesProvider { DirectoryIO = directoryIO };
+        return UseDirectoryIO<FilesProvider>(directoryIO);
+    }
+
+    public FilesProvider UseErrorHandler(IErrorHandler errorHandler)
+    {
+        return UseErrorHandler<FilesProvider>(errorHandler);
     }
 
     /// <summary>
@@ -147,7 +148,8 @@ public sealed class FilesProvider :
         {
             Int32 fixedRecursionDepth = searchingDirectory.MaxRecursionDepth - 1;
 
-            IEnumerable<EntryPath> subdirectories = DirectoriesProvider.Create(DirectoryIO)
+            IEnumerable<EntryPath> subdirectories = DirectoriesProvider.Create()
+                .UseDirectoryIO(DirectoryIO)
                 .IncludeDirectory(searchingDirectory with
                 {
                     MaxRecursionDepth = fixedRecursionDepth,

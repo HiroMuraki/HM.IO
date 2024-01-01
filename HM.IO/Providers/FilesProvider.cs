@@ -28,6 +28,20 @@ public sealed class FilesProvider :
         return UseErrorHandler<FilesProvider>(errorHandler);
     }
 
+    public FilesProvider UseFilesEnumerationOptions(FileEnumerationOptions enumerationOptions)
+    {
+        _filesEnumerationOptions = enumerationOptions;
+
+        return this;
+    }
+
+    public FilesProvider UseDirectoriesEnumerationOptions(DirectoryEnumerationOptions enumerationOptions)
+    {
+        _directoriesEnumerationOptions = enumerationOptions;
+
+        return this;
+    }
+
     /// <summary>
     /// Includes a directory for processing by the <see cref="FilesProvider"/>.
     /// </summary>
@@ -102,16 +116,10 @@ public sealed class FilesProvider :
             .Where(d => !excludedDirectories.Contains(d))
             .ToList();
 
-        var enumerationOptions = new EnumerationOptions()
-        {
-            IgnoreInaccessible = true,
-            RecurseSubdirectories = false,
-            AttributesToSkip = (FileAttributes)Int32.MinValue,
-        };
-
         foreach (EntryPath directory in includedDirectories)
         {
-            foreach (EntryPath file in DirectoryIO.EnumerateFiles(directory, enumerationOptions))
+            foreach (EntryPath file in DirectoryIO.EnumerateFiles(
+                directory, _filesEnumerationOptions.ToEnumerationOptions()))
             {
                 if (CanInclude(file))
                 {
@@ -140,6 +148,16 @@ public sealed class FilesProvider :
     private readonly List<SearchingDirectory> _excludingDirectories = [];
     private readonly List<SearchingFile> _includingFiles = [];
     private readonly List<SearchingFile> _excludingFiles = [];
+    private FileEnumerationOptions _filesEnumerationOptions = new()
+    {
+        IgnoreInaccessible = true,
+        AttributesToSkip = (FileAttributes)Int32.MinValue,
+    };
+    private DirectoryEnumerationOptions _directoriesEnumerationOptions = new()
+    {
+        IgnoreInaccessible = true,
+        AttributesToSkip = (FileAttributes)Int32.MinValue,
+    };
     private IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory searchingDirectory)
     {
         yield return searchingDirectory.Path;
@@ -150,6 +168,7 @@ public sealed class FilesProvider :
 
             IEnumerable<EntryPath> subdirectories = DirectoriesProvider.Create()
                 .UseDirectoryIO(DirectoryIO)
+                .UseDirectoriesEnumerationOptions(_directoriesEnumerationOptions)
                 .IncludeDirectory(searchingDirectory with
                 {
                     MaxRecursionDepth = fixedRecursionDepth,

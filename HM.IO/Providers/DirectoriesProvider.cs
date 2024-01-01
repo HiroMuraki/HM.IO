@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 
 namespace HM.IO.Providers;
@@ -28,6 +29,13 @@ public sealed class DirectoriesProvider :
     public DirectoriesProvider UseErrorHandler(IErrorHandler errorHandler)
     {
         return UseErrorHandler<DirectoriesProvider>(errorHandler);
+    }
+
+    public DirectoriesProvider UseDirectoriesEnumerationOptions(DirectoryEnumerationOptions enumerationOptions)
+    {
+        _directoriesEnumerationOptions = enumerationOptions;
+
+        return this;
     }
 
     /// <summary>
@@ -77,6 +85,11 @@ public sealed class DirectoriesProvider :
     #region NonPublic
     private readonly List<SearchingDirectory> _includingDirectories = [];
     private readonly List<SearchingDirectory> _excludingDirectories = [];
+    private DirectoryEnumerationOptions _directoriesEnumerationOptions = new()
+    {
+        IgnoreInaccessible = true,
+        AttributesToSkip = (FileAttributes)Int32.MinValue,
+    };
     private IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory directory)
     {
         if (!DirectoryIO.Exists(directory.Path))
@@ -91,13 +104,12 @@ public sealed class DirectoriesProvider :
             }
         }
 
-        IEnumerable<EntryPath> directories = DirectoryIO.EnumerateDirectories(directory.Path, new EnumerationOptions
-        {
-            IgnoreInaccessible = true,
-            RecurseSubdirectories = directory.RecurseSubdirectories,
-            MaxRecursionDepth = directory.MaxRecursionDepth,
-            AttributesToSkip = (FileAttributes)Int32.MinValue,
-        });
+        EnumerationOptions enumerationOptions = _directoriesEnumerationOptions.ToEnumerationOptions();
+        enumerationOptions.RecurseSubdirectories = directory.RecurseSubdirectories;
+        enumerationOptions.MaxRecursionDepth = directory.MaxRecursionDepth;
+
+        IEnumerable<EntryPath> directories = DirectoryIO.EnumerateDirectories(
+            directory.Path, enumerationOptions);
 
         foreach (EntryPath dir in directories)
         {

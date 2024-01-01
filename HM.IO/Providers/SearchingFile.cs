@@ -24,3 +24,41 @@ public readonly struct SearchingFile
         Path = path;
     }
 }
+
+public class FileEnumerationOptions
+{
+    public FileAttributes AttributesToSkip { get; init; } = (FileAttributes)Int32.MinValue;
+
+    public Boolean IgnoreInaccessible { get; init; } = true;
+
+    public Boolean ReturnSpecialDirectories { get; init; } = false;
+
+    public EnumerationOptions ToEnumerationOptions()
+    {
+        return new EnumerationOptions
+        {
+            AttributesToSkip = AttributesToSkip,
+            IgnoreInaccessible = IgnoreInaccessible,
+            ReturnSpecialDirectories = ReturnSpecialDirectories,
+        };
+    }
+}
+
+public class DirectoryEnumerationOptions
+{
+    public FileAttributes AttributesToSkip { get; init; } = (FileAttributes)Int32.MinValue;
+
+    public Boolean IgnoreInaccessible { get; init; } = true;
+
+    public Boolean ReturnSpecialDirectories { get; init; } = false;
+
+    public EnumerationOptions ToEnumerationOptions()
+    {
+        return new EnumerationOptions
+        {
+            AttributesToSkip = AttributesToSkip,
+            IgnoreInaccessible = IgnoreInaccessible,
+            ReturnSpecialDirectories = ReturnSpecialDirectories,
+        };
+    }
+}

@@ -10,7 +10,7 @@ namespace LibraryTest;
 [TestClass]
 public class FilesProviderTest : TestClass
 {
-    public string TestCasesBaseDirectory => Environment.CurrentDirectory;
+    public string TestCasesBaseDirectory => Path.Combine(Environment.CurrentDirectory, "TestCases");
 
     public FilesProviderTest()
     {
@@ -24,9 +24,9 @@ public class FilesProviderTest : TestClass
         TestHelper(new()
         {
             IncDirs = [
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\A"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\B"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\C"),
+                Path.Combine(TestCasesBaseDirectory, @"A"),
+                Path.Combine(TestCasesBaseDirectory, @"B"),
+                Path.Combine(TestCasesBaseDirectory, @"C"),
             ],
             ExcDirs = [
 
@@ -37,7 +37,18 @@ public class FilesProviderTest : TestClass
             ExcFiles = [
 
             ]
-        }, 8);
+        }, [
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_3"),
+
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_3"),
+
+            Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_2"),
+        ]);
     }
 
     [TestMethod]
@@ -52,17 +63,24 @@ public class FilesProviderTest : TestClass
 
             ],
             IncFiles = [
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\a.txt"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\b.txt"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\A\A-FILE_1"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\A\A-FILE_2"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\B\B-FILE_1"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\C\C-FILE_2)"),
+                Path.Combine(TestCasesBaseDirectory, @"a.txt"),
+                Path.Combine(TestCasesBaseDirectory, @"b.txt"),
+                Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_1"),
+                Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_2"),
+                Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_1"),
+                Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_2)"),
             ],
             ExcFiles = [
 
             ]
-        }, 6);
+        }, [
+            Path.Combine(TestCasesBaseDirectory, @"a.txt"),
+            Path.Combine(TestCasesBaseDirectory, @"b.txt"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_2)"),
+        ]);
     }
 
     [TestMethod]
@@ -71,13 +89,13 @@ public class FilesProviderTest : TestClass
         TestHelper(new()
         {
             IncDirs = [
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\A"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\B"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\C"),
+                Path.Combine(TestCasesBaseDirectory, @"A"),
+                Path.Combine(TestCasesBaseDirectory, @"B"),
+                Path.Combine(TestCasesBaseDirectory, @"C"),
             ],
             ExcDirs = [
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\A"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\C"),
+                Path.Combine(TestCasesBaseDirectory, @"A"),
+                Path.Combine(TestCasesBaseDirectory, @"C"),
             ],
             IncFiles = [
 
@@ -85,7 +103,11 @@ public class FilesProviderTest : TestClass
             ExcFiles = [
 
             ]
-        }, 3);
+        }, [
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_3"),
+        ]);
     }
 
     [TestMethod]
@@ -100,19 +122,23 @@ public class FilesProviderTest : TestClass
 
             ],
             IncFiles = [
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\a.txt"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\b.txt"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\A\A-FILE_1"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\A\A-FILE_2"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\B\B-FILE_1"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\C\C-FILE_2)"),
+                Path.Combine(TestCasesBaseDirectory, @"a.txt"),
+                Path.Combine(TestCasesBaseDirectory, @"b.txt"),
+                Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_1"),
+                Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_2"),
+                Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_1"),
+                Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_2)"),
             ],
             ExcFiles = [
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\a.txt"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\A\A-FILE_1"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\C\C-FILE_2)"),
+                Path.Combine(TestCasesBaseDirectory, @"a.txt"),
+                Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_1"),
+                Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_2)"),
             ]
-        }, 3);
+        }, [
+            Path.Combine(TestCasesBaseDirectory, @"b.txt"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"B\B-FILE_1"),
+        ]);
     }
 
     [TestMethod]
@@ -120,31 +146,39 @@ public class FilesProviderTest : TestClass
     {
         TestHelper(new()
         {
-            IncDirs = [Path.Combine(TestCasesBaseDirectory, @"TestCases\A"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\B"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\C"),
+            IncDirs = [
+                Path.Combine(TestCasesBaseDirectory, @"A"),
+                Path.Combine(TestCasesBaseDirectory, @"B"),
+                Path.Combine(TestCasesBaseDirectory, @"C"),
             ],
             ExcDirs = [
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\B"),
-
+                Path.Combine(TestCasesBaseDirectory, @"B"),
             ],
             IncFiles = [
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\a.txt"),
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\b.txt"),
+                Path.Combine(TestCasesBaseDirectory, @"a.txt"),
+                Path.Combine(TestCasesBaseDirectory, @"b.txt"),
             ],
             ExcFiles = [
-                Path.Combine(TestCasesBaseDirectory, @"TestCases\A\A-FILE_1"),
+                Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_1"),
             ]
-        }, 6);
+        }, [
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"A\A-FILE_3"),
+            Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_1"),
+            Path.Combine(TestCasesBaseDirectory, @"C\C-FILE_2"),
+            Path.Combine(TestCasesBaseDirectory, @"a.txt"),
+            Path.Combine(TestCasesBaseDirectory, @"b.txt"),
+        ]);
     }
     #endregion
 
-    static void TestHelper(SearchingOption option, int expectedCount, [CallerMemberName] string? caller = null)
+    static void TestHelper(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
     {
         System.Diagnostics.Debug.WriteLine(caller); // debug output
 #pragma warning disable IDE0200
 #pragma warning disable IDE0008 // 使用显式类型
         FilesProvider fp = null!;
+        var orderExpectedFiles = expectedFiles.Order().ToList();
 
         // At once
         for (int i = 0; i < 3; i++)
@@ -201,8 +235,9 @@ public class FilesProviderTest : TestClass
                     break;
             }
 
-            var files = fp.EnumerateFiles().ToList();
-            Assert.AreEqual(expectedCount, files.Count);
+            var files = fp.EnumerateFiles().Select(x => x.StringPath).Order().ToList();
+            Assert.AreEqual(orderExpectedFiles.Count, files.Count);
+            Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
         }
 
         // By each
@@ -271,8 +306,11 @@ public class FilesProviderTest : TestClass
                     }
                     break;
             }
+
+            var files = fp.EnumerateFiles().Select(x => x.StringPath).Order().ToList();
+            Assert.AreEqual(orderExpectedFiles.Count, files.Count);
+            Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
         }
-        System.Diagnostics.Debug.WriteLine($"{0}"); // debug output
 #pragma warning restore IDE0200
 #pragma warning restore IDE0008 // 使用显式类型
     }

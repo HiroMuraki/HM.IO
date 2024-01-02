@@ -1,4 +1,5 @@
-﻿namespace HM.IO.Providers;
+﻿#if PREVIEW
+namespace HM.IO.Providers;
 
 public static class DirectoriesProviderExtensions
 {
@@ -89,3 +90,4 @@ public static class DirectoriesProviderExtensions
         => ExcludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
     #endregion
 }
+#endif

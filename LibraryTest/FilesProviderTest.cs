@@ -18,25 +18,7 @@ public partial class FilesProviderTest : TestClass
     }
 
     [TestMethod]
-    public void MyTestMethod()
-    {
-        var sdir = new SearchingDirectory()
-        {
-            Path = EntryPath.CreateFromPath(Path.Combine(TestCasesBaseDirectory, @"B")),
-            RecurseSubdirectories = true,
-            MaxRecursionDepth = 1
-        };
-
-        FilesProvider fp = FilesProvider.Create().IncludeDirectory(sdir);
-
-        foreach (var item in fp.EnumerateFiles())
-        {
-            System.Diagnostics.Debug.WriteLine($"{item}"); // debug output
-        }
-    }
-
-    [TestMethod]
-    public void SubTest1_IncludedDirecoriesOnly()
+    public void ForFile_IncludedDirecoriesOnly()
     {
         TestHelper(new()
         {
@@ -69,7 +51,7 @@ public partial class FilesProviderTest : TestClass
     }
 
     [TestMethod]
-    public void SubTest2_IncludedFilesOnly()
+    public void ForFile_IncludedFilesOnly()
     {
         TestHelper(new()
         {
@@ -101,7 +83,7 @@ public partial class FilesProviderTest : TestClass
     }
 
     [TestMethod]
-    public void SubTest3_IncludedAndExcludedDirectoriesOnly()
+    public void ForFile_IncludedAndExcludedDirectoriesOnly()
     {
         TestHelper(new()
         {
@@ -128,7 +110,7 @@ public partial class FilesProviderTest : TestClass
     }
 
     [TestMethod]
-    public void SubTest4_IncludedAndExcludedFilesOnly()
+    public void ForFile_IncludedAndExcludedFilesOnly()
     {
         TestHelper(new()
         {
@@ -159,7 +141,7 @@ public partial class FilesProviderTest : TestClass
     }
 
     [TestMethod]
-    public void SubTest5_Full()
+    public void ForFiles_Full()
     {
         TestHelper(new()
         {
@@ -189,7 +171,7 @@ public partial class FilesProviderTest : TestClass
     }
 
     [TestMethod]
-    public void SubTest6_Recursive()
+    public void ForFiles_Recursive()
     {
         TestHelper_Recursive(new()
         {
@@ -258,6 +240,20 @@ public partial class FilesProviderTest : TestClass
             //Path.Combine(TestCasesBaseDirectory, @"C\C1\C2\C3\C4\C-C1-C2-C3-C4-FILE_2"),
         ]);
     }
+
+    [TestMethod]
+    public void ForDirectory_IncludedDirecoriesOnly()
+    {
+        IEnumerable<EntryPath> ep = EntryPathsProvider.Create()
+            .IncludeDirectory(TestCasesBaseDirectory)
+            .EnumerateDirectories();
+
+        Assert.IsTrue(ep.Order().SequenceEqual(new EntryPath[] {
+            EntryPath.CreateFromPath(Path.Combine(TestCasesBaseDirectory, "A")),
+            EntryPath.CreateFromPath(Path.Combine(TestCasesBaseDirectory, "B")),
+            EntryPath.CreateFromPath(Path.Combine(TestCasesBaseDirectory, "C")),
+        }.Order()));
+    }
 }
 
 public partial class FilesProviderTest
@@ -267,7 +263,7 @@ public partial class FilesProviderTest
         System.Diagnostics.Debug.WriteLine(caller); // debug output
 #pragma warning disable IDE0200
 #pragma warning disable IDE0008 // 使用显式类型
-        FilesProvider fp = null!;
+        EntryPathsProvider fp = null!;
         var orderExpectedFiles = expectedFiles.Order().ToList();
 
         // At once
@@ -277,7 +273,7 @@ public partial class FilesProviderTest
             {
                 // SearchingType
                 case 0:
-                    fp = FilesProvider.Create()
+                    fp = EntryPathsProvider.Create()
                         .IncludeDirectories(
                             option.IncDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x)))
                         )
@@ -293,7 +289,7 @@ public partial class FilesProviderTest
                     break;
                 // EntryPathType
                 case 1:
-                    fp = FilesProvider.Create()
+                    fp = EntryPathsProvider.Create()
                        .IncludeDirectories(
                            option.IncDirs.Select(x => EntryPath.CreateFromPath(x))
                        )
@@ -309,7 +305,7 @@ public partial class FilesProviderTest
                     break;
                 // StringType
                 case 2:
-                    fp = FilesProvider.Create()
+                    fp = EntryPathsProvider.Create()
                        .IncludeDirectories(
                            option.IncDirs.Select(x => x.Path)
                        )
@@ -337,7 +333,7 @@ public partial class FilesProviderTest
             {
                 // SearchingType
                 case 0:
-                    fp = FilesProvider.Create();
+                    fp = EntryPathsProvider.Create();
                     foreach (var item in option.IncDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x))))
                     {
                         fp.IncludeDirectory(item);
@@ -357,7 +353,7 @@ public partial class FilesProviderTest
                     break;
                 // EntryPathType
                 case 1:
-                    fp = FilesProvider.Create();
+                    fp = EntryPathsProvider.Create();
                     foreach (var item in option.IncDirs.Select(x => EntryPath.CreateFromPath(x)))
                     {
                         fp.IncludeDirectory(item);
@@ -377,7 +373,7 @@ public partial class FilesProviderTest
                     break;
                 // StringType
                 case 2:
-                    fp = FilesProvider.Create();
+                    fp = EntryPathsProvider.Create();
                     foreach (var item in option.IncDirs.Select(x => x.Path))
                     {
                         fp.IncludeDirectory(item);
@@ -410,11 +406,11 @@ public partial class FilesProviderTest
         System.Diagnostics.Debug.WriteLine(caller); // debug output
 #pragma warning disable IDE0200
 #pragma warning disable IDE0008 // 使用显式类型
-        FilesProvider fp = null!;
+        EntryPathsProvider fp = null!;
         var orderExpectedFiles = expectedFiles.Order().ToList();
 
         // By once
-        fp = FilesProvider.Create()
+        fp = EntryPathsProvider.Create()
             .IncludeDirectories(
                 option.IncDirs.Select(x => x.AsSearchingDirectory())
             )
@@ -438,7 +434,7 @@ public partial class FilesProviderTest
         Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
 
         // By each
-        fp = FilesProvider.Create();
+        fp = EntryPathsProvider.Create();
         foreach (var item in option.IncDirs.Select(x => x.AsSearchingDirectory()))
         {
             fp.IncludeDirectory(item);

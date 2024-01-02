@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿#if PREVIEW
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -115,3 +116,4 @@ public sealed class DirectoriesProvider :
     }
     #endregion
 }
+#endif

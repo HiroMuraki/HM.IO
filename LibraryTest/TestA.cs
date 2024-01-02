@@ -69,3 +69,7 @@
 //        }
 //    }
 //}
+
+using HM.IO.Providers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Reflection;

@@ -14,10 +14,6 @@ public static class DirectoriesProviderExtensions
         {
             self.UseErrorHandler((IErrorHandler)component);
         }
-        else if (typeof(T) == typeof(DirectoryEnumerationOptions))
-        {
-            self.UseDirectoriesEnumerationOptions((DirectoryEnumerationOptions)component);
-        }
         else
         {
             throw new ArgumentOutOfRangeException(nameof(component));

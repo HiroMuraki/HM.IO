@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.IO;
 
 namespace HM.IO.Providers;
 
@@ -31,20 +32,6 @@ public sealed class FilesProvider :
         ArgumentNullException.ThrowIfNull(errorHandler, nameof(errorHandler));
 
         _errorHandler = errorHandler;
-
-        return this;
-    }
-
-    public FilesProvider UseFilesEnumerationOptions(FileEnumerationOptions enumerationOptions)
-    {
-        _filesEnumerationOptions = enumerationOptions;
-
-        return this;
-    }
-
-    public FilesProvider UseDirectoriesEnumerationOptions(DirectoryEnumerationOptions enumerationOptions)
-    {
-        _directoriesEnumerationOptions = enumerationOptions;
 
         return this;
     }
@@ -126,7 +113,7 @@ public sealed class FilesProvider :
         foreach (EntryPath directory in includedDirectories)
         {
             foreach (EntryPath file in _directoryIO.EnumerateFiles(
-                directory, _filesEnumerationOptions.ToEnumerationOptions()))
+                directory, GetFilesEnumerationOptions()))
             {
                 if (CanInclude(file))
                 {
@@ -157,39 +144,50 @@ public sealed class FilesProvider :
     private readonly List<SearchingFile> _excludingFiles = [];
     private IDirectoryIO _directoryIO = new DirectoryIO();
     private IErrorHandler? _errorHandler;
-    private FileEnumerationOptions _filesEnumerationOptions = new()
-    {
-        IgnoreInaccessible = true,
-        AttributesToSkip = (FileAttributes)Int32.MinValue,
-    };
-    private DirectoryEnumerationOptions _directoriesEnumerationOptions = new()
-    {
-        IgnoreInaccessible = true,
-        AttributesToSkip = (FileAttributes)Int32.MinValue,
-    };
     private IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory searchingDirectory)
     {
         yield return searchingDirectory.Path;
 
         if (searchingDirectory.RecurseSubdirectories && searchingDirectory.MaxRecursionDepth > 0)
         {
-            Int32 fixedRecursionDepth = searchingDirectory.MaxRecursionDepth - 1;
-
-            IEnumerable<EntryPath> subdirectories = DirectoriesProvider.Create()
-                .UseDirectoryIO(_directoryIO)
-                .UseDirectoriesEnumerationOptions(_directoriesEnumerationOptions)
-                .IncludeDirectory(searchingDirectory with
+            if (!_directoryIO.Exists(searchingDirectory.Path))
+            {
+                if (searchingDirectory.IgnoreIfNotExists)
                 {
-                    MaxRecursionDepth = fixedRecursionDepth,
-                })
-                .EnumerateDirectories();
+                    yield break;
+                }
+                else
+                {
+                    HandleOrThrow(new DirectoryNotFoundException(searchingDirectory.Path.StringPath));
+                }
+            }
 
-            foreach (EntryPath directory in subdirectories)
+            EnumerationOptions enumerationOptions = GetDirectoriesEnumerationOptions();
+            enumerationOptions.RecurseSubdirectories = searchingDirectory.RecurseSubdirectories;
+            enumerationOptions.MaxRecursionDepth = searchingDirectory.MaxRecursionDepth;
+            enumerationOptions.MaxRecursionDepth = searchingDirectory.MaxRecursionDepth - 1;
+
+            IEnumerable<EntryPath> directories = _directoryIO.EnumerateDirectories(
+                searchingDirectory.Path, enumerationOptions);
+
+            foreach (EntryPath directory in directories)
             {
                 yield return directory;
             }
         }
     }
+    private static EnumerationOptions GetDirectoriesEnumerationOptions() => new()
+    {
+        IgnoreInaccessible = true,
+        MatchType = MatchType.Simple,
+        AttributesToSkip = (FileAttributes)Int32.MinValue,
+    };
+    private static EnumerationOptions GetFilesEnumerationOptions() => new()
+    {
+        IgnoreInaccessible = true,
+        MatchType = MatchType.Simple,
+        AttributesToSkip = (FileAttributes)Int32.MinValue,
+    };
     private FilesProvider AddOptionHelper<T>(List<T> list, ref T item)
     {
         if (!list.Contains(item))
@@ -198,6 +196,14 @@ public sealed class FilesProvider :
         }
 
         return this;
+    }
+    private void HandleOrThrow<TException>(TException exception)
+        where TException : Exception
+    {
+        if (_errorHandler?.Handle(exception) ?? false)
+        {
+            throw exception;
+        }
     }
     private FilesProvider()
     {

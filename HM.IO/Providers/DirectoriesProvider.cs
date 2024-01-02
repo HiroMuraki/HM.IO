@@ -31,13 +31,6 @@ public sealed class DirectoriesProvider :
         return UseErrorHandler<DirectoriesProvider>(errorHandler);
     }
 
-    public DirectoriesProvider UseDirectoriesEnumerationOptions(DirectoryEnumerationOptions enumerationOptions)
-    {
-        _directoriesEnumerationOptions = enumerationOptions;
-
-        return this;
-    }
-
     /// <summary>
     /// Includes a directory for processing by the <see cref="DirectoriesProvider"/>.
     /// </summary>
@@ -104,7 +97,7 @@ public sealed class DirectoriesProvider :
             }
         }
 
-        EnumerationOptions enumerationOptions = _directoriesEnumerationOptions.ToEnumerationOptions();
+        var enumerationOptions = _directoriesEnumerationOptions.ToEnumerationOptions();
         enumerationOptions.RecurseSubdirectories = directory.RecurseSubdirectories;
         enumerationOptions.MaxRecursionDepth = directory.MaxRecursionDepth;
 

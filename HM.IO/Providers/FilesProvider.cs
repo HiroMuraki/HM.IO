@@ -6,7 +6,6 @@ namespace HM.IO.Providers;
 /// Represents a sealed class for providing file-related operations and implements the <see cref="EntryPathsProvider"/> base class.
 /// </summary>
 public sealed class FilesProvider :
-    EntryPathsProvider,
     IFilesProvider
 {
     /// <summary>
@@ -20,12 +19,20 @@ public sealed class FilesProvider :
 
     public FilesProvider UseDirectoryIO(IDirectoryIO directoryIO)
     {
-        return UseDirectoryIO<FilesProvider>(directoryIO);
+        ArgumentNullException.ThrowIfNull(directoryIO, nameof(directoryIO));
+
+        _directoryIO = directoryIO;
+
+        return this;
     }
 
     public FilesProvider UseErrorHandler(IErrorHandler errorHandler)
     {
-        return UseErrorHandler<FilesProvider>(errorHandler);
+        ArgumentNullException.ThrowIfNull(errorHandler, nameof(errorHandler));
+
+        _errorHandler = errorHandler;
+
+        return this;
     }
 
     public FilesProvider UseFilesEnumerationOptions(FileEnumerationOptions enumerationOptions)
@@ -118,7 +125,7 @@ public sealed class FilesProvider :
 
         foreach (EntryPath directory in includedDirectories)
         {
-            foreach (EntryPath file in DirectoryIO.EnumerateFiles(
+            foreach (EntryPath file in _directoryIO.EnumerateFiles(
                 directory, _filesEnumerationOptions.ToEnumerationOptions()))
             {
                 if (CanInclude(file))
@@ -138,7 +145,7 @@ public sealed class FilesProvider :
     /// Enumerates files based on the provided inclusion and exclusion filters.
     /// </summary>
     /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
-    public override IEnumerable<EntryPath> EnumerateItems()
+    public IEnumerable<EntryPath> EnumerateItems()
     {
         return EnumerateFiles();
     }
@@ -148,6 +155,8 @@ public sealed class FilesProvider :
     private readonly List<SearchingDirectory> _excludingDirectories = [];
     private readonly List<SearchingFile> _includingFiles = [];
     private readonly List<SearchingFile> _excludingFiles = [];
+    private IDirectoryIO _directoryIO = new DirectoryIO();
+    private IErrorHandler? _errorHandler;
     private FileEnumerationOptions _filesEnumerationOptions = new()
     {
         IgnoreInaccessible = true,
@@ -167,7 +176,7 @@ public sealed class FilesProvider :
             Int32 fixedRecursionDepth = searchingDirectory.MaxRecursionDepth - 1;
 
             IEnumerable<EntryPath> subdirectories = DirectoriesProvider.Create()
-                .UseDirectoryIO(DirectoryIO)
+                .UseDirectoryIO(_directoryIO)
                 .UseDirectoriesEnumerationOptions(_directoriesEnumerationOptions)
                 .IncludeDirectory(searchingDirectory with
                 {
@@ -180,6 +189,15 @@ public sealed class FilesProvider :
                 yield return directory;
             }
         }
+    }
+    private FilesProvider AddOptionHelper<T>(List<T> list, ref T item)
+    {
+        if (!list.Contains(item))
+        {
+            list.Add(item);
+        }
+
+        return this;
     }
     private FilesProvider()
     {

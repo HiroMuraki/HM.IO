@@ -2,6 +2,31 @@
 
 public static class DirectoriesProviderExtensions
 {
+    #region Use
+    public static DirectoriesProvider Use<T>(this DirectoriesProvider self, T component)
+        where T : notnull
+    {
+        if (typeof(T) == typeof(IDirectoryIO))
+        {
+            self.UseDirectoryIO((IDirectoryIO)component);
+        }
+        else if (typeof(T) == typeof(IErrorHandler))
+        {
+            self.UseErrorHandler((IErrorHandler)component);
+        }
+        else if (typeof(T) == typeof(DirectoryEnumerationOptions))
+        {
+            self.UseDirectoriesEnumerationOptions((DirectoryEnumerationOptions)component);
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException(nameof(component));
+        }
+
+        return self;
+    }
+    #endregion
+
     #region IncludeDirectory
     public static DirectoriesProvider IncludeDirectory(this DirectoriesProvider self, EntryPath path)
     {

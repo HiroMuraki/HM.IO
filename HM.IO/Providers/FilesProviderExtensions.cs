@@ -2,6 +2,26 @@
 
 public static class FilesProviderExtensions
 {
+    #region Use
+    public static FilesProvider Use<T>(this FilesProvider self, T component)
+        where T : notnull
+    {
+        switch (typeof(T))
+        {
+            case IDirectoryIO:
+                self.UseDirectoryIO((IDirectoryIO)component);
+                break;
+            case IErrorHandler:
+                self.UseErrorHandler((IErrorHandler)component);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(component));
+        }
+
+        return self;
+    }
+    #endregion
+
     #region IncludeDirectory
     public static FilesProvider IncludeDirectory(this FilesProvider self, EntryPath path)
     {

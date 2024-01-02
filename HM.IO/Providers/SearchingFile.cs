@@ -25,7 +25,7 @@ public readonly struct SearchingFile
     }
 }
 
-public class FileEnumerationOptions
+public sealed class FileEnumerationOptions
 {
     public FileAttributes AttributesToSkip { get; init; } = (FileAttributes)Int32.MinValue;
 
@@ -44,7 +44,7 @@ public class FileEnumerationOptions
     }
 }
 
-public class DirectoryEnumerationOptions
+public sealed class DirectoryEnumerationOptions
 {
     public FileAttributes AttributesToSkip { get; init; } = (FileAttributes)Int32.MinValue;
 

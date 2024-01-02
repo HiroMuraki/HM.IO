@@ -35,18 +35,20 @@ public abstract class EntryPathsProvider :
         return this;
     }
     protected T UseDirectoryIO<T>(IDirectoryIO directoryIO)
-        where T : EntryPathsProvider
     {
+        ArgumentNullException.ThrowIfNull(directoryIO, nameof(directoryIO));
+
         DirectoryIO = directoryIO;
 
-        return (T)this;
+        return this;
     }
     protected T UseErrorHandler<T>(IErrorHandler errorHandler)
-        where T : EntryPathsProvider
     {
+        ArgumentNullException.ThrowIfNull(errorHandler, nameof(errorHandler));
+
         ErrorHandler = errorHandler;
 
-        return (T)this;
+        return this;
     }
     #endregion
 }

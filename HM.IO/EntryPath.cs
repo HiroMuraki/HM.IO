@@ -162,6 +162,11 @@ public readonly struct EntryPath :
         String[] routes = normalizedPath.Split(s_pathSeparatorChar);
         return new EntryPath(routes);
     }
+
+    public EntryPath() : this([])
+    {
+
+    }
     #endregion
 
     #region NonPublic

@@ -321,7 +321,7 @@ public class FileUtility
     }
     #endregion
 
-    #region ComputeHashAsync
+    #region ComputeHash
     /// <summary>
     /// Asynchronously computes the hash value of a file using a hashing algorithm.
     /// </summary>

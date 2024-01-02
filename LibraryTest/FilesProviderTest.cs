@@ -1,8 +1,8 @@
+#pragma warning disable IDE0008 // 使用显式类型
 #pragma warning disable IDE0049 // 使用框架类型
 
 using HM.IO;
 using HM.IO.Providers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.CompilerServices;
 
 namespace LibraryTest;
@@ -20,7 +20,7 @@ public partial class FilesProviderTest : TestClass
     [TestMethod]
     public void ForFile_IncludedDirecoriesOnly()
     {
-        TestHelper(new()
+        TestHelper_File(new()
         {
             IncDirs = [
                 Path.Combine(TestCasesBaseDirectory, @"A"),
@@ -53,7 +53,7 @@ public partial class FilesProviderTest : TestClass
     [TestMethod]
     public void ForFile_IncludedFilesOnly()
     {
-        TestHelper(new()
+        TestHelper_File(new()
         {
             IncDirs = [
 
@@ -85,7 +85,7 @@ public partial class FilesProviderTest : TestClass
     [TestMethod]
     public void ForFile_IncludedAndExcludedDirectoriesOnly()
     {
-        TestHelper(new()
+        TestHelper_File(new()
         {
             IncDirs = [
                 Path.Combine(TestCasesBaseDirectory, @"A"),
@@ -112,7 +112,7 @@ public partial class FilesProviderTest : TestClass
     [TestMethod]
     public void ForFile_IncludedAndExcludedFilesOnly()
     {
-        TestHelper(new()
+        TestHelper_File(new()
         {
             IncDirs = [
 
@@ -143,7 +143,7 @@ public partial class FilesProviderTest : TestClass
     [TestMethod]
     public void ForFiles_Full()
     {
-        TestHelper(new()
+        TestHelper_File(new()
         {
             IncDirs = [
                 Path.Combine(TestCasesBaseDirectory, @"A"),
@@ -173,7 +173,7 @@ public partial class FilesProviderTest : TestClass
     [TestMethod]
     public void ForFiles_Recursive()
     {
-        TestHelper_Recursive(new()
+        TestHelper_File_Recursive(new()
         {
             IncDirs = [
                 new(Path.Combine(TestCasesBaseDirectory, @"A"), true, Int32.MaxValue),
@@ -240,29 +240,34 @@ public partial class FilesProviderTest : TestClass
             //Path.Combine(TestCasesBaseDirectory, @"C\C1\C2\C3\C4\C-C1-C2-C3-C4-FILE_2"),
         ]);
     }
+}
 
+partial class FilesProviderTest
+{
     [TestMethod]
     public void ForDirectory_IncludedDirecoriesOnly()
     {
-        IEnumerable<EntryPath> ep = EntryPathsProvider.Create()
-            .IncludeDirectory(TestCasesBaseDirectory)
-            .EnumerateDirectories();
-
-        Assert.IsTrue(ep.Order().SequenceEqual(new EntryPath[] {
-            EntryPath.CreateFromPath(Path.Combine(TestCasesBaseDirectory, "A")),
-            EntryPath.CreateFromPath(Path.Combine(TestCasesBaseDirectory, "B")),
-            EntryPath.CreateFromPath(Path.Combine(TestCasesBaseDirectory, "C")),
-        }.Order()));
+        TestHelper_Directory(new()
+        {
+            IncDirs =
+            [
+                TestCasesBaseDirectory,
+            ]
+        },
+        [
+            Path.Combine(TestCasesBaseDirectory, "A"),
+            Path.Combine(TestCasesBaseDirectory, "B"),
+            Path.Combine(TestCasesBaseDirectory, "C"),
+        ]);
     }
 }
 
-public partial class FilesProviderTest
+partial class FilesProviderTest
 {
-    static void TestHelper(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
+    static void TestHelper_File(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
     {
         System.Diagnostics.Debug.WriteLine(caller); // debug output
-#pragma warning disable IDE0200
-#pragma warning disable IDE0008 // 使用显式类型
+
         EntryPathsProvider fp = null!;
         var orderExpectedFiles = expectedFiles.Order().ToList();
 
@@ -397,15 +402,12 @@ public partial class FilesProviderTest
             Assert.AreEqual(orderExpectedFiles.Count, files.Count);
             Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
         }
-#pragma warning restore IDE0200
-#pragma warning restore IDE0008 // 使用显式类型
     }
 
-    static void TestHelper_Recursive(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
+    static void TestHelper_File_Recursive(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
     {
         System.Diagnostics.Debug.WriteLine(caller); // debug output
-#pragma warning disable IDE0200
-#pragma warning disable IDE0008 // 使用显式类型
+
         EntryPathsProvider fp = null!;
         var orderExpectedFiles = expectedFiles.Order().ToList();
 
@@ -454,8 +456,28 @@ public partial class FilesProviderTest
 
         Assert.AreEqual(orderExpectedFiles.Count, files.Count);
         Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
-#pragma warning restore IDE0200
-#pragma warning restore IDE0008 // 使用显式类型
+    }
+
+    static void TestHelper_Directory(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
+    {
+        System.Diagnostics.Debug.WriteLine(caller); // debug output
+
+        var ep = EntryPathsProvider.Create()
+            .IncludeDirectories(
+                option.IncDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x)))
+            )
+            .ExcludeDirectories(
+                option.ExcDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x))
+            ))
+            .IncludeFiles(
+                option.IncFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+            )
+            .ExcludeFiles(
+                option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+            );
+
+        Assert.IsTrue(ep.EnumerateDirectories().Order()
+            .SequenceEqual(expectedFiles.Select(EntryPath.CreateFromPath).Order()));
     }
 
     class SearchingOption
@@ -500,133 +522,3 @@ public partial class FilesProviderTest
         }
     }
 }
-
-//[TestMethod]
-//public void MyTestMethod()
-//{
-//    var source = new FilesProvider.CompressedRoutedPath(new int[] { 1, 2, 3, 4, 5 });
-
-//    var equals = new FilesProvider.CompressedEntryPath[]
-//    {
-//        new(new int[] { 1, 2, 3, 4, 5 }),
-//    };
-
-//    var notEquals = new FilesProvider.CompressedEntryPath[]
-//    {
-//        new(new int[] { 1, 2, 3, 4, 6 }),
-//        new(new int[] { 1, 2, 3, 4, 5, 6 }),
-//        new(new int[] { 1, 2, 3, 4 }),
-//        new(new int[] { }),
-//    };
-
-//    Console.WriteLine(source.CompareTo(source));
-//    Console.WriteLine(source.CompareTo(equals[0]));
-//    Console.WriteLine(source.CompareTo(notEquals[0]));
-//    Console.WriteLine(source.CompareTo(notEquals[1]));
-//    Console.WriteLine(source.CompareTo(notEquals[2]));
-//    Console.WriteLine(source.CompareTo(notEquals[3]));
-//    TestEquality(source, source, true);
-//    foreach (var equal in equals)
-//    {
-//        TestEquality(source, equal, true);
-//    }
-//    foreach (var notEqual in notEquals)
-//    {
-//        TestEquality(source, notEqual, false);
-//    }
-
-//    static void TestEquality(FilesProvider.CompressedEntryPath a, FilesProvider.CompressedEntryPath b, bool equal)
-//    {
-//        if (equal)
-//        {
-//            Assert.IsTrue(a == b);
-//            Assert.IsTrue(!(a != b));
-
-//            Assert.IsTrue(a.Equals(b));
-
-//            Assert.IsTrue(a.CompareTo(b) == 0);
-//            Assert.IsTrue(!(a.CompareTo(b) != 0));
-
-//            Assert.IsTrue(a.GetHashCode() == b.GetHashCode());
-//            Assert.IsTrue(!(a.GetHashCode() != b.GetHashCode()));
-//        }
-//        else
-//        {
-//            Assert.IsFalse(a == b);
-//            Assert.IsFalse(!(a != b));
-
-//            Assert.IsFalse(a.Equals(b));
-
-//            Assert.IsFalse(a.CompareTo(b) == 0);
-//            Assert.IsFalse(!(a.CompareTo(b) != 0));
-//        }
-//    }
-//}
-
-//[TestMethod]
-//public void TestCommon()
-//{
-//    PrintTimestamp();
-
-//    var ep1 = EntryPath.CreateFromPath(@"C:\Windows\System32");
-//    var ep2 = EntryPath.CreateFromPath(@"C:\Windows\System32\etc");
-//    var ep3 = EntryPath.CreateFromPath(@"C:\Windows\Wows64\etc");
-
-//    System.Diagnostics.Debug.WriteLine($"{ep2.IsSubPathOf(ep1)}"); // debug output
-//    System.Diagnostics.Debug.WriteLine($"{ep3.IsSubPathOf(ep1)}"); // debug output
-//                                                                   //var array1 = new string[] { "AAA", "BBB", "CCC" };
-//                                                                   //var array2 = new string[] { "AAA", "BBB", "CCC" };
-//                                                                   //var a = array1.ToImmutableArray(); 
-//                                                                   //var b = array2.ToImmutableArray();
-//                                                                   //System.Diagnostics.Debug.WriteLine($"{array1.GetHashCode()}"); // debug output
-//                                                                   //System.Diagnostics.Debug.WriteLine($"{array2.GetHashCode()}"); // debug output
-//                                                                   //System.Diagnostics.Debug.WriteLine($""); // debug output
-//                                                                   //System.Diagnostics.Debug.WriteLine($"{a.GetHashCode()}"); // debug output
-//                                                                   //System.Diagnostics.Debug.WriteLine($"{b.GetHashCode()}"); // debug output
-//                                                                   //return;
-
-//    //EntryPath[] paths =
-//    //{
-//    //    EntryPath.CreateFromPath(@"C:\Users\11717\Downloads\_FP TEST CASES\A\*"),
-//    //    EntryPath.CreateFromPath(@"C:\Users\11717\Downloads\_FP TEST CASES\B\*"),
-//    //    EntryPath.CreateFromPath(@"C:\Users\11717\Downloads\_FP TEST CASES\C"),
-//    //};
-//    //EntryPath[] eep =
-//    //{
-//    //    EntryPath.CreateFromPath(@"C:\Users\11717\Downloads\_FP TEST CASES\C")
-//    //};
-//    //bool e20 = EntryPathEqualityComparer.Default.Equals(paths[2], eep[0]);
-//    //int hashCode3 = EntryPathEqualityComparer.Default.GetHashCode(paths[0]);
-//    //int hashCode1 = EntryPathEqualityComparer.Default.GetHashCode(paths[2]);
-//    //int hashCode2 = EntryPathEqualityComparer.Default.GetHashCode(eep[0]);
-//    //System.Diagnostics.Debug.WriteLine($"{EqualityComparer<EntryPath>.Default.Equals(eep[0], paths[2])}"); // debug output
-//    //System.Diagnostics.Debug.WriteLine($"{EqualityComparer<EntryPath>.Default.GetHashCode(eep[0])}"); // debug output
-//    //System.Diagnostics.Debug.WriteLine($"{EqualityComparer<EntryPath>.Default.GetHashCode(paths[2])}"); // debug output
-//    //var set = new HashSet<EntryPath>(paths, EntryPathEqualityComparer.Default);
-//    //bool c = set.Contains(eep[0]);
-//    //return;
-
-//    //bool e00 = EntryPathEqualityComparer.Default.Equals(paths[0], eep[0]);
-//    //bool e10 = EntryPathEqualityComparer.Default.Equals(paths[1], eep[0]);
-//    //var eps = paths.Except(eep, EntryPathEqualityComparer.Default).ToList();
-
-//    //int[] values = { 1, 2, 3, 4, 5 };
-//    //int[] ev = { 2, 3, 4 };
-//    //var ints = values.Except(ev).ToList();
-//    //;
-
-//    //string[] strs1 =
-//    //{
-//    //    "AAA",
-//    //    "BBB",
-//    //    "CCC",
-//    //    "DDD",
-//    //};
-//    //var selected = strs1.Except(new string[] { "BBB", "CCC" });
-//    //foreach (var item in selected)
-//    //{
-//    //    System.Diagnostics.Debug.WriteLine($"{item}"); // debug output
-//    //}
-
-//    //System.Diagnostics.Debug.WriteLine("12345"[0..^1]); // debug output
-//}

@@ -1,0 +1,58 @@
+﻿<SearchingDirectory>
+	<Class name="SearchingDirectory">
+		<summary>
+			Represents a readonly structure for specifying a directory to be searched, including optional parameters.
+		</summary>
+	</Class>
+
+	<Properties>
+		<Instance name="Path">
+			<summary>
+				Gets the path of the directory to be searched.
+			</summary>
+			<returns>
+				The path of the directory to be searched.
+			</returns>
+		</Instance>
+
+		<Instance name="RecurseSubdirectories">
+			<summary>
+				Gets or sets a value indicating whether to ignore the file if it does not exist (default is false).
+			</summary>
+			<returns>
+				A value indicating whether to ignore the file if it does not exist (default is false)
+			</returns>
+		</Instance>
+
+		<Instance name="MaxRecursionDepth">
+			<summary>
+				Gets or sets the maximum recursion depth when searching subdirectories (default is Int32.MaxValue).
+			</summary>
+			<returns>
+				The maximum recursion depth when searching subdirectories.
+			</returns>
+		</Instance>
+
+		<Instance name="IgnoreIfNotExists">
+			<summary>
+				Gets or sets a value indicating whether to ignore the directory if it does not exist (default is false).
+			</summary>
+			<returns>
+				A value indicating whether to ignore the directory if it does not exist.
+			</returns>
+		</Instance>
+	</Properties>
+
+	<Methods>
+
+	</Methods>
+
+	<Ctors>
+		<Ctor name="SearchingDirectory[EntryPath]">
+			<summary>
+				Initializes a new instance of the <see cref="SearchingDirectory"/> structure with the specified directory path.
+			</summary>
+			<param name="entryPath">The path of the directory to be searched.</param>
+		</Ctor>
+	</Ctors>
+</SearchingDirectory>

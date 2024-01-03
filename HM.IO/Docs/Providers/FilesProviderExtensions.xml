@@ -1,0 +1,200 @@
+﻿<FilesProviderExtensions>
+	<Class name="FilesProviderExtensions">
+		<summary></summary>
+	</Class>
+
+	<Properties>
+
+	</Properties>
+
+	<Methods>
+		<Static name="Use[EntryPathsProvider,T]">
+			<summary>
+				Use a component.
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="component"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeDirectory[EntryPathsProvider,EntryPath]">
+			<summary>
+				IncludeDirectory[EntryPathsProvider,EntryPath]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="path"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeDirectory[EntryPathsProvider,String]">
+			<summary>
+				IncludeDirectory[EntryPathsProvider,String]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="path"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeDirectories[EntryPathsProvider,IEnumerable&lt;SearchingDirectory&gt;]">
+			<summary>
+				IncludeDirectories[EntryPathsProvider,IEnumerable&lt;SearchingDirectory&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="searchingDirectories"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeDirectories[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]">
+			<summary>
+				IncludeDirectories[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="entryPaths"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeDirectories[EntryPathsProvider,IEnumerable&lt;String&gt;]">
+			<summary>
+				IncludeDirectories[EntryPathsProvider,IEnumerable&lt;String&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="paths"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeFile[EntryPathsProvider,EntryPath]">
+			<summary>
+				IncludeFile[EntryPathsProvider,EntryPath]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="path"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeFile[EntryPathsProvider,String]">
+			<summary>
+				IncludeFile[EntryPathsProvider,String]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="path"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeFiles[EntryPathsProvider,IEnumerable&lt;SearchingFile&gt;]">
+			<summary>
+				IncludeFiles[EntryPathsProvider,IEnumerable&lt;SearchingFile&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="searchingFiles"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeFiles[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]">
+			<summary>
+				IncludeFiles[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="entryPaths"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="IncludeFiles[EntryPathsProvider,IEnumerable&lt;String&gt;]">
+			<summary>
+				IncludeFiles[EntryPathsProvider,IEnumerable&lt;String&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="paths"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeDirectory[EntryPathsProvider,EntryPath]">
+			<summary>
+				ExcludeDirectory[EntryPathsProvider,EntryPath]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="path"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeDirectory[EntryPathsProvider,String]">
+			<summary>
+				ExcludeDirectory[EntryPathsProvider,String]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="path"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeDirectories[EntryPathsProvider,IEnumerable&lt;SearchingDirectory&gt;]">
+			<summary>
+				ExcludeDirectories[EntryPathsProvider,IEnumerable&lt;SearchingDirectory&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="searchingDirectories"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeDirectories[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]">
+			<summary>
+				ExcludeDirectories[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="entryPaths"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeDirectories[EntryPathsProvider,IEnumerable&lt;String&gt;]">
+			<summary>
+				ExcludeDirectories[EntryPathsProvider,IEnumerable&lt;String&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="paths"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeFile[EntryPathsProvider,EntryPath]">
+			<summary>
+				ExcludeFile[EntryPathsProvider,EntryPath]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="path"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeFile[EntryPathsProvider,String]">
+			<summary>
+				ExcludeFile[EntryPathsProvider,String]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="path"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeFiles[EntryPathsProvider,IEnumerable&lt;SearchingFile&gt;]">
+			<summary>
+				ExcludeFiles[EntryPathsProvider,IEnumerable&lt;SearchingFile&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="searchingFiles"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeFiles[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]">
+			<summary>
+				ExcludeFiles[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="entryPaths"></param>
+			<returns></returns>
+		</Static>
+
+		<Static name="ExcludeFiles[EntryPathsProvider,IEnumerable&lt;String&gt;]">
+			<summary>
+				ExcludeFiles[EntryPathsProvider,IEnumerable&lt;String&gt;]
+			</summary>
+			<param name="self">The instance of EntryPathsProvider.</param>
+			<param name="paths"></param>
+			<returns></returns>
+		</Static>
+	</Methods>
+</FilesProviderExtensions>

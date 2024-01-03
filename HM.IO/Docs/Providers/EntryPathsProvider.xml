@@ -1,0 +1,94 @@
+﻿<EntryPathsProvider>
+	<Class name="EntryPathsProvider">
+		<summary>
+			Represents a class for providing file-related and directory-related enumeration operations.
+		</summary>
+	</Class>
+	
+	<Properties>
+		
+	</Properties>
+	
+	<Methods>
+		<Static name="Create[]">
+			<summary>
+				Creates a new instance of <see cref="EntryPathsProvider"/> with default directory input/output operations.
+			</summary>
+			<returns>
+				A new <see cref="EntryPathsProvider"/> instance.
+			</returns>
+		</Static>
+
+		<Instance name="UseDirectoryIO[IDirectoryIO]">
+			<summary></summary>
+			<param name="directoryIO"></param>
+			<returns></returns>
+		</Instance>
+		
+		<Instance name="UseErrorHandler[IErrorHandler]">
+			<summary></summary>
+			<param name="errorHandler"></param>
+			<returns></returns>
+		</Instance>
+		
+		<Instance name="IncludeDirectory[SearchingDirectory]">
+			<summary>
+				Includes a directory for processing by the <see cref="EntryPathsProvider"/>.
+			</summary>
+			<param name="entryPath">
+				Path of the directory to be included.
+			</param>
+			<returns>
+				The updated <see cref="EntryPathsProvider"/> instance.
+			</returns>
+		</Instance>
+		
+		<Instance name="ExcludeDirectory[SearchingDirectory]">
+			<summary>
+				Excludes a directory from processing by the <see cref="EntryPathsProvider"/>.
+			</summary>
+			<param name="entryPath">Path of the directory to be excluded.</param>
+			<returns>
+				The updated <see cref="EntryPathsProvider"/> instance.
+			</returns>
+		</Instance>
+		
+		<Instance name="IncludeFile[SearchingFile]">
+			<summary>
+				Includes a file for processing by the <see cref="EntryPathsProvider"/>.
+			</summary>
+			<param name="entryPath">Path of the file to be included.</param>
+			<returns>
+				The updated <see cref="EntryPathsProvider"/> instance.
+			</returns>
+		</Instance>
+		
+		<Instance name="ExcludeFile[SearchingFile]">
+			<summary>
+				Excludes a file from processing by the <see cref="EntryPathsProvider"/>.
+			</summary>
+			<param name="entryPath">Path of the file to be excluded.</param>
+			<returns>
+				The updated <see cref="EntryPathsProvider"/> instance.
+			</returns>
+		</Instance>
+		
+		<Instance name="EnumerateFiles[]">
+			<summary>
+				Enumerates files based on the provided inclusion and exclusion filters.
+			</summary>
+			<returns>
+				An enumerable collection of <see cref="EntryPath"/> instances representing files.
+			</returns>
+		</Instance>
+		
+		<Instance name="EnumerateDirectories[]">
+			<summary>
+				Enumerates and returns a collection of directories processed by the <see cref="EntryPathsProvider"/>.
+			</summary>
+			<returns>
+				An <see cref="IEnumerable{T}"/> of directory paths.
+			</returns>
+		</Instance>
+	</Methods>
+</EntryPathsProvider>

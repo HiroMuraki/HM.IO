@@ -1,0 +1,38 @@
+﻿<SearchingFile>
+	<Class name="SearchingFile">
+		<summary>
+			Represents a readonly structure for specifying a file to be searched, including optional parameters.
+		</summary>
+	</Class>
+
+	<Properties>
+		<Instance name="Path">
+			<summary>
+				Gets the path of the file to be searched.
+			</summary>
+			<returns>
+				The path of the file to be searched.
+			</returns>
+		</Instance>
+
+		<Instance name="IgnoreIfNotExists">
+			<summary>
+				Gets or sets a value indicating whether to ignore the file if it does not exist (default is false).
+			</summary>
+			<returns>
+				A value indicating whether to ignore the file if it does not exist.
+			</returns>
+		</Instance>
+	</Properties>
+
+	<Ctors>
+		<Ctor name="SearchingFile[]">
+			<summary>
+				Initializes a new instance of the <see cref="SearchingFile"/> structure with the specified file path.
+			</summary>
+			<param name="entryPath">
+				The path of the file to be searched.
+			</param>
+		</Ctor>
+	</Ctors>
+</SearchingFile>

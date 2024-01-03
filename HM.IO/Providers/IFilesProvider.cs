@@ -1,14 +1,8 @@
 ﻿namespace HM.IO.Providers;
 
-/// <summary>
-/// Represents an interface for providing file paths.
-/// </summary>
-public interface IFilesProvider :
-    IItemsProvider<EntryPath>
+/// <include file='Docs/Providers/IFilesProvider.xml' path='IFilesProvider/Class[@name="IFilesProvider"]/*' />
+public interface IFilesProvider
 {
-    /// <summary>
-    /// Enumerates and returns a collection of paths to files.
-    /// </summary>
-    /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing file paths.</returns>
+    /// <include file='Docs/Providers/IFilesProvider.xml' path='IFilesProvider/Methods/Instance[@name="EnumerateFiles[]"]/*' />
     IEnumerable<EntryPath> EnumerateFiles();
 }

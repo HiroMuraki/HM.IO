@@ -1,22 +1,17 @@
 ﻿using System.Collections.Immutable;
-using System.IO;
 
 namespace HM.IO.Providers;
 
-/// <summary>
-/// Represents a class for providing file-related and directory-related enumeration operations.
-/// </summary>
+/// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Class[@name="EntryPathsProvider"]/*' />
 public sealed class EntryPathsProvider
 {
-    /// <summary>
-    /// Creates a new instance of <see cref="EntryPathsProvider"/> with default directory input/output operations.
-    /// </summary>
-    /// <returns>A new <see cref="EntryPathsProvider"/> instance.</returns>
+    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Static[@name="Create[]"]/*' />
     public static EntryPathsProvider Create()
     {
         return new EntryPathsProvider();
     }
 
+    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="UseDirectoryIO[IDirectoryIO]"]/*' />
     public EntryPathsProvider UseDirectoryIO(IDirectoryIO directoryIO)
     {
         ArgumentNullException.ThrowIfNull(directoryIO, nameof(directoryIO));
@@ -26,6 +21,7 @@ public sealed class EntryPathsProvider
         return this;
     }
 
+    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="UseErrorHandler[IErrorHandler]"]/*' />
     public EntryPathsProvider UseErrorHandler(IErrorHandler errorHandler)
     {
         ArgumentNullException.ThrowIfNull(errorHandler, nameof(errorHandler));
@@ -35,50 +31,31 @@ public sealed class EntryPathsProvider
         return this;
     }
 
-    /// <summary>
-    /// Includes a directory for processing by the <see cref="EntryPathsProvider"/>.
-    /// </summary>
-    /// <param name="entryPath">Path of the directory to be included.</param>
-    /// <returns>The updated <see cref="EntryPathsProvider"/> instance.</returns>
+    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="IncludeDirectory[SearchingDirectory]"]/*' />
     public EntryPathsProvider IncludeDirectory(SearchingDirectory entryPath)
     {
         return (EntryPathsProvider)AddOptionHelper(_includingDirectories, ref entryPath);
     }
 
-    /// <summary>
-    /// Excludes a directory from processing by the <see cref="EntryPathsProvider"/>.
-    /// </summary>
-    /// <param name="entryPath">Path of the directory to be excluded.</param>
-    /// <returns>The updated <see cref="EntryPathsProvider"/> instance.</returns>
+    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="ExcludeDirectory[SearchingDirectory]"]/*' />
     public EntryPathsProvider ExcludeDirectory(SearchingDirectory entryPath)
     {
         return (EntryPathsProvider)AddOptionHelper(_excludingDirectories, ref entryPath);
     }
 
-    /// <summary>
-    /// Includes a file for processing by the <see cref="EntryPathsProvider"/>.
-    /// </summary>
-    /// <param name="entryPath">Path of the file to be included.</param>
-    /// <returns>The updated <see cref="EntryPathsProvider"/> instance.</returns>
+    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="IncludeFile[SearchingFile]"]/*' />
     public EntryPathsProvider IncludeFile(SearchingFile entryPath)
     {
         return (EntryPathsProvider)AddOptionHelper(_includingFiles, ref entryPath);
     }
 
-    /// <summary>
-    /// Excludes a file from processing by the <see cref="EntryPathsProvider"/>.
-    /// </summary>
-    /// <param name="entryPath">Path of the file to be excluded.</param>
-    /// <returns>The updated <see cref="EntryPathsProvider"/> instance.</returns>
+    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="ExcludeFile[SearchingFile]"]/*' />
     public EntryPathsProvider ExcludeFile(SearchingFile entryPath)
     {
         return (EntryPathsProvider)AddOptionHelper(_excludingFiles, ref entryPath);
     }
 
-    /// <summary>
-    /// Enumerates files based on the provided inclusion and exclusion filters.
-    /// </summary>
-    /// <returns>An enumerable collection of <see cref="EntryPath"/> instances representing files.</returns>
+    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateFiles[]"]/*' />
     public IEnumerable<EntryPath> EnumerateFiles()
     {
         // Yield from files
@@ -160,10 +137,7 @@ public sealed class EntryPathsProvider
         }
     }
 
-    /// <summary>
-    /// Enumerates and returns a collection of directories processed by the <see cref="EntryPathsProvider"/>.
-    /// </summary>
-    /// <returns>An <see cref="IEnumerable{T}"/> of directory paths.</returns>
+    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateDirectories[]"]/*' />
     public IEnumerable<EntryPath> EnumerateDirectories()
     {
         var excludedDirectories = _excludingDirectories

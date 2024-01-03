@@ -5,32 +5,21 @@
 /// </summary>
 public readonly struct SearchingDirectory
 {
-    /// <summary>
-    /// Gets the path of the directory to be searched.
-    /// </summary>
+    /// <include file='Docs/Providers/SearchingDirectory.xml' path='SearchingDirectory/Properties/Instance[@name="Path"]/*' />
     public EntryPath Path { get; init; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether to recurse into subdirectories when searching (default is false).
-    /// </summary>
+    /// <include file='Docs/Providers/SearchingDirectory.xml' path='SearchingDirectory/Properties/Instance[@name="RecurseSubdirectories"]/*' />
     public Boolean RecurseSubdirectories { get; init; } = false;
 
-    /// <summary>
-    /// Gets or sets the maximum recursion depth when searching subdirectories (default is Int32.MaxValue).
-    /// </summary>
+    /// <include file='Docs/Providers/SearchingDirectory.xml' path='SearchingDirectory/Properties/Instance[@name="RecurseSubdirectories"]/*' />
     public Int32 MaxRecursionDepth { get; init; } = Int32.MaxValue;
 
-    /// <summary>
-    /// Gets or sets a value indicating whether to ignore the directory if it does not exist (default is false).
-    /// </summary>
+    /// <include file='Docs/Providers/SearchingDirectory.xml' path='SearchingDirectory/Properties/Instance[@name="IgnoreIfNotExists"]/*' />
     public Boolean IgnoreIfNotExists { get; init; } = false;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SearchingDirectory"/> structure with the specified directory path.
-    /// </summary>
-    /// <param name="path">The path of the directory to be searched.</param>
-    public SearchingDirectory(EntryPath path)
+    /// <include file='Docs/Providers/SearchingDirectory.xml' path='SearchingDirectory/Ctors/Ctor[@name="SearchingDirectory[EntryPath]"]/*' />
+    public SearchingDirectory(EntryPath entryPath)
     {
-        Path = path;
+        Path = entryPath;
     }
 }

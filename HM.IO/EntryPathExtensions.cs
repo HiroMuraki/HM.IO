@@ -1,5 +1,6 @@
 ﻿namespace HM.IO;
 
+/// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Class[@name="EntryPathExtensions"]/*' />
 public static class EntryPathExtensions
 {
     #region Properties

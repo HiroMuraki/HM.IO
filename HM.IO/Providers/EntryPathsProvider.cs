@@ -4,6 +4,7 @@ namespace HM.IO.Providers;
 
 /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Class[@name="EntryPathsProvider"]/*' />
 public sealed class EntryPathsProvider
+    : IFilesProvider, IDirectoriesProvider
 {
     /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Static[@name="Create[]"]/*' />
     public static EntryPathsProvider Create()

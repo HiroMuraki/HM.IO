@@ -1,7 +1,6 @@
 ﻿namespace HM.IO;
 
 /// <include file='Docs/ErrorHandler.xml' path='ErrorHandler/Class[@name="ErrorHandler"]/*' />
-
 public class ErrorHandler : IErrorHandler
 {
     /// <include file='Docs/ErrorHandler.xml' path='ErrorHandler/Methods/Static[@name="Create[Func&lt;Exception, Boolean&gt;]"]/*' />

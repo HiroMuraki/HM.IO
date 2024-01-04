@@ -1,22 +1,14 @@
 ﻿namespace HM.IO;
 
-/// <summary>
-/// Represents the types of file system entries.
-/// </summary>
+/// <include file='EntryType.xml' path='EntryType/Enum[@name="EntryType"]/*' />
 public enum EntryType
 {
-    /// <summary>
-    /// The entry type is unknown or undefined.
-    /// </summary>
+    /// <include file='EntryType.xml' path='EntryType/Values/Value[@name="Unknow"]/*' />
     Unknow,
 
-    /// <summary>
-    /// The entry is a file.
-    /// </summary>
+    /// <include file='EntryType.xml' path='EntryType/Values/Value[@name="File"]/*' />
     File,
 
-    /// <summary>
-    /// The entry is a directory.
-    /// </summary>
+    /// <include file='EntryType.xml' path='EntryType/Values/Value[@name="Directory"]/*' />
     Directory,
 }

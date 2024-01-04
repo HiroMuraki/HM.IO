@@ -1,0 +1,40 @@
+﻿<FileTimestamps>
+	<Class name="FileTimestamps">
+		<summary>
+			Represents the creation, last write, and last access timestamps of a file.
+		</summary>
+	</Class>
+
+	<Properties>
+		<Instance name="CreationTime">
+			<summary>
+				Gets or sets the timestamp when the file was created.
+			</summary>
+			<returns>
+				A <see cref="DateTime"/> object representing the creation time.
+			</returns>
+		</Instance>
+
+		<Instance name="LastWriteTime">
+			<summary>
+				Gets or sets the timestamp when the file was last written to.
+			</summary>
+			<returns>
+				A <see cref="DateTime"/> object representing the last write time.
+			</returns>
+		</Instance>
+
+		<Instance name="LastAccessTime">
+			<summary>
+				Gets or sets the timestamp when the file was last accessed.
+			</summary>
+			<returns>
+				A <see cref="DateTime"/> object representing the last access time.
+			</returns>
+		</Instance>
+	</Properties>
+
+	<Methods>
+		<!-- No methods defined for this class. -->
+	</Methods>
+</FileTimestamps>

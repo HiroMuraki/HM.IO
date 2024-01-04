@@ -3,12 +3,15 @@
 public static class EntryPathExtensions
 {
     #region Properties
+    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Properties/Static[@name="DirectoryIO"]/*' />
     public static IDirectoryIO DirectoryIO { get; set; } = new DirectoryIO();
 
+    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Properties/Static[@name="FileIO"]/*' />
     public static IFileIO FileIO { get; set; } = new FileIO();
     #endregion
 
     #region Methods
+    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Methods/Static[@name="GetEntryType[EntryPath]"]/*' />
     public static EntryType GetEntryType(this ref EntryPath self)
     {
         if (FileIO.Exists(self))
@@ -25,7 +28,8 @@ public static class EntryPathExtensions
         }
     }
 
-    public static FileInfo AsFileInfo(this ref EntryPath self)
+    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Methods/Static[@name="ToFileInfo[EntryPath]"]/*' />
+    public static FileInfo ToFileInfo(this ref EntryPath self)
     {
         String filePath = self.StringPath;
 
@@ -37,7 +41,8 @@ public static class EntryPathExtensions
         return new FileInfo(filePath);
     }
 
-    public static DirectoryInfo AsDirectoryInfo(this ref EntryPath self)
+    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Methods/Static[@name="ToDirectoryInfo[EntryPath]"]/*' />
+    public static DirectoryInfo ToDirectoryInfo(this ref EntryPath self)
     {
         String directoryPath = self.StringPath;
 

@@ -1,0 +1,22 @@
+﻿<IDirectoriesProvider>
+	<Class name="IDirectoriesProvider">
+		<summary>
+			Represents an interface for providing directory paths.
+		</summary>
+	</Class>
+
+	<Properties>
+		<!-- No properties defined for this class. -->
+	</Properties>
+
+	<Methods>
+		<Instance name="EnumerateDirectories[]">
+			<summary>
+				Enumerates and returns a collection of paths to directories.
+			</summary>
+			<returns>
+				An enumerable collection of <see cref="EntryPath"/> instances representing directory paths.
+			</returns>
+		</Instance>
+	</Methods>
+</IDirectoriesProvider>

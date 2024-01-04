@@ -1,0 +1,192 @@
+﻿<FileUtility>
+	<Class name="FileUtility">
+		<summary>
+			A utility class for file-related operations. This is not a static class for providing a more flexible class.
+		</summary>
+	</Class>
+
+	<ConstValues>
+		<Static name="LargeFileThreshold">
+			<summary>
+				The threshold size in bytes for a file to be considered large.
+			</summary>
+		</Static>
+		<Static name="LargeFileBufferSize">
+			<summary>
+				The buffer size in bytes to use when reading and writing large files.
+			</summary>
+		</Static>
+	</ConstValues>
+
+	<Properties>
+		<Static name="Default">
+			<summary>
+				Gets the default instance of the FileUtility class.
+			</summary>
+			<value>
+				A <see cref="FileUtility"/> instance initialized with a default <see cref="FileIO"/> instance.
+			</value>
+		</Static>
+	</Properties>
+
+	<Methods>
+		<Instance name="CompareEqualityAsync[EntryPath,EntryPath]">
+			<summary>
+				Compares the contents of two files for equality.
+			</summary>
+			<param name="filePath1">The first file to compare.</param>
+			<param name="filePath2">The second file to compare.</param>
+			<returns>
+				true if the files have the same contents; otherwise, false.
+			</returns>
+		</Instance>
+
+		<Instance name="CompareEqualityAsync[EntryPath,EntryPath,CancellationToken]">
+			<summary>
+				Compares the contents of two files for equality, with support for cancellation.
+
+			</summary>
+			<param name="file1">The first file to compare.</param>
+			<param name="file2">The second file to compare.</param>
+			<param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
+			<returns>true if the files have the same contents; otherwise, false.</returns>
+		</Instance>
+
+		<Instance name="CopyAsync[EntryPath,EntryPath]">
+			<summary>
+				Copies a file from the source path to the destination path, with options to overwrite the destination file and support for cancellation.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+			<exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
+			<exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+		</Instance>
+
+		<Instance name="CopyAsync[EntryPath,EntryPath,Boolean]">
+			<summary>
+				Copies a file from the source path to the destination path, with options to overwrite the destination file and support for cancellation.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+			<param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
+			<exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
+			<exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+		</Instance>
+
+		<Instance name="CopyAsync[EntryPath,EntryPath,CancellationToken]">
+			<summary>
+				Copies a file from the source path to the destination path, with options to overwrite the destination file and support for cancellation.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+			<param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
+			<param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
+			<exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
+			<exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+		</Instance>
+
+		<Instance name="CopyAsync[EntryPath,EntryPath,Boolean,CancellationToken]">
+			<summary>
+				Copies a file from the source path to the destination path, with options to overwrite the destination file and support for cancellation.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+			<param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
+			<param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
+			<exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
+			<exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+		</Instance>
+
+		<Instance name="MoveAsync[EntryPath,EntryPath]">
+			<summary>
+				Moves a file from the source path to the destination path.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+			<exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
+			<exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+		</Instance>
+
+		<Instance name="MoveAsync[EntryPath,EntryPath,Boolean]">
+			<summary>
+				Moves a file from the source path to the destination path.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+			<param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
+			<exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
+			<exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+		</Instance>
+
+		<Instance name="MoveAsync[EntryPath,EntryPath,CancellationToken]">
+			<summary>
+				Moves a file from the source path to the destination path.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+			<param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
+			<exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
+			<exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+		</Instance>
+
+		<Instance name="MoveAsync[EntryPath,EntryPath,Boolean,CancellationToken]">
+			<summary>
+				Moves a file from the source path to the destination path.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+			<param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
+			<param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
+			<exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
+			<exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+		</Instance>
+
+		<Instance name="CopyTimestamps[EntryPath,EntryPath]">
+			<summary>
+				Copies the timestamps (creation time, last write time, and last access time) from the source file to the destination file.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+		</Instance>
+
+		<Instance name="CopyAttributes[EntryPath,EntryPath]">
+			<summary>
+				Copies the file attributes (such as read-only or hidden) from the source file to the destination file.
+			</summary>
+			<param name="sourceFilePath">The path of the source file.</param>
+			<param name="destinationFilePath">The path of the destination file.</param>
+		</Instance>
+
+		<Instance name="ComputeHashAsync[EntryPath]">
+			<summary>
+				Asynchronously computes the hash value of a file using a hashing algorithm.
+			</summary>
+			<param name="filePath">The path to the file for which to compute the hash.</param>
+			<returns>
+				A task representing the asynchronous operation. The task will return a string
+				containing the computed hash value of the file, represented as a hexadecimal string.
+			</returns>
+		</Instance>
+
+		<Instance name="ComputeHashAsync[EntryPath,CancellationToken]">
+			<summary>
+				Asynchronously computes the hash value of a file using a hashing algorithm.
+			</summary>
+			<param name="filePath">The path to the file for which to compute the hash.</param>
+			<param name="cancellationToken">A cancellation token that can be used to request the operation's cancellation.This allows the caller to request the task to be canceled if needed.</param>
+			<returns>
+				A task representing the asynchronous operation. The task will return a string
+				containing the computed hash value of the file, represented as a hexadecimal string.
+			</returns>
+		</Instance>
+	</Methods>
+
+	<Ctors>
+		<Ctor name="FileUtility[IFileIO]">
+			<summary>
+				Initializes a new instance of the FileUtility class with the specified <see cref="IFileIO"/> implementation.
+			</summary>
+			<param name="fileIO">The <see cref="IFileIO"/> implementation to use for file operations.</param>
+		</Ctor>
+	</Ctors>
+</FileUtility>

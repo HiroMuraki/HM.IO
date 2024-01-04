@@ -1,0 +1,23 @@
+﻿<IErrorHandler>
+	<Class name="IErrorHandler">
+		<summary>
+			Represents an interface for an error handler that handles exceptions.
+		</summary>
+	</Class>
+
+	<Properties>
+		<!-- No properties defined for this class. -->
+	</Properties>
+
+	<Methods>
+		<Instance name="Handle[Exception]">
+			<summary>
+				Handles the specified exception.
+			</summary>
+			<param name="e">The exception to be handled.</param>
+			<returns>
+				True if the exception was successfully handled; otherwise, false.
+			</returns>
+		</Instance>
+	</Methods>
+</IErrorHandler>

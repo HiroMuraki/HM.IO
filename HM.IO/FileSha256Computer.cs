@@ -4,19 +4,24 @@ using System.Security.Cryptography;
 
 namespace HM.IO;
 
+/// <include file='Docs/FileSha256Computer.xml' path='FileSha256Computer/Class[@name="FileSha256Computer"]/*' />
 public sealed class FileSha256Computer : IFileHashComputer, IFileHashesComputer
 {
+    /// <include file='Docs/FileSha256Computer.xml' path='FileSha256Computer/Methods/Instance[@name="ComputeHashAsync[EntryPath]"]/*' />
     public async Task<String> ComputeHashAsync(EntryPath filePath)
     {
         using var sha256 = SHA256.Create();
         using FileStream fs = File.OpenRead(filePath.StringPath);
         return Convert.ToHexString(await sha256.ComputeHashAsync(fs));
     }
+
+    /// <include file='Docs/FileSha256Computer.xml' path='FileSha256Computer/Methods/Instance[@name="ComputeHashesAsync[IEnumerable&lt;EntryPath&gt;]"]/*' />
     public Task<ImmutableDictionary<EntryPath, String>> ComputeHashesAsync(IEnumerable<EntryPath> filePaths)
     {
         return ComputeHashesAsync(filePaths, false);
     }
 
+    /// <include file='Docs/FileSha256Computer.xml' path='FileSha256Computer/Methods/Instance[@name="ComputeHashesAsync[IEnumerable&lt;EntryPath&gt;,Boolean]"]/*' />
     public async Task<ImmutableDictionary<EntryPath, String>> ComputeHashesAsync(IEnumerable<EntryPath> filePaths, Boolean useTasks)
     {
         if (useTasks)

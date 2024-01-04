@@ -3,40 +3,29 @@ using System.Security.Cryptography;
 
 namespace HM.IO;
 
-/// <summary>
-/// A utility class for file-related operations. This is not a static class for providing a more flexible class.
-/// </summary>
+/// <include file='Docs/FileUtility.xml' path='FileUtility/Class[@name="FileUtility"]/*' />
 public class FileUtility
 {
-    /// <summary>
-    /// The threshold size in bytes for a file to be considered large.
-    /// </summary>
+    #region ConstValues
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/ConstValues/Static[@name="LargeFileThreshold"]/*' />
     public const Int32 LargeFileThreshold = 4096 * 1024;
-    /// <summary>
-    /// The buffer size in bytes to use when reading and writing large files.
-    /// </summary>
-    public const Int32 LargeFileBufferSize = 64 * 1024;
 
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/ConstValues/Static[@name="LargeFileBufferSize"]/*' />
+    public const Int32 LargeFileBufferSize = 64 * 1024;
+    #endregion
+
+    #region Properties
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Properties/Static[@name="Default"]/*' />
     public static FileUtility Default { get; } = new(new FileIO());
+    #endregion
 
     #region Methods
     #region CompareEquality
-    /// <summary>
-    /// Compares the contents of two files for equality.
-    /// </summary>
-    /// <param name="filePath1">The first file to compare.</param>
-    /// <param name="filePath2">The second file to compare.</param>
-    /// <returns>true if the files have the same contents; otherwise, false.</returns>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="CompareEqualityAsync[EntryPath,EntryPath]"]/*' />
     public async Task<Boolean> CompareEqualityAsync(EntryPath filePath1, EntryPath filePath2)
         => await CompareEqualityAsync(filePath1, filePath2, CancellationToken.None);
 
-    /// <summary>
-    /// Compares the contents of two files for equality, with support for cancellation.
-    /// </summary>
-    /// <param name="file1">The first file to compare.</param>
-    /// <param name="file2">The second file to compare.</param>
-    /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
-    /// <returns>true if the files have the same contents; otherwise, false.</returns>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="CompareEqualityAsync[EntryPath,EntryPath,CancellationToken]"]/*' />
     public async Task<Boolean> CompareEqualityAsync(EntryPath filePath1, EntryPath filePath2, CancellationToken cancellationToken)
     {
         if (!_fileIO.Exists(filePath1))
@@ -128,48 +117,19 @@ public class FileUtility
     #endregion
 
     #region Copy
-    /// <summary>
-    /// Copies a file from the source path to the destination path, with options to overwrite the destination file and support for cancellation.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
-    /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
-    /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAsync[EntryPath,EntryPath]"]/*' />
     public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
         => await CopyAsync(sourceFilePath, destinationFilePath, false, CancellationToken.None);
 
-    /// <summary>
-    /// Copies a file from the source path to the destination path, with options to overwrite the destination file and support for cancellation.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
-    /// <param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
-    /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
-    /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAsync[EntryPath,EntryPath,Boolean]"]/*' />
     public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite)
         => await CopyAsync(sourceFilePath, destinationFilePath, overwrite, CancellationToken.None);
 
-    /// <summary>
-    /// Copies a file from the source path to the destination path, with options to overwrite the destination file and support for cancellation.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
-    /// <param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
-    /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
-    /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
-    /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAsync[EntryPath,EntryPath,CancellationToken]"]/*' />
     public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
         => await CopyAsync(sourceFilePath, destinationFilePath, false, cancellationToken);
 
-    /// <summary>
-    /// Copies a file from the source path to the destination path, with options to overwrite the destination file and support for cancellation.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
-    /// <param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
-    /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
-    /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
-    /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAsync[EntryPath,EntryPath,Boolean,CancellationToken]"]/*' />
     public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
     {
         if (!_fileIO.Exists(sourceFilePath))
@@ -214,47 +174,19 @@ public class FileUtility
     #endregion
 
     #region Move
-    /// <summary>
-    /// Moves a file from the source path to the destination path.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
-    /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
-    /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="MoveAsync[EntryPath,EntryPath]"]/*' />
     public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
         => await MoveAsync(sourceFilePath, destinationFilePath, false, CancellationToken.None);
 
-    /// <summary>
-    /// Moves a file from the source path to the destination path.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
-    /// <param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
-    /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
-    /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="MoveAsync[EntryPath,EntryPath,Boolean]"]/*' />
     public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite)
         => await MoveAsync(sourceFilePath, destinationFilePath, overwrite, CancellationToken.None);
 
-    /// <summary>
-    /// Moves a file from the source path to the destination path.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
-    /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
-    /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
-    /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="MoveAsync[EntryPath,EntryPath,CancellationToken]"]/*' />
     public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
         => await MoveAsync(sourceFilePath, destinationFilePath, false, cancellationToken);
 
-    /// <summary>
-    /// Moves a file from the source path to the destination path.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
-    /// <param name="overwrite">Whether to overwrite the destination file if it already exists.</param>
-    /// <param name="cancellationToken">The cancellation token to use to cancel the operation.</param>
-    /// <exception cref="FileNotFoundException">Thrown if the source file does not exist.</exception>
-    /// <exception cref="IOException">Thrown if the destination file exists and overwrite is false, or if the copied file's contents do not match the original file's contents.</exception>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="MoveAsync[EntryPath,EntryPath,Boolean,CancellationToken]"]/*' />
     public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
     {
         if (!overwrite && _fileIO.Exists(destinationFilePath))
@@ -299,21 +231,13 @@ public class FileUtility
     #endregion
 
     #region MetaData
-    /// <summary>
-    /// Copies the timestamps (creation time, last write time, and last access time) from the source file to the destination file.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyTimestamps[EntryPath,EntryPath]"]/*' />
     public void CopyTimestamps(EntryPath sourceFilePath, EntryPath destinationFilePath)
     {
         _fileIO.SetFileTimestamps(destinationFilePath, _fileIO.GetFileTimestamps(sourceFilePath));
     }
 
-    /// <summary>
-    /// Copies the file attributes (such as read-only or hidden) from the source file to the destination file.
-    /// </summary>
-    /// <param name="sourceFilePath">The path of the source file.</param>
-    /// <param name="destinationFilePath">The path of the destination file.</param>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAttributes[EntryPath,EntryPath]"]/*' />
     public void CopyAttributes(EntryPath sourceFilePath, EntryPath destinationFilePath)
     {
         FileAttributes attributes = _fileIO.GetFileAttributes(sourceFilePath);
@@ -322,29 +246,11 @@ public class FileUtility
     #endregion
 
     #region ComputeHash
-    /// <summary>
-    /// Asynchronously computes the hash value of a file using a hashing algorithm.
-    /// </summary>
-    /// <param name="filePath">The path to the file for which to compute the hash.</param>
-    /// <returns>
-    /// A task representing the asynchronous operation. The task will return a string
-    /// containing the computed hash value of the file, represented as a hexadecimal string.
-    /// </returns>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="ComputeHashAsync[EntryPath]"]/*' />
     public async Task<String> ComputeHashAsync(EntryPath filePath)
         => await ComputeHashAsync(filePath, CancellationToken.None);
 
-    /// <summary>
-    /// Asynchronously computes the hash value of a file using a hashing algorithm.
-    /// </summary>
-    /// <param name="filePath">The path to the file for which to compute the hash.</param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used to request the operation's cancellation.
-    /// This allows the caller to request the task to be canceled if needed.
-    /// </param>
-    /// <returns>
-    /// A task representing the asynchronous operation. The task will return a string
-    /// containing the computed hash value of the file, represented as a hexadecimal string.
-    /// </returns>
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Methods/Instance[@name="ComputeHashAsync[EntryPath,CancellationToken]"]/*' />
     public async Task<String> ComputeHashAsync(EntryPath filePath, CancellationToken cancellationToken)
     {
         using var sha256 = SHA256.Create();
@@ -354,10 +260,13 @@ public class FileUtility
     #endregion
     #endregion
 
+    #region Constructors
+    /// <include file='Docs/FileUtility.xml' path='FileUtility/Ctors/Ctor[@name="FileUtility[IFileIO]"]/*' />
     public FileUtility(IFileIO fileIO)
     {
         _fileIO = fileIO;
     }
+    #endregion
 
     #region NonPublic
     private readonly IFileIO _fileIO;

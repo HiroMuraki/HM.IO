@@ -1,25 +1,16 @@
 ﻿namespace HM.IO;
 
-/// <summary>
-/// Represents an implementation of the <see cref="IErrorHandler"/> interface for handling exceptions.
-/// </summary>
+/// <include file='Docs/ErrorHandler.xml' path='ErrorHandler/Class[@name="ErrorHandler"]/*' />
+
 public class ErrorHandler : IErrorHandler
 {
-    /// <summary>
-    /// Creates a new instance of <see cref="ErrorHandler"/> with the specified error handling function.
-    /// </summary>
-    /// <param name="errorHandler">The function that handles exceptions. It should return true if the exception is successfully handled; otherwise, false.</param>
-    /// <returns>A new <see cref="ErrorHandler"/> instance.</returns>
+    /// <include file='Docs/ErrorHandler.xml' path='ErrorHandler/Methods/Static[@name="Create[Func&lt;Exception, Boolean&gt;]"]/*' />
     public static ErrorHandler Create(Func<Exception, Boolean> errorHandler)
     {
         return new ErrorHandler(errorHandler);
     }
 
-    /// <summary>
-    /// Handles the specified exception using the configured error handling function.
-    /// </summary>
-    /// <param name="e">The exception to be handled.</param>
-    /// <returns>True if the exception was successfully handled; otherwise, false.</returns>
+    /// <include file='Docs/ErrorHandler.xml' path='ErrorHandler/Methods/Instance[@name="Handle[Exception]"]/*' />
     public Boolean Handle(Exception e)
     {
         return _errorHandler(e);

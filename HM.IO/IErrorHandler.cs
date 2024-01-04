@@ -1,14 +1,8 @@
 ﻿namespace HM.IO;
 
-/// <summary>
-/// Represents an interface for an error handler that handles exceptions.
-/// </summary>
+/// <include file='Docs/IErrorHandler.xml' path='IErrorHandler/Class[@name="IErrorHandler"]/*' />
 public interface IErrorHandler
 {
-    /// <summary>
-    /// Handles the specified exception.
-    /// </summary>
-    /// <param name="e">The exception to be handled.</param>
-    /// <returns>True if the exception was successfully handled; otherwise, false.</returns>
+    /// <include file='Docs/IErrorHandler.xml' path='IErrorHandler/Methods/Instance[@name="Handle[Exception]"]/*' />
     Boolean Handle(Exception e);
 }

@@ -326,7 +326,7 @@ partial class FilesProviderTest
                     break;
             }
 
-            var files = fp.EnumerateFiles().Select(x => x.StringPath).Order().ToList();
+            var files = fp.EnumerateFilePaths().Select(x => x.StringPath).Order().ToList();
             Assert.AreEqual(orderExpectedFiles.Count, files.Count);
             Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
         }
@@ -398,7 +398,7 @@ partial class FilesProviderTest
                     break;
             }
 
-            var files = fp.EnumerateFiles().Select(x => x.StringPath).Order().ToList();
+            var files = fp.EnumerateFilePaths().Select(x => x.StringPath).Order().ToList();
             Assert.AreEqual(orderExpectedFiles.Count, files.Count);
             Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
         }
@@ -426,8 +426,8 @@ partial class FilesProviderTest
                 option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
             );
 
-        var files = fp.EnumerateFiles().Select(x => x.StringPath).Order().ToList();
-        files = fp.EnumerateFiles().Select(x => x.StringPath).Order().ToList();
+        var files = fp.EnumerateFilePaths().Select(x => x.StringPath).Order().ToList();
+        files = fp.EnumerateFilePaths().Select(x => x.StringPath).Order().ToList();
         foreach (var item in files.ToHashSet().Except(orderExpectedFiles))
         {
             System.Diagnostics.Debug.WriteLine($"?? {item}"); // debug output
@@ -476,7 +476,7 @@ partial class FilesProviderTest
                 option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
             );
 
-        Assert.IsTrue(ep.EnumerateDirectories().Order()
+        Assert.IsTrue(ep.EnumerateDirectoryPaths().Order()
             .SequenceEqual(expectedFiles.Select(EntryPath.CreateFromPath).Order()));
     }
 

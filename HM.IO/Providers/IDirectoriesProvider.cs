@@ -4,5 +4,5 @@
 public interface IDirectoriesProvider
 {
     /// <include file='Docs/Providers/IDirectoriesProvider.xml' path='IDirectoriesProvider/Methods/Instance[@name="EnumerateDirectories[]"]/*' />
-    IEnumerable<EntryPath> EnumerateDirectories();
+    IEnumerable<EntryPath> EnumerateDirectoryPaths();
 }

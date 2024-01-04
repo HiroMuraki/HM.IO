@@ -4,5 +4,5 @@
 public interface IFilesProvider
 {
     /// <include file='Docs/Providers/IFilesProvider.xml' path='IFilesProvider/Methods/Instance[@name="EnumerateFiles[]"]/*' />
-    IEnumerable<EntryPath> EnumerateFiles();
+    IEnumerable<EntryPath> EnumerateFilePaths();
 }

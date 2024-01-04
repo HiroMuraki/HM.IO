@@ -75,7 +75,7 @@
 			</returns>
 		</Instance>
 
-		<Instance name="EnumerateFiles[]">
+		<Instance name="EnumerateFilePaths[]">
 			<summary>
 				Enumerates files based on the provided inclusion and exclusion filters.
 			</summary>
@@ -84,7 +84,7 @@
 			</returns>
 		</Instance>
 
-		<Instance name="EnumerateDirectories[]">
+		<Instance name="EnumerateDirectoryPaths[]">
 			<summary>
 				Enumerates and returns a collection of directories processed by the <see cref="EntryPathsProvider"/>.
 			</summary>

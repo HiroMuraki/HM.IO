@@ -57,7 +57,7 @@ public sealed class EntryPathsProvider
     }
 
     /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateFiles[]"]/*' />
-    public IEnumerable<EntryPath> EnumerateFiles()
+    public IEnumerable<EntryPath> EnumerateFilePaths()
     {
         // Yield from files
         var includingFiles = _includingFiles
@@ -139,7 +139,7 @@ public sealed class EntryPathsProvider
     }
 
     /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateDirectories[]"]/*' />
-    public IEnumerable<EntryPath> EnumerateDirectories()
+    public IEnumerable<EntryPath> EnumerateDirectoryPaths()
     {
         var excludedDirectories = _excludingDirectories
             .SelectMany(EnumerateDirectories)

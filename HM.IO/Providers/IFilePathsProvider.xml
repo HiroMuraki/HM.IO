@@ -1,5 +1,5 @@
-﻿<IFilesProvider>
-	<Class name="IFilesProvider">
+﻿<IFilePathsProvider>
+	<Class name="IFilePathsProvider">
 		<summary>
 			Represents an interface for providing file paths.
 		</summary>
@@ -10,7 +10,7 @@
 	</Properties>
 
 	<Methods>
-		<Instance name="EnumerateFiles[]">
+		<Instance name="EnumerateFilePaths[]">
 			<summary>
 				Enumerates and returns a collection of paths to files.
 			</summary>
@@ -19,4 +19,4 @@
 			</returns>
 		</Instance>
 	</Methods>
-</IFilesProvider>
+</IFilePathsProvider>

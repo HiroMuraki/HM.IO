@@ -1,6 +1,8 @@
-﻿<FilesProviderExtensions>
-	<Class name="FilesProviderExtensions">
-		<summary></summary>
+﻿<EntryPathsProviderExtensions>
+	<Class name="EntryPathsProviderExtensions">
+		<summary>
+			Extension methods for EntryPathsProvider.
+		</summary>
 	</Class>
 
 	<Properties>
@@ -239,4 +241,4 @@
 			</returns>
 		</Static>
 	</Methods>
-</FilesProviderExtensions>
+</EntryPathsProviderExtensions>

@@ -1,18 +1,18 @@
 ﻿namespace HM.IO;
 
-/// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Class[@name="EntryPathExtensions"]/*' />
+/// <include file='EntryPathExtensions.xml' path='EntryPathExtensions/Class[@name="EntryPathExtensions"]/*' />
 public static class EntryPathExtensions
 {
     #region Properties
-    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Properties/Static[@name="DirectoryIO"]/*' />
+    /// <include file='EntryPathExtensions.xml' path='EntryPathExtensions/Properties/Static[@name="DirectoryIO"]/*' />
     public static IDirectoryIO DirectoryIO { get; set; } = new DirectoryIO();
 
-    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Properties/Static[@name="FileIO"]/*' />
+    /// <include file='EntryPathExtensions.xml' path='EntryPathExtensions/Properties/Static[@name="FileIO"]/*' />
     public static IFileIO FileIO { get; set; } = new FileIO();
     #endregion
 
     #region Methods
-    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Methods/Static[@name="GetEntryType[EntryPath]"]/*' />
+    /// <include file='EntryPathExtensions.xml' path='EntryPathExtensions/Methods/Static[@name="GetEntryType[EntryPath]"]/*' />
     public static EntryType GetEntryType(this ref EntryPath self)
     {
         if (FileIO.Exists(self))
@@ -29,7 +29,7 @@ public static class EntryPathExtensions
         }
     }
 
-    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Methods/Static[@name="ToFileInfo[EntryPath]"]/*' />
+    /// <include file='EntryPathExtensions.xml' path='EntryPathExtensions/Methods/Static[@name="ToFileInfo[EntryPath]"]/*' />
     public static FileInfo ToFileInfo(this ref EntryPath self)
     {
         String filePath = self.StringPath;
@@ -42,7 +42,7 @@ public static class EntryPathExtensions
         return new FileInfo(filePath);
     }
 
-    /// <include file='Docs/EntryPathExtensions.xml' path='EntryPathExtensions/Methods/Static[@name="ToDirectoryInfo[EntryPath]"]/*' />
+    /// <include file='EntryPathExtensions.xml' path='EntryPathExtensions/Methods/Static[@name="ToDirectoryInfo[EntryPath]"]/*' />
     public static DirectoryInfo ToDirectoryInfo(this ref EntryPath self)
     {
         String directoryPath = self.StringPath;

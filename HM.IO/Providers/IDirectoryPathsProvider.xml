@@ -1,5 +1,5 @@
-﻿<IDirectoriesProvider>
-	<Class name="IDirectoriesProvider">
+﻿<IDirectoryPathsProvider>
+	<Class name="IDirectoryPathsProvider">
 		<summary>
 			Represents an interface for providing directory paths.
 		</summary>
@@ -10,7 +10,7 @@
 	</Properties>
 
 	<Methods>
-		<Instance name="EnumerateDirectories[]">
+		<Instance name="EnumerateDirectoryPaths[]">
 			<summary>
 				Enumerates and returns a collection of paths to directories.
 			</summary>
@@ -19,4 +19,4 @@
 			</returns>
 		</Instance>
 	</Methods>
-</IDirectoriesProvider>
+</IDirectoryPathsProvider>

@@ -2,17 +2,17 @@
 
 namespace HM.IO.Providers;
 
-/// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Class[@name="EntryPathsProvider"]/*' />
+/// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Class[@name="EntryPathsProvider"]/*' />
 public sealed class EntryPathsProvider
-    : IFilesProvider, IDirectoriesProvider
+    : IFilePathsProvider, IDirectoryPathsProvider
 {
-    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Static[@name="Create[]"]/*' />
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Static[@name="Create[]"]/*' />
     public static EntryPathsProvider Create()
     {
         return new EntryPathsProvider();
     }
 
-    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="UseDirectoryIO[IDirectoryIO]"]/*' />
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="UseDirectoryIO[IDirectoryIO]"]/*' />
     public EntryPathsProvider UseDirectoryIO(IDirectoryIO directoryIO)
     {
         ArgumentNullException.ThrowIfNull(directoryIO, nameof(directoryIO));
@@ -22,7 +22,7 @@ public sealed class EntryPathsProvider
         return this;
     }
 
-    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="UseErrorHandler[IErrorHandler]"]/*' />
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="UseErrorHandler[IErrorHandler]"]/*' />
     public EntryPathsProvider UseErrorHandler(IErrorHandler errorHandler)
     {
         ArgumentNullException.ThrowIfNull(errorHandler, nameof(errorHandler));
@@ -32,31 +32,31 @@ public sealed class EntryPathsProvider
         return this;
     }
 
-    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="IncludeDirectory[SearchingDirectory]"]/*' />
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="IncludeDirectory[SearchingDirectory]"]/*' />
     public EntryPathsProvider IncludeDirectory(SearchingDirectory entryPath)
     {
         return (EntryPathsProvider)AddOptionHelper(_includingDirectories, ref entryPath);
     }
 
-    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="ExcludeDirectory[SearchingDirectory]"]/*' />
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="ExcludeDirectory[SearchingDirectory]"]/*' />
     public EntryPathsProvider ExcludeDirectory(SearchingDirectory entryPath)
     {
         return (EntryPathsProvider)AddOptionHelper(_excludingDirectories, ref entryPath);
     }
 
-    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="IncludeFile[SearchingFile]"]/*' />
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="IncludeFile[SearchingFile]"]/*' />
     public EntryPathsProvider IncludeFile(SearchingFile entryPath)
     {
         return (EntryPathsProvider)AddOptionHelper(_includingFiles, ref entryPath);
     }
 
-    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="ExcludeFile[SearchingFile]"]/*' />
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="ExcludeFile[SearchingFile]"]/*' />
     public EntryPathsProvider ExcludeFile(SearchingFile entryPath)
     {
         return (EntryPathsProvider)AddOptionHelper(_excludingFiles, ref entryPath);
     }
 
-    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateFiles[]"]/*' />
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateFiles[]"]/*' />
     public IEnumerable<EntryPath> EnumerateFilePaths()
     {
         // Yield from files
@@ -138,7 +138,7 @@ public sealed class EntryPathsProvider
         }
     }
 
-    /// <include file='Docs/Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateDirectories[]"]/*' />
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateDirectories[]"]/*' />
     public IEnumerable<EntryPath> EnumerateDirectoryPaths()
     {
         var excludedDirectories = _excludingDirectories

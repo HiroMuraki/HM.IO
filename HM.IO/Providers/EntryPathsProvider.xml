@@ -35,6 +35,16 @@
 			</returns>
 		</Instance>
 
+		<Instance name="UseFileProcessor[IAsyncFileProcessor]">
+			<summary></summary>
+			<param name="fileProcessor">
+				The file processor to be used by the <see cref="EntryPathsProvider"/>.
+			</param>
+			<returns>
+				The updated <see cref="EntryPathsProvider"/> instance.
+			</returns>
+		</Instance>
+
 		<Instance name="IncludeDirectory[SearchingDirectory]">
 			<summary>
 				Includes a directory for processing by the <see cref="EntryPathsProvider"/>.

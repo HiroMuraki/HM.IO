@@ -32,28 +32,35 @@ public sealed class EntryPathsProvider
         return this;
     }
 
+    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="UseFileProcessor[IAsyncFileProcessor]"]/*' />
+    public EntryPathsProvider UseFileProcessor(IAsyncFileProcessor fileProcessor)
+    {
+        _fileProcessors.Add(fileProcessor);
+        return this;
+    }
+
     /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="IncludeDirectory[SearchingDirectory]"]/*' />
     public EntryPathsProvider IncludeDirectory(SearchingDirectory entryPath)
     {
-        return (EntryPathsProvider)AddOptionHelper(_includingDirectories, ref entryPath);
+        return AddOptionHelper(_includingDirectories, ref entryPath);
     }
 
     /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="ExcludeDirectory[SearchingDirectory]"]/*' />
     public EntryPathsProvider ExcludeDirectory(SearchingDirectory entryPath)
     {
-        return (EntryPathsProvider)AddOptionHelper(_excludingDirectories, ref entryPath);
+        return AddOptionHelper(_excludingDirectories, ref entryPath);
     }
 
     /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="IncludeFile[SearchingFile]"]/*' />
     public EntryPathsProvider IncludeFile(SearchingFile entryPath)
     {
-        return (EntryPathsProvider)AddOptionHelper(_includingFiles, ref entryPath);
+        return AddOptionHelper(_includingFiles, ref entryPath);
     }
 
     /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="ExcludeFile[SearchingFile]"]/*' />
     public EntryPathsProvider ExcludeFile(SearchingFile entryPath)
     {
-        return (EntryPathsProvider)AddOptionHelper(_excludingFiles, ref entryPath);
+        return AddOptionHelper(_excludingFiles, ref entryPath);
     }
 
     /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateFiles[]"]/*' />
@@ -184,6 +191,7 @@ public sealed class EntryPathsProvider
     private readonly List<SearchingFile> _excludingFiles = [];
     private IDirectoryIO _directoryIO = new DirectoryIO();
     private IErrorHandler? _errorHandler;
+    private readonly List<IAsyncFileProcessor> _fileProcessors = [];
     private static EnumerationOptions GetDirectoriesEnumerationOptions() => new()
     {
         IgnoreInaccessible = true,

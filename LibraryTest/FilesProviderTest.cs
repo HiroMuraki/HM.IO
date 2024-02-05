@@ -242,7 +242,7 @@ public partial class FilesProviderTest : TestClass
     }
 }
 
-partial class FilesProviderTest
+public partial class FilesProviderTest
 {
     [TestMethod]
     public void ForDirectory_IncludedDirecoriesOnly()
@@ -262,9 +262,9 @@ partial class FilesProviderTest
     }
 }
 
-partial class FilesProviderTest
+public partial class FilesProviderTest
 {
-    static void TestHelper_File(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
+    private static void TestHelper_File(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
     {
         System.Diagnostics.Debug.WriteLine(caller); // debug output
 
@@ -404,7 +404,7 @@ partial class FilesProviderTest
         }
     }
 
-    static void TestHelper_File_Recursive(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
+    private static void TestHelper_File_Recursive(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
     {
         System.Diagnostics.Debug.WriteLine(caller); // debug output
 
@@ -458,7 +458,7 @@ partial class FilesProviderTest
         Assert.IsTrue(orderExpectedFiles.SequenceEqual(files));
     }
 
-    static void TestHelper_Directory(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
+    private static void TestHelper_Directory(SearchingOption option, List<string> expectedFiles, [CallerMemberName] string? caller = null)
     {
         System.Diagnostics.Debug.WriteLine(caller); // debug output
 
@@ -480,7 +480,7 @@ partial class FilesProviderTest
             .SequenceEqual(expectedFiles.Select(EntryPath.CreateFromPath).Order()));
     }
 
-    class SearchingOption
+    private class SearchingOption
     {
         public PathOption[] IncDirs { get; set; } = [];
         public PathOption[] IncFiles { get; set; } = [];
@@ -488,7 +488,7 @@ partial class FilesProviderTest
         public PathOption[] ExcFiles { get; set; } = [];
     }
 
-    class PathOption
+    private class PathOption
     {
         public string Path { get; }
         public bool IncSub { get; }

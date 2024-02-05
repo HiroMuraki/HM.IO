@@ -1,7 +1,6 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
 
 using HM.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LibraryTest;
 

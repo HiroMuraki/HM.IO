@@ -40,7 +40,7 @@ public static class FileUtilityExtensions
     #endregion
 
     #region MetaData
-    public static void CopyTimestamps(this FileUtility self, String sourceFilePath, String destinationFilePath) 
+    public static void CopyTimestamps(this FileUtility self, String sourceFilePath, String destinationFilePath)
         => self.CopyTimestamps(EntryPath.CreateFromPath(sourceFilePath), EntryPath.CreateFromPath(destinationFilePath));
 
     public static void CopyAttributes(this FileUtility self, String sourceFilePath, String destinationFilePath)

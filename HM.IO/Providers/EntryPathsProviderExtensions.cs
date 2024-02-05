@@ -16,6 +16,9 @@ public static class EntryPathsProviderExtensions
             case IErrorHandler:
                 self.UseErrorHandler((IErrorHandler)component);
                 break;
+            case IAsyncFileProcessor:
+                self.UseFileProcessor((IAsyncFileProcessor)component);
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(component));
         }

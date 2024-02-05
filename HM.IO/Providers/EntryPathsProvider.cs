@@ -32,13 +32,6 @@ public sealed class EntryPathsProvider
         return this;
     }
 
-    /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="UseFileProcessor[IAsyncFileProcessor]"]/*' />
-    public EntryPathsProvider UseFileProcessor(IAsyncFileProcessor fileProcessor)
-    {
-        _fileProcessors.Add(fileProcessor);
-        return this;
-    }
-
     /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="IncludeDirectory[SearchingDirectory]"]/*' />
     public EntryPathsProvider IncludeDirectory(SearchingDirectory entryPath)
     {
@@ -66,80 +59,88 @@ public sealed class EntryPathsProvider
     /// <include file='Providers/EntryPathsProvider.xml' path='EntryPathsProvider/Methods/Instance[@name="EnumerateFiles[]"]/*' />
     public IEnumerable<EntryPath> EnumerateFilePaths()
     {
-        // Yield from files
-        var includingFiles = _includingFiles
-            .Where(x => !String.IsNullOrEmpty(x.Path.StringPath))
-            .Select(x => x.Path)
-            .ToList();
-        var excludingFiles = _excludingFiles
-            .Where(x => !String.IsNullOrEmpty(x.Path.StringPath))
-            .Select(x => x.Path)
-            .ToImmutableHashSet();
-
-        foreach (EntryPath file in includingFiles)
+        foreach (EntryPath entryPath in EnumerateCore())
         {
-            if (CanInclude(file))
-            {
-                yield return file;
-            }
+            yield return entryPath;
         }
-
-        // yield from directories
-        var excludedDirectories = _excludingDirectories
-            .SelectMany(EnumerateDirectories)
-            .ToImmutableHashSet();
-
-        var includedDirectories = _includingDirectories
-            .SelectMany(EnumerateDirectories)
-            .Where(d => !excludedDirectories.Contains(d))
-            .ToList();
-
-        foreach (EntryPath directory in includedDirectories)
+        
+        IEnumerable<EntryPath> EnumerateCore()
         {
-            foreach (EntryPath file in _directoryIO.EnumerateFiles(
-                directory, GetFilesEnumerationOptions()))
+            // Yield from files
+            var includingFiles = _includingFiles
+                .Where(x => !String.IsNullOrEmpty(x.Path.StringPath))
+                .Select(x => x.Path)
+                .ToList();
+            var excludingFiles = _excludingFiles
+                .Where(x => !String.IsNullOrEmpty(x.Path.StringPath))
+                .Select(x => x.Path)
+                .ToImmutableHashSet();
+
+            foreach (EntryPath file in includingFiles)
             {
                 if (CanInclude(file))
                 {
                     yield return file;
                 }
             }
-        }
 
-        Boolean CanInclude(EntryPath entryPath)
-        {
-            return !excludingFiles.Contains(entryPath);
-        }
+            // yield from directories
+            var excludedDirectories = _excludingDirectories
+                .SelectMany(EnumerateDirectories)
+                .ToImmutableHashSet();
 
-        IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory searchingDirectory)
-        {
-            yield return searchingDirectory.Path;
+            var includedDirectories = _includingDirectories
+                .SelectMany(EnumerateDirectories)
+                .Where(d => !excludedDirectories.Contains(d))
+                .ToList();
 
-            if (searchingDirectory.RecurseSubdirectories && searchingDirectory.MaxRecursionDepth > 0)
+            foreach (EntryPath directory in includedDirectories)
             {
-                if (!_directoryIO.Exists(searchingDirectory.Path))
+                foreach (EntryPath file in _directoryIO.EnumerateFiles(
+                    directory, GetFilesEnumerationOptions()))
                 {
-                    if (searchingDirectory.IgnoreIfNotExists)
+                    if (CanInclude(file))
                     {
-                        yield break;
-                    }
-                    else
-                    {
-                        HandleOrThrow(new DirectoryNotFoundException(searchingDirectory.Path.StringPath));
+                        yield return file;
                     }
                 }
+            }
 
-                EnumerationOptions enumerationOptions = GetDirectoriesEnumerationOptions();
-                enumerationOptions.RecurseSubdirectories = searchingDirectory.RecurseSubdirectories;
-                enumerationOptions.MaxRecursionDepth = searchingDirectory.MaxRecursionDepth;
-                enumerationOptions.MaxRecursionDepth = searchingDirectory.MaxRecursionDepth - 1;
+            Boolean CanInclude(EntryPath entryPath)
+            {
+                return !excludingFiles.Contains(entryPath);
+            }
 
-                IEnumerable<EntryPath> directories = _directoryIO.EnumerateDirectories(
-                    searchingDirectory.Path, enumerationOptions);
+            IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory searchingDirectory)
+            {
+                yield return searchingDirectory.Path;
 
-                foreach (EntryPath directory in directories)
+                if (searchingDirectory.RecurseSubdirectories && searchingDirectory.MaxRecursionDepth > 0)
                 {
-                    yield return directory;
+                    if (!_directoryIO.Exists(searchingDirectory.Path))
+                    {
+                        if (searchingDirectory.IgnoreIfNotExists)
+                        {
+                            yield break;
+                        }
+                        else
+                        {
+                            HandleOrThrow(new DirectoryNotFoundException(searchingDirectory.Path.StringPath));
+                        }
+                    }
+
+                    EnumerationOptions enumerationOptions = GetDirectoriesEnumerationOptions();
+                    enumerationOptions.RecurseSubdirectories = searchingDirectory.RecurseSubdirectories;
+                    enumerationOptions.MaxRecursionDepth = searchingDirectory.MaxRecursionDepth;
+                    enumerationOptions.MaxRecursionDepth = searchingDirectory.MaxRecursionDepth - 1;
+
+                    IEnumerable<EntryPath> directories = _directoryIO.EnumerateDirectories(
+                        searchingDirectory.Path, enumerationOptions);
+
+                    foreach (EntryPath directory in directories)
+                    {
+                        yield return directory;
+                    }
                 }
             }
         }

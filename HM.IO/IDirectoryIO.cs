@@ -8,9 +8,9 @@ public interface IDirectoryIO
     /// <include file='IDirectoryIO.xml' path='IDirectoryIO/Methods/Instance[@name="Exists[EntryPath]"]/*' />
     Boolean Exists(EntryPath path);
 
-    /// <include file='IDirectoryIO.xml' path='IDirectoryIO/Methods/Instance[@name="EnumerateFiles[EntryPath,EnumerationOptions]"]/*' />
-    IEnumerable<EntryPath> EnumerateFiles(EntryPath path, EnumerationOptions enumerationOptions);
+    /// <include file='IDirectoryIO.xml' path='IDirectoryIO/Methods/Instance[@name="EnumerateFilePaths[EntryPath,EnumerationOptions]"]/*' />
+    IEnumerable<EntryPath> EnumerateFilePaths(EntryPath path, EnumerationOptions enumerationOptions);
 
-    /// <include file='IDirectoryIO.xml' path='IDirectoryIO/Methods/Instance[@name="EnumerateDirectories[EntryPath,EnumerationOptions]"]/*' />
-    IEnumerable<EntryPath> EnumerateDirectories(EntryPath path, EnumerationOptions enumerationOptions);
+    /// <include file='IDirectoryIO.xml' path='IDirectoryIO/Methods/Instance[@name="EnumerateDirectoryPaths[EntryPath,EnumerationOptions]"]/*' />
+    IEnumerable<EntryPath> EnumerateDirectoryPaths(EntryPath path, EnumerationOptions enumerationOptions);
 }

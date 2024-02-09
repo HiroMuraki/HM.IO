@@ -20,7 +20,7 @@
 			</returns>
 		</Instance>
 
-		<Instance name="EnumerateFiles[EntryPath,EnumerationOptions]">
+		<Instance name="EnumerateFilePaths[EntryPath,EnumerationOptions]">
 			<summary>
 				Enumerates directories in the specified path with the given options.
 			</summary>
@@ -31,7 +31,7 @@
 			</returns>
 		</Instance>
 
-		<Instance name="EnumerateDirectories[EntryPath,EnumerationOptions]">
+		<Instance name="EnumerateDirectoryPaths[EntryPath,EnumerationOptions]">
 			<summary>
 				Enumerates files in the specified path with the given options.
 			</summary>

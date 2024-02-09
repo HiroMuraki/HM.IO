@@ -27,7 +27,7 @@ public sealed class DirectoryIO :
     }
 
     /// <include file='DirectoryIO.xml' path='DirectoryIO/Methods/Instance[@name="EnumerateDirectories[EntryPath,EnumerationOptions]"]/*' />
-    public IEnumerable<EntryPath> EnumerateDirectories(EntryPath path, EnumerationOptions enumerationOptions)
+    public IEnumerable<EntryPath> EnumerateDirectoryPaths(EntryPath path, EnumerationOptions enumerationOptions)
     {
         return Directory
             .EnumerateDirectories(path.StringPath, "*", enumerationOptions)
@@ -35,7 +35,7 @@ public sealed class DirectoryIO :
     }
 
     /// <include file='DirectoryIO.xml' path='DirectoryIO/Methods/Instance[@name="EnumerateFiles[EntryPath,EnumerationOptions]"]/*' />
-    public IEnumerable<EntryPath> EnumerateFiles(EntryPath path, EnumerationOptions enumerationOptions)
+    public IEnumerable<EntryPath> EnumerateFilePaths(EntryPath path, EnumerationOptions enumerationOptions)
     {
         return Directory
             .EnumerateFiles(path.StringPath, "*", enumerationOptions)

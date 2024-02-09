@@ -3,6 +3,9 @@
 /// <include file='FileIO.xml' path='FileIO/Class[@name="FileIO"]/*' />
 public class FileIO : IFileIO
 {
+    /// <include file='FileIO.xml' path='FileIO/Properties/Static[@name="Default"]/*' />
+    public static FileIO Default { get; } = new();
+
     /// <include file='FileIO.xml' path='FileIO/Methods/Instance[@name="Exists[EntryPath]"]/*' />
     public Boolean Exists(EntryPath filePath)
     {
@@ -34,11 +37,11 @@ public class FileIO : IFileIO
     }
 
     /// <include file='FileIO.xml' path='FileIO/Methods/Instance[@name="GetFileTimestamps[EntryPath]"]/*' />
-    public FileTimestamps GetFileTimestamps(EntryPath path)
+    public EntryTimestamps GetFileTimestamps(EntryPath path)
     {
         String filePath = path.StringPath;
 
-        return new FileTimestamps
+        return new EntryTimestamps
         {
             CreationTime = File.GetCreationTime(filePath),
             LastWriteTime = File.GetLastWriteTime(filePath),
@@ -47,7 +50,7 @@ public class FileIO : IFileIO
     }
 
     /// <include file='FileIO.xml' path='FileIO/Methods/Instance[@name="SetFileTimestamps[EntryPath,FileTimestamps]"]/*' />
-    public void SetFileTimestamps(EntryPath path, FileTimestamps timestamps)
+    public void SetFileTimestamps(EntryPath path, EntryTimestamps timestamps)
     {
         String filePath = path.StringPath;
 
@@ -67,4 +70,11 @@ public class FileIO : IFileIO
     {
         File.SetAttributes(path.StringPath, attributes);
     }
+
+    #region NonPublic
+    private FileIO()
+    {
+
+    }
+    #endregion
 }

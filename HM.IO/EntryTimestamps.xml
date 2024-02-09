@@ -1,5 +1,5 @@
 ﻿<FileTimestamps>
-	<Class name="FileTimestamps">
+	<Class name="EntryTimestamps">
 		<summary>
 			Represents the creation, last write, and last access timestamps of a file.
 		</summary>

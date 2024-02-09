@@ -190,7 +190,7 @@ public sealed class EntryPathsProvider
     private readonly List<SearchingDirectory> _excludingDirectories = [];
     private readonly List<SearchingFile> _includingFiles = [];
     private readonly List<SearchingFile> _excludingFiles = [];
-    private IDirectoryIO _directoryIO = new DirectoryIO();
+    private IDirectoryIO _directoryIO = DirectoryIO.Default;
     private IErrorHandler? _errorHandler;
     private readonly List<IAsyncFileProcessor> _fileProcessors = [];
     private static EnumerationOptions GetDirectoriesEnumerationOptions() => new()

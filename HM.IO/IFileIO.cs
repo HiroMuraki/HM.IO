@@ -19,10 +19,10 @@ public interface IFileIO
     void Delete(EntryPath path);
 
     /// <include file='IFileIO.xml' path='IFileIO/Methods/Instance[@name="GetFileTimestamps[EntryPath]"]/*' />
-    FileTimestamps GetFileTimestamps(EntryPath path);
+    EntryTimestamps GetFileTimestamps(EntryPath path);
 
     /// <include file='IFileIO.xml' path='IFileIO/Methods/Instance[@name="SetFileTimestamps[EntryPath,FileTimestamps]"]/*' />
-    void SetFileTimestamps(EntryPath path, FileTimestamps timestamps);
+    void SetFileTimestamps(EntryPath path, EntryTimestamps timestamps);
 
     /// <include file='IFileIO.xml' path='IFileIO/Methods/Instance[@name="GetFileAttributes[EntryPath]"]/*' />
     FileAttributes GetFileAttributes(EntryPath path);

@@ -15,7 +15,7 @@ public class FileUtility
 
     #region Properties
     /// <include file='FileUtility.xml' path='FileUtility/Properties/Static[@name="Default"]/*' />
-    public static FileUtility Default { get; } = new(new FileIO());
+    public static FileUtility Default { get; } = new(FileIO.Default);
     #endregion
 
     #region Methods
@@ -198,7 +198,7 @@ public class FileUtility
             throw new InvalidOperationException($"The `{destinationFilePath.StringPath}` can be equal to `{sourceFilePath.StringPath}`.");
         }
 
-        FileTimestamps sourceFileTimeStamps = _fileIO.GetFileTimestamps(sourceFilePath);
+        EntryTimestamps sourceFileTimeStamps = _fileIO.GetFileTimestamps(sourceFilePath);
         FileAttributes fileAttributes = _fileIO.GetFileAttributes(sourceFilePath);
 
         if (Path.GetPathRoot(sourceFilePath.StringPath) == Path.GetPathRoot(destinationFilePath.StringPath))

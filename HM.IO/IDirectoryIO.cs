@@ -3,8 +3,10 @@
 /// <include file='IDirectoryIO.xml' path='IDirectoryIO/Class[@name="IDirectoryIO"]/*' />
 public interface IDirectoryIO
 {
+    EntryTimestamps GetFileTimestamps(EntryPath path);
+
     /// <include file='IDirectoryIO.xml' path='IDirectoryIO/Methods/Instance[@name="Exists[EntryPath]"]/*' />
-    Boolean Exists(EntryPath entryPath);
+    Boolean Exists(EntryPath path);
 
     /// <include file='IDirectoryIO.xml' path='IDirectoryIO/Methods/Instance[@name="EnumerateFiles[EntryPath,EnumerationOptions]"]/*' />
     IEnumerable<EntryPath> EnumerateFiles(EntryPath path, EnumerationOptions enumerationOptions);

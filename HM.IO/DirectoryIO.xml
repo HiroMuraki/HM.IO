@@ -6,10 +6,27 @@
 	</Class>
 
 	<Properties>
-		<!-- No properties defined for this class. -->
+		<Static name="Default">
+			<summary>
+				Instance of <see cref="DirectoryIO"/>.
+			</summary>
+			<value>
+				A <see cref="DirectoryIO"/> instance.
+			</value>
+		</Static>
 	</Properties>
 
 	<Methods>
+		<Instance name="GetFileTimestamps[EntryPath]">
+			<summary>
+				Retrieves the timestamps (creation, last write, and last access) of the specified file or directory.
+			</summary>
+			<param name="entryPath">The path of the directory or file to check for existence.</param>
+			<returns>
+				A <see cref="FileTimestamps"/> object containing the timestamps of the specified directory.
+			</returns>
+		</Instance>
+
 		<Instance name="Exists[EntryPath]">
 			<summary>
 				Checks if the specified directory or file exists at the given entry path.

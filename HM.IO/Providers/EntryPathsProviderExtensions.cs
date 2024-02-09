@@ -33,7 +33,7 @@ public static class EntryPathsProviderExtensions
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="IncludeDirectory[EntryPathsProvider,String]"]/*' />
     public static EntryPathsProvider IncludeDirectory(this EntryPathsProvider self, String path)
-        => IncludeDirectory(self, EntryPath.CreateFromPath(path));
+        => IncludeDirectory(self, EntryPath.Create(path));
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="IncludeDirectories[EntryPathsProvider,IEnumerable&lt;SearchingDirectory&gt;]"]/*' />
     public static EntryPathsProvider IncludeDirectories(this EntryPathsProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
@@ -59,7 +59,7 @@ public static class EntryPathsProviderExtensions
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="IncludeDirectories[EntryPathsProvider,IEnumerable&lt;String&gt;]"]/*' />
     public static EntryPathsProvider IncludeDirectories(this EntryPathsProvider self, IEnumerable<String> paths)
-        => IncludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
+        => IncludeDirectories(self, paths.Select(EntryPath.Create));
     #endregion
 
     #region IncludeFile
@@ -71,7 +71,7 @@ public static class EntryPathsProviderExtensions
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="IncludeFile[EntryPathsProvider,String]"]/*' />
     public static EntryPathsProvider IncludeFile(this EntryPathsProvider self, String path)
-        => IncludeFile(self, EntryPath.CreateFromPath(path));
+        => IncludeFile(self, EntryPath.Create(path));
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="IncludeFiles[EntryPathsProvider,IEnumerable&lt;SearchingFile&gt;]"]/*' />
     public static EntryPathsProvider IncludeFiles(this EntryPathsProvider self, IEnumerable<SearchingFile> searchingFiles)
@@ -97,7 +97,7 @@ public static class EntryPathsProviderExtensions
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="IncludeFiles[EntryPathsProvider,IEnumerable&lt;String&gt;]"]/*' />
     public static EntryPathsProvider IncludeFiles(this EntryPathsProvider self, IEnumerable<String> paths)
-        => IncludeFiles(self, paths.Select(EntryPath.CreateFromPath));
+        => IncludeFiles(self, paths.Select(EntryPath.Create));
     #endregion
 
     #region ExcludeDirectory
@@ -109,7 +109,7 @@ public static class EntryPathsProviderExtensions
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="ExcludeDirectory[EntryPathsProvider,String]"]/*' />
     public static EntryPathsProvider ExcludeDirectory(this EntryPathsProvider self, String path)
-        => ExcludeDirectory(self, EntryPath.CreateFromPath(path));
+        => ExcludeDirectory(self, EntryPath.Create(path));
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="ExcludeDirectories[EntryPathsProvider,IEnumerable&lt;SearchingDirectory&gt;]"]/*' />
     public static EntryPathsProvider ExcludeDirectories(this EntryPathsProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
@@ -135,7 +135,7 @@ public static class EntryPathsProviderExtensions
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="ExcludeDirectories[EntryPathsProvider,IEnumerable&lt;String&gt;]"]/*' />
     public static EntryPathsProvider ExcludeDirectories(this EntryPathsProvider self, IEnumerable<String> paths)
-        => ExcludeDirectories(self, paths.Select(EntryPath.CreateFromPath));
+        => ExcludeDirectories(self, paths.Select(EntryPath.Create));
     #endregion
 
     #region ExcludeFile
@@ -147,7 +147,7 @@ public static class EntryPathsProviderExtensions
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="ExcludeFile[EntryPathsProvider,String]"]/*' />
     public static EntryPathsProvider ExcludeFile(this EntryPathsProvider self, String path)
-        => ExcludeFile(self, EntryPath.CreateFromPath(path));
+        => ExcludeFile(self, EntryPath.Create(path));
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="ExcludeFiles[EntryPathsProvider,IEnumerable&lt;SearchingFile&gt;]"]/*' />
     public static EntryPathsProvider ExcludeFiles(this EntryPathsProvider self, IEnumerable<SearchingFile> searchingFiles)
@@ -173,6 +173,6 @@ public static class EntryPathsProviderExtensions
 
     /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Methods/Static[@name="ExcludeFiles[EntryPathsProvider,IEnumerable&lt;String&gt;]"]/*' />
     public static EntryPathsProvider ExcludeFiles(this EntryPathsProvider self, IEnumerable<String> paths)
-        => ExcludeFiles(self, paths.Select(EntryPath.CreateFromPath));
+        => ExcludeFiles(self, paths.Select(EntryPath.Create));
     #endregion
 }

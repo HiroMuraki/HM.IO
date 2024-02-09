@@ -10,5 +10,5 @@ public interface IFileHashComputer
 public static class FileHashComputerExtension
 {
     public static async Task<String> ComputeHashAsync(this IFileHashComputer hashComputer, String filePath)
-        => await hashComputer.ComputeHashAsync(EntryPath.CreateFromPath(filePath));
+        => await hashComputer.ComputeHashAsync(EntryPath.Create(filePath));
 }

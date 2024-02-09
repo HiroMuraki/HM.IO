@@ -93,7 +93,7 @@
 			</returns>
 		</Instance>
 
-		<Class name="CreateFromPath[String]">
+		<Class name="Create[String]">
 			<summary>
 				Creates an <see cref="EntryPath" /> instance from the specified path.
 			</summary>

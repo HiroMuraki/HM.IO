@@ -127,6 +127,19 @@ public readonly struct EntryPath :
         return 0;
     }
 
+    /// <include file='EntryPath.xml' path='EntryPath/Methods/Class[@name="Create[String]"]/*' />
+    public static EntryPath Create(String path)
+    {
+        if (String.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentException($"{nameof(path)} can't be null, empty or white space-only");
+        }
+
+        String normalizedPath = Path.TrimEndingDirectorySeparator(path);
+        String[] routes = normalizedPath.Split(s_pathSeparatorChar);
+        return new EntryPath(routes);
+    }
+
     public static Boolean operator ==(EntryPath left, EntryPath right)
     {
         if (left!._routes.Length != right!._routes.Length)
@@ -148,19 +161,6 @@ public readonly struct EntryPath :
     public static Boolean operator !=(EntryPath left, EntryPath right)
     {
         return left == right;
-    }
-
-    /// <include file='EntryPath.xml' path='EntryPath/Methods/Class[@name="CreateFromPath[String]"]/*' />
-    public static EntryPath CreateFromPath(String path)
-    {
-        if (String.IsNullOrWhiteSpace(path))
-        {
-            throw new ArgumentException($"{nameof(path)} can't be null, empty or white space-only");
-        }
-
-        String normalizedPath = Path.TrimEndingDirectorySeparator(path);
-        String[] routes = normalizedPath.Split(s_pathSeparatorChar);
-        return new EntryPath(routes);
     }
 
     public EntryPath() : this([])

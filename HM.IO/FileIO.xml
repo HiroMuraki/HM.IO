@@ -6,7 +6,14 @@
 	</Class>
 
 	<Properties>
-		<!-- No properties defined for this class. -->
+		<Static name="Default">
+			<summary>
+				Instance of <see cref="FileIO"/>.
+			</summary>
+			<value>
+				A <see cref="FileIO"/> instance.
+			</value>
+		</Static>
 	</Properties>
 
 	<Methods>

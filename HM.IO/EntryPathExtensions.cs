@@ -5,10 +5,10 @@ public static class EntryPathExtensions
 {
     #region Properties
     /// <include file='EntryPathExtensions.xml' path='EntryPathExtensions/Properties/Static[@name="DirectoryIO"]/*' />
-    public static IDirectoryIO DirectoryIO { get; set; } = new DirectoryIO();
+    public static IDirectoryIO DirectoryIO { get; set; } = IO.DirectoryIO.Default;
 
     /// <include file='EntryPathExtensions.xml' path='EntryPathExtensions/Properties/Static[@name="FileIO"]/*' />
-    public static IFileIO FileIO { get; set; } = new FileIO();
+    public static IFileIO FileIO { get; set; } = IO.FileIO.Default;
     #endregion
 
     #region Methods

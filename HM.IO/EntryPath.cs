@@ -10,39 +10,41 @@ public readonly struct EntryPath :
 {
     #region Properties
     /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="Indexer[Int32]"]/*' />
-    public readonly String this[Int32 index] => _routes[index];
+    public readonly String this[Int32 index] => GetRoutes()[index];
 
     /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="Indexer[Index]"]/*' />
-    public readonly String this[Index index] => _routes[index];
+    public readonly String this[Index index] => GetRoutes()[index];
 
     /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="Indexer[Range]"]/*' />
-    public readonly EntryPath this[Range range] => new(_routes[range]);
+    public readonly EntryPath this[Range range] => new(GetRoutes()[range]);
 
     /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="Length"]/*' />
-    public readonly Int32 Length => _routes.Length;
+    public readonly Int32 Length => GetRoutes().Length;
 
     /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="StringPath"]/*' />
-    public readonly String StringPath => Path.Combine(_routes);
+    public readonly String StringPath => _stringPath;
 
     /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="DirectoryName"]/*' />
-    public EntryPath DirectoryName => new(_routes[0..(_routes.Length - 1)]);
+    public EntryPath DirectoryName => new(GetRoutes()[0..(GetRoutes().Length - 1)]);
 
     /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="EntryName"]/*' />
-    public EntryPath EntryName => new(_routes[^1]);
+    public EntryPath EntryName => new(GetRoutes()[^1]);
     #endregion
 
     #region Methods
     /// <include file='EntryPath.xml' path='EntryPath/Methods/Instance[@name="IsSubPathOf[EntryPath]"]/*' />
     public Boolean IsSubPathOf(EntryPath otherPath)
     {
-        if (_routes.Length <= otherPath._routes.Length)
+        if (_stringPath.Length <= otherPath._stringPath.Length)
         {
             return false;
         }
 
+        String[] routesOfThis = GetRoutes();
+        String[] routesOfOther = otherPath.GetRoutes();
         for (Int32 i = 0; i < otherPath.Length; i++)
         {
-            if (_routes[i] != otherPath[i])
+            if (routesOfThis[i] != routesOfOther[i])
             {
                 return false;
             }
@@ -59,7 +61,7 @@ public readonly struct EntryPath :
 
     public readonly override String ToString()
     {
-        return String.Join("", _routes.Select(p => $"[{p}]"));
+        return String.Join("", GetRoutes().Select(p => $"[{p}]"));
     }
 
     public readonly override Boolean Equals([NotNullWhen(true)] Object? obj)
@@ -80,14 +82,15 @@ public readonly struct EntryPath :
     {
         unchecked
         {
-            Int32 hashCode = _routes.Length ^ 17;
-            if (_routes.Length > 0)
+            String[] routes = GetRoutes();
+            Int32 hashCode = routes.Length ^ 17;
+            if (routes.Length > 0)
             {
-                hashCode = HashCode.Combine(hashCode, _routes[0]) * 31;
+                hashCode = HashCode.Combine(hashCode, routes[0]) * 31;
             }
-            if (_routes.Length > 1)
+            if (routes.Length > 1)
             {
-                hashCode = HashCode.Combine(hashCode, _routes[^1]) * 31;
+                hashCode = HashCode.Combine(hashCode, routes[^1]) * 31;
             }
             return hashCode;
         }
@@ -100,11 +103,14 @@ public readonly struct EntryPath :
 
     public readonly Int32 CompareTo(EntryPath other)
     {
-        Int32 minLength = _routes.Length < other._routes.Length ? _routes.Length : other._routes.Length;
+        String[] routesOfThis = GetRoutes();
+        String[] routesOfOther = other.GetRoutes();
+
+        Int32 minLength = routesOfThis.Length < routesOfOther.Length ? routesOfThis.Length : routesOfOther.Length;
 
         for (Int32 i = 0; i < minLength; i++)
         {
-            Int32 compareResult = String.Compare(_routes[i], other._routes[i], StringComparison.Ordinal);
+            Int32 compareResult = String.Compare(routesOfThis[i], routesOfOther[i], StringComparison.Ordinal);
             if (compareResult < 0)
             {
                 return -1;
@@ -115,11 +121,11 @@ public readonly struct EntryPath :
             }
         }
 
-        if (_routes.Length < other._routes.Length)
+        if (routesOfThis.Length < routesOfOther.Length)
         {
             return -1;
         }
-        else if (_routes.Length > other._routes.Length)
+        else if (routesOfThis.Length > routesOfOther.Length)
         {
             return 1;
         }
@@ -142,14 +148,17 @@ public readonly struct EntryPath :
 
     public static Boolean operator ==(EntryPath left, EntryPath right)
     {
-        if (left!._routes.Length != right!._routes.Length)
+        String[] routesOfLeft = left.GetRoutes();
+        String[] routesOfRight = right.GetRoutes();
+
+        if (routesOfLeft.Length != routesOfRight.Length)
         {
             return false;
         }
 
-        for (Int32 i = 0; i < left._routes.Length; i++)
+        for (Int32 i = 0; i < routesOfLeft.Length; i++)
         {
-            if (left._routes[i] != right._routes[i])
+            if (routesOfLeft[i] != routesOfRight[i])
             {
                 return false;
             }
@@ -163,22 +172,30 @@ public readonly struct EntryPath :
         return left == right;
     }
 
-    public EntryPath() : this([])
+    public EntryPath()
     {
-
+        throw new InvalidOperationException($"Unable to call default constructor of `{typeof(EntryPath)}`.");
     }
     #endregion
 
     #region NonPublic
-    private readonly String[] _routes;
+    private readonly String _stringPath;
     private static readonly Char[] s_pathSeparatorChar =
     {
         Path.DirectorySeparatorChar,
         Path.AltDirectorySeparatorChar
     };
-    private EntryPath(params String[] routes)
+    private EntryPath(String stringPath)
     {
-        _routes = routes;
+        _stringPath = stringPath;
+    }
+    private EntryPath(IEnumerable<String> routes)
+    {
+        _stringPath = String.Join(s_pathSeparatorChar[0], routes);
+    }
+    private String[] GetRoutes()
+    {
+        return _stringPath.Split(s_pathSeparatorChar);
     }
     #endregion
 }

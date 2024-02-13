@@ -280,32 +280,32 @@ public partial class FilesProviderTest
                 case 0:
                     fp = EntryPathsProvider.Create()
                         .IncludeDirectories(
-                            option.IncDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x)))
+                            option.IncDirs.Select(x => new SearchingDirectory(EntryPath.Create(x)))
                         )
                         .ExcludeDirectories(
-                            option.ExcDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x))
+                            option.ExcDirs.Select(x => new SearchingDirectory(EntryPath.Create(x))
                         ))
                         .IncludeFiles(
-                            option.IncFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+                            option.IncFiles.Select(x => new SearchingFile(EntryPath.Create(x)))
                         )
                         .ExcludeFiles(
-                            option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+                            option.ExcFiles.Select(x => new SearchingFile(EntryPath.Create(x)))
                         );
                     break;
                 // EntryPathType
                 case 1:
                     fp = EntryPathsProvider.Create()
                        .IncludeDirectories(
-                           option.IncDirs.Select(x => EntryPath.CreateFromPath(x))
+                           option.IncDirs.Select(x => EntryPath.Create(x))
                        )
                        .ExcludeDirectories(
-                           option.ExcDirs.Select(x => EntryPath.CreateFromPath(x)
+                           option.ExcDirs.Select(x => EntryPath.Create(x)
                        ))
                        .IncludeFiles(
-                           option.IncFiles.Select(x => EntryPath.CreateFromPath(x))
+                           option.IncFiles.Select(x => EntryPath.Create(x))
                        )
                        .ExcludeFiles(
-                           option.ExcFiles.Select(x => EntryPath.CreateFromPath(x))
+                           option.ExcFiles.Select(x => EntryPath.Create(x))
                        );
                     break;
                 // StringType
@@ -339,19 +339,19 @@ public partial class FilesProviderTest
                 // SearchingType
                 case 0:
                     fp = EntryPathsProvider.Create();
-                    foreach (var item in option.IncDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x))))
+                    foreach (var item in option.IncDirs.Select(x => new SearchingDirectory(EntryPath.Create(x))))
                     {
                         fp.IncludeDirectory(item);
                     }
-                    foreach (var item in option.ExcDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x))))
+                    foreach (var item in option.ExcDirs.Select(x => new SearchingDirectory(EntryPath.Create(x))))
                     {
                         fp.ExcludeDirectory(item);
                     }
-                    foreach (var item in option.IncFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x))))
+                    foreach (var item in option.IncFiles.Select(x => new SearchingFile(EntryPath.Create(x))))
                     {
                         fp.IncludeFile(item);
                     }
-                    foreach (var item in option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x))))
+                    foreach (var item in option.ExcFiles.Select(x => new SearchingFile(EntryPath.Create(x))))
                     {
                         fp.ExcludeFile(item);
                     }
@@ -359,19 +359,19 @@ public partial class FilesProviderTest
                 // EntryPathType
                 case 1:
                     fp = EntryPathsProvider.Create();
-                    foreach (var item in option.IncDirs.Select(x => EntryPath.CreateFromPath(x)))
+                    foreach (var item in option.IncDirs.Select(x => EntryPath.Create(x)))
                     {
                         fp.IncludeDirectory(item);
                     }
-                    foreach (var item in option.ExcDirs.Select(x => EntryPath.CreateFromPath(x)))
+                    foreach (var item in option.ExcDirs.Select(x => EntryPath.Create(x)))
                     {
                         fp.ExcludeDirectory(item);
                     }
-                    foreach (var item in option.IncFiles.Select(x => EntryPath.CreateFromPath(x)))
+                    foreach (var item in option.IncFiles.Select(x => EntryPath.Create(x)))
                     {
                         fp.IncludeFile(item);
                     }
-                    foreach (var item in option.ExcFiles.Select(x => EntryPath.CreateFromPath(x)))
+                    foreach (var item in option.ExcFiles.Select(x => EntryPath.Create(x)))
                     {
                         fp.ExcludeFile(item);
                     }
@@ -420,10 +420,10 @@ public partial class FilesProviderTest
                 option.ExcDirs.Select(x => x.AsSearchingDirectory())
             )
             .IncludeFiles(
-                option.IncFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+                option.IncFiles.Select(x => new SearchingFile(EntryPath.Create(x)))
             )
             .ExcludeFiles(
-                option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+                option.ExcFiles.Select(x => new SearchingFile(EntryPath.Create(x)))
             );
 
         var files = fp.EnumerateFilePaths().Select(x => x.StringPath).Order().ToList();
@@ -445,11 +445,11 @@ public partial class FilesProviderTest
         {
             fp.ExcludeDirectory(item);
         }
-        foreach (var item in option.IncFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x))))
+        foreach (var item in option.IncFiles.Select(x => new SearchingFile(EntryPath.Create(x))))
         {
             fp.IncludeFile(item);
         }
-        foreach (var item in option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x))))
+        foreach (var item in option.ExcFiles.Select(x => new SearchingFile(EntryPath.Create(x))))
         {
             fp.ExcludeFile(item);
         }
@@ -464,20 +464,20 @@ public partial class FilesProviderTest
 
         var ep = EntryPathsProvider.Create()
             .IncludeDirectories(
-                option.IncDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x)))
+                option.IncDirs.Select(x => new SearchingDirectory(EntryPath.Create(x)))
             )
             .ExcludeDirectories(
-                option.ExcDirs.Select(x => new SearchingDirectory(EntryPath.CreateFromPath(x))
+                option.ExcDirs.Select(x => new SearchingDirectory(EntryPath.Create(x))
             ))
             .IncludeFiles(
-                option.IncFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+                option.IncFiles.Select(x => new SearchingFile(EntryPath.Create(x)))
             )
             .ExcludeFiles(
-                option.ExcFiles.Select(x => new SearchingFile(EntryPath.CreateFromPath(x)))
+                option.ExcFiles.Select(x => new SearchingFile(EntryPath.Create(x)))
             );
 
         Assert.IsTrue(ep.EnumerateDirectoryPaths().Order()
-            .SequenceEqual(expectedFiles.Select(EntryPath.CreateFromPath).Order()));
+            .SequenceEqual(expectedFiles.Select(EntryPath.Create).Order()));
     }
 
     private class SearchingOption
@@ -515,7 +515,7 @@ public partial class FilesProviderTest
         {
             return new SearchingDirectory
             {
-                Path = EntryPath.CreateFromPath(Path),
+                Path = EntryPath.Create(Path),
                 RecurseSubdirectories = IncSub,
                 MaxRecursionDepth = MaxRecDepth,
             };

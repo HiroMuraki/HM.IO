@@ -20,7 +20,7 @@ public class EntryPathTest : TestClass
 
         foreach (string path in paths)
         {
-            var entryPath = EntryPath.CreateFromPath(path);
+            var entryPath = EntryPath.Create(path);
             Assert.IsTrue(entryPath.StringPath == @"C:\Windows\System32");
             Assert.IsTrue(entryPath.Length == 3);
             Assert.IsTrue(entryPath[0] == "C:");
@@ -43,28 +43,28 @@ public class EntryPathTest : TestClass
 
         foreach (String path in excPaths)
         {
-            Assert.ThrowsException<ArgumentException>(() => EntryPath.CreateFromPath(path));
+            Assert.ThrowsException<ArgumentException>(() => EntryPath.Create(path));
         }
     }
 
     [TestMethod]
     public void Comparer()
     {
-        var refPath = EntryPath.CreateFromPath("C:\\Windows\\System32");
+        var refPath = EntryPath.Create("C:\\Windows\\System32");
         (EntryPath path, bool assertResult)[] testPaths =
         {
-            (EntryPath.CreateFromPath("C:\\Windows\\System32"), true),
-            (EntryPath.CreateFromPath("C:/Windows/System32"), true),
-            (EntryPath.CreateFromPath("C:/Windows\\System32"), true),
-            (EntryPath.CreateFromPath("C:\\Windows/System32"), true),
-            (EntryPath.CreateFromPath("C:/Windows\\System32\\"), true),
+            (EntryPath.Create("C:\\Windows\\System32"), true),
+            (EntryPath.Create("C:/Windows/System32"), true),
+            (EntryPath.Create("C:/Windows\\System32"), true),
+            (EntryPath.Create("C:\\Windows/System32"), true),
+            (EntryPath.Create("C:/Windows\\System32\\"), true),
 
-            (EntryPath.CreateFromPath("c:\\windows/system32"), false),
-            (EntryPath.CreateFromPath("C:\\WINDOWS\\System32/"), false),
-            (EntryPath.CreateFromPath("C:\\wIndows\\sYstem32"), false),
-            (EntryPath.CreateFromPath("C:\\wIndows\\sYstem321"), false),
-            (EntryPath.CreateFromPath("C:\\wIndows1\\sYstem321"), false),
-            (EntryPath.CreateFromPath("C:\\users"), false),
+            (EntryPath.Create("c:\\windows/system32"), false),
+            (EntryPath.Create("C:\\WINDOWS\\System32/"), false),
+            (EntryPath.Create("C:\\wIndows\\sYstem32"), false),
+            (EntryPath.Create("C:\\wIndows\\sYstem321"), false),
+            (EntryPath.Create("C:\\wIndows1\\sYstem321"), false),
+            (EntryPath.Create("C:\\users"), false),
         };
 
         foreach ((EntryPath path, Boolean assertResult) in testPaths)
@@ -84,18 +84,18 @@ public class EntryPathTest : TestClass
     [TestMethod]
     public void IsSubPathOf_IsParentPathOf()
     {
-        var refPath = EntryPath.CreateFromPath("C:/User/abc/Programs/Games");
+        var refPath = EntryPath.Create("C:/User/abc/Programs/Games");
 
         (EntryPath path, bool assertResult)[] testPaths =
         {
-            (EntryPath.CreateFromPath("C:"), true),
-            (EntryPath.CreateFromPath("C:/User"), true),
-            (EntryPath.CreateFromPath("C:/User/abc"), true),
-            (EntryPath.CreateFromPath("C:/User/abc/Programs"), true),
+            (EntryPath.Create("C:"), true),
+            (EntryPath.Create("C:/User"), true),
+            (EntryPath.Create("C:/User/abc"), true),
+            (EntryPath.Create("C:/User/abc/Programs"), true),
 
-            (EntryPath.CreateFromPath("E:"), false),
-            (EntryPath.CreateFromPath("C:/User/abcd"), false),
-            (EntryPath.CreateFromPath("C:/User/abc/Programs/Game"), false),
+            (EntryPath.Create("E:"), false),
+            (EntryPath.Create("C:/User/abcd"), false),
+            (EntryPath.Create("C:/User/abc/Programs/Game"), false),
         };
 
         foreach ((EntryPath path, Boolean assertResult) in testPaths)
@@ -129,7 +129,7 @@ public class EntryPathTest : TestClass
 
         foreach ((String ePath, String eDirectoryName, String eEntryName) in paths)
         {
-            var refPath = EntryPath.CreateFromPath(ePath);
+            var refPath = EntryPath.Create(ePath);
 
             Assert.AreEqual(eDirectoryName, refPath.DirectoryName.StringPath);
 

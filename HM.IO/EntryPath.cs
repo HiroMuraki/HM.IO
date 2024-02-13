@@ -134,16 +134,23 @@ public readonly struct EntryPath :
     }
 
     /// <include file='EntryPath.xml' path='EntryPath/Methods/Class[@name="Create[String]"]/*' />
-    public static EntryPath Create(String path)
+    public static EntryPath Create(String stringPath)
     {
-        if (String.IsNullOrWhiteSpace(path))
+        if (String.IsNullOrWhiteSpace(stringPath))
         {
-            throw new ArgumentException($"{nameof(path)} can't be null, empty or white space-only");
+            throw new ArgumentException($"{nameof(stringPath)} can't be null, empty or white space-only");
         }
 
-        String normalizedPath = Path.TrimEndingDirectorySeparator(path);
-        String[] routes = normalizedPath.Split(s_pathSeparatorChar);
-        return new EntryPath(routes);
+        String normalizedPath = Path.TrimEndingDirectorySeparator(stringPath);
+        if (stringPath.Contains(s_pathSeparatorChar[1]))
+        {
+            String[] routes = normalizedPath.Split(s_pathSeparatorChar);
+            return new EntryPath(routes);
+        }
+        else
+        {
+            return new EntryPath(normalizedPath);
+        }
     }
 
     public static Boolean operator ==(EntryPath left, EntryPath right)

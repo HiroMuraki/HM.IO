@@ -18,8 +18,17 @@ public readonly struct SearchingDirectory
     public Boolean IgnoreIfNotExists { get; init; } = false;
 
     /// <include file='Providers/SearchingDirectory.xml' path='SearchingDirectory/Ctors/Ctor[@name="SearchingDirectory[EntryPath]"]/*' />
-    public SearchingDirectory(EntryPath entryPath)
+    public SearchingDirectory(EntryPath path) : this(path, false)
     {
-        Path = entryPath;
+    }
+
+    public SearchingDirectory(EntryPath path, Boolean recurseSubdirectories)
+    {
+        Path = path;
+        if (recurseSubdirectories)
+        {
+            RecurseSubdirectories = true;
+            MaxRecursionDepth = Int32.MaxValue;
+        }
     }
 }

@@ -63,7 +63,7 @@ public sealed class EntryPathsProvider
         {
             yield return entryPath;
         }
-        
+
         IEnumerable<EntryPath> EnumerateCore()
         {
             // Yield from files

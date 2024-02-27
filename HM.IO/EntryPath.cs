@@ -1,48 +1,178 @@
-﻿#define PLATFORM_WINDOWS
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace HM.IO;
 
-/// <include file='EntryPath.xml' path='EntryPath/Class[@name="EntryPath"]/*' />
+/// <summary>
+///     Represents a path to a directory or file.
+/// </summary>
 public readonly struct EntryPath :
+    IEquatable<EntryPath>,
+    IEqualityOperators<EntryPath, EntryPath, Boolean>,
     IComparable<EntryPath>,
-    IEquatable<EntryPath>
+    IComparable
 {
     #region Properties
-    /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="Indexer[Int32]"]/*' />
-    public readonly String this[Int32 index] => GetRoutes()[index];
+    /// <summary>
+    ///     Gets an empty <see cref="EntryPath"/> instance.
+    /// </summary>
+    /// <value>
+    ///     An empty <see cref="EntryPath"/> instance.
+    /// </value>
+    public static EntryPath Empty { get; } = new EntryPath(String.Empty);
 
-    /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="Indexer[Index]"]/*' />
-    public readonly String this[Index index] => GetRoutes()[index];
+    /// <summary>
+    ///     Gets the route at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the route to retrieve.</param>
+    /// <value>
+    ///     A <see cref="String" /> representing the route at the specified index.
+    /// </value>
+    public readonly String this[Int32 index]
+    {
+        get
+        {
+            return GetRoutes()[index];
+        }
+    }
 
-    /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="Indexer[Range]"]/*' />
-    public readonly EntryPath this[Range range] => new(GetRoutes()[range]);
+    /// <summary>
+    ///     Gets the route at the specified index using an index object.
+    /// </summary>
+    /// <param name="index">The index object indicating the route to retrieve.</param>
+    /// <value>
+    ///     A <see cref="String" /> representing the route at the specified index.
+    /// </value>
+    public readonly String this[Index index]
+    {
+        get
+        {
+            return GetRoutes()[index];
+        }
+    }
 
-    /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="Length"]/*' />
-    public readonly Int32 Length => GetRoutes().Length;
+    /// <summary>
+    ///     Gets a sub path using the specified range.
+    /// </summary>
+    /// <param name="range">The range specifying the sub path.</param>
+    /// <value>
+    ///     An <see cref="EntryPath" /> representing the sub path.
+    /// </value>
+    public readonly EntryPath this[Range range]
+    {
+        get
+        {
+            return new EntryPath(String.Join(SystemPathSeparatorChar, GetRoutes()[range]));
+        }
+    }
 
-    /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="StringPath"]/*' />
-    public readonly String StringPath => _stringPath;
+    public readonly String[] Routes => GetRoutes();
 
-    /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="DirectoryName"]/*' />
-    public EntryPath DirectoryName => new(GetRoutes()[0..(GetRoutes().Length - 1)]);
+    /// <summary>
+    ///     Gets the path as a string.
+    /// </summary>
+    /// <value>
+    ///     A <see cref="String" /> representing its string-style path.
+    /// </value>
+    public readonly String StringPath
+    {
+        get
+        {
+            return _stringPath;
+        }
+    }
 
-    /// <include file='EntryPath.xml' path='EntryPath/Properties/Instance[@name="EntryName"]/*' />
-    public EntryPath EntryName => new(GetRoutes()[^1]);
+    /// <summary>
+    ///     Gets the full path of current entry path.
+    /// </summary>
+    /// <value>
+    ///     The full <see cref="EntryPath"/> of the entry.
+    /// </value>
+    public readonly EntryPath FullPath
+    {
+        get
+        {
+            return Create(Path.GetFullPath(StringPath));
+        }
+    }
+
+    /// <summary>
+    ///     Gets the root of current entry path.
+    /// </summary>
+    /// <value>
+    ///     The root of the path, or <see langword="null"/> if the path is not rooted.
+    /// </value>
+    public readonly String? PathRoot
+    {
+        get
+        {
+            return Path.GetPathRoot(StringPath);
+        }
+    }
+
+    /// <summary>
+    ///     Gets the directory name part of the current entry path.
+    /// </summary>
+    /// <value>
+    ///     An <see cref="EntryPath" /> representing the directory name part of the current entry path.
+    /// </value>
+    public readonly EntryPath DirectoryName
+    {
+        get
+        {
+            String[] routes = GetRoutes();
+            return new EntryPath(String.Join(SystemPathSeparatorChar, routes[0..(routes.Length - 1)]));
+        }
+    }
+
+    /// <summary>
+    ///     Gets the entry name part of the current entry path.
+    /// </summary>
+    /// <value>
+    ///     A string representing the entry name part of the current entry path.
+    /// </value>
+    public readonly String EntryName
+    {
+        get
+        {
+            return GetRoutes()[^1];
+        }
+    }
+
+    /// <summary>
+    ///     Gets the number of routes of current entry path.
+    /// </summary>
+    /// <value>
+    ///     An <see cref="Int32" /> representing number of routes in the <see cref="EntryPath"/>.
+    /// </value>
+    public readonly Int32 LengthOfRoutes
+    {
+        get
+        {
+            return GetRoutes().Length;
+        }
+    }
     #endregion
 
     #region Methods
-    /// <include file='EntryPath.xml' path='EntryPath/Methods/Instance[@name="IsSubPathOf[EntryPath]"]/*' />
-    public Boolean IsSubPathOf(EntryPath otherPath)
+    /// <summary>
+    ///     Determines if the current entry path is a sub path of the specified other path.
+    /// </summary>
+    /// <param name="otherPath">The other entry path to compare against.</param>
+    /// <returns>
+    ///     <c>true</c> if the current entry path is a sub path of the other path; otherwise, <c>false</c>.
+    /// </returns>
+    public readonly Boolean IsSubPathOf(EntryPath otherPath)
     {
-        if (_stringPath.Length <= otherPath._stringPath.Length)
+        if (StringPath.Length <= otherPath.StringPath.Length)
         {
             return false;
         }
 
         String[] routesOfThis = GetRoutes();
         String[] routesOfOther = otherPath.GetRoutes();
-        for (Int32 i = 0; i < otherPath.Length; i++)
+        for (Int32 i = 0; i < otherPath.LengthOfRoutes; i++)
         {
             if (routesOfThis[i] != routesOfOther[i])
             {
@@ -53,10 +183,63 @@ public readonly struct EntryPath :
         return true;
     }
 
-    /// <include file='EntryPath.xml' path='EntryPath/Methods/Instance[@name="IsParentPathOf[EntryPath]"]/*' />
-    public Boolean IsParentPathOf(EntryPath otherPath)
+    /// <summary>
+    ///     Determines if the current entry path is a parent path of the specified other path.
+    /// </summary>
+    /// <param name="otherPath">The other entry path to compare against.</param>
+    /// <returns>
+    ///     <c>true</c> if the current entry path is a parent path of the other path; otherwise, <c>false</c>.
+    /// </returns>
+    public readonly Boolean IsParentPathOf(EntryPath otherPath)
     {
         return otherPath.IsSubPathOf(this);
+    }
+
+    public readonly Boolean Equals(EntryPath other)
+    {
+        return this == other;
+    }
+
+    public readonly Int32 CompareTo(EntryPath other)
+    {
+        String[] routes = GetRoutes();
+        String[] otherRoutes = other.GetRoutes();
+
+        Int32 minLength = Int32.Min(routes.Length, otherRoutes.Length);
+
+        for (Int32 i = 0; i < minLength; i++)
+        {
+            Int32 compareResult = routes[i].CompareTo(otherRoutes[i]);
+            if (compareResult < 0)
+            {
+                return -1;
+            }
+            else if (compareResult > 0)
+            {
+                return 1;
+            }
+        }
+
+        if (routes.Length < otherRoutes.Length)
+        {
+            return -1;
+        }
+        else if (routes.Length > otherRoutes.Length)
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    public readonly Int32 CompareTo(Object? obj)
+    {
+        if (obj is null)
+        {
+            return 1;
+        }
+
+        return CompareTo((EntryPath)obj);
     }
 
     public readonly override String ToString()
@@ -84,56 +267,27 @@ public readonly struct EntryPath :
         {
             String[] routes = GetRoutes();
             Int32 hashCode = routes.Length ^ 17;
+
             if (routes.Length > 0)
             {
-                hashCode = HashCode.Combine(hashCode, routes[0]) * 31;
+                hashCode = HashCode.Combine(hashCode, routes[0].ToUpper()) * 31;
             }
             if (routes.Length > 1)
             {
-                hashCode = HashCode.Combine(hashCode, routes[^1]) * 31;
+                hashCode = HashCode.Combine(hashCode, routes[^1].ToUpper()) * 31;
             }
+
             return hashCode;
         }
     }
 
-    public readonly Boolean Equals(EntryPath other)
-    {
-        return this == other;
-    }
-
-    public readonly Int32 CompareTo(EntryPath other)
-    {
-        String[] routesOfThis = GetRoutes();
-        String[] routesOfOther = other.GetRoutes();
-
-        Int32 minLength = routesOfThis.Length < routesOfOther.Length ? routesOfThis.Length : routesOfOther.Length;
-
-        for (Int32 i = 0; i < minLength; i++)
-        {
-            Int32 compareResult = String.Compare(routesOfThis[i], routesOfOther[i], StringComparison.Ordinal);
-            if (compareResult < 0)
-            {
-                return -1;
-            }
-            else if (compareResult > 0)
-            {
-                return 1;
-            }
-        }
-
-        if (routesOfThis.Length < routesOfOther.Length)
-        {
-            return -1;
-        }
-        else if (routesOfThis.Length > routesOfOther.Length)
-        {
-            return 1;
-        }
-
-        return 0;
-    }
-
-    /// <include file='EntryPath.xml' path='EntryPath/Methods/Class[@name="Create[String]"]/*' />
+    /// <summary>
+    ///     Creates an <see cref="EntryPath" /> instance from the specified path.
+    /// </summary>
+    /// <param name="path">The path <see cref="String" /> to create an <see cref="EntryPath" /> from.</param>
+    /// <returns>
+    ///     An <see cref="EntryPath" /> instance representing the specified path.
+    /// </returns>
     public static EntryPath Create(String stringPath)
     {
         if (String.IsNullOrWhiteSpace(stringPath))
@@ -142,30 +296,90 @@ public readonly struct EntryPath :
         }
 
         String normalizedPath = Path.TrimEndingDirectorySeparator(stringPath);
-        if (stringPath.Contains(s_pathSeparatorChar[1]))
+
+        if (stringPath.Contains(AltPathSeparatorChar))
         {
-            String[] routes = normalizedPath.Split(s_pathSeparatorChar);
-            return new EntryPath(routes);
+            normalizedPath = normalizedPath.Replace(AltPathSeparatorChar, SystemPathSeparatorChar);
         }
-        else
-        {
-            return new EntryPath(normalizedPath);
-        }
+
+        return new EntryPath(normalizedPath);
     }
 
+    /// <summary>
+    ///     Combines two <see cref="EntryPath"/> instances.
+    /// </summary>
+    /// <param name="path1">The first <see cref="EntryPath"/>.</param>
+    /// <param name="path2">The second <see cref="EntryPath"/>.</param>
+    /// <returns>
+    ///     A new <see cref="EntryPath"/> instance representing the combination of the specified paths.
+    /// </returns>
+    public static EntryPath Combine(EntryPath path1, EntryPath path2)
+    {
+        return Create(Path.Combine(path1.StringPath, path2.StringPath));
+    }
+
+    /// <summary>
+    ///     Combines three <see cref="EntryPath"/> instances.
+    /// </summary>
+    /// <param name="path1">The first <see cref="EntryPath"/>.</param>
+    /// <param name="path2">The second <see cref="EntryPath"/>.</param>
+    /// <param name="path3">The third <see cref="EntryPath"/>.</param>
+    /// <returns>
+    ///     A new <see cref="EntryPath"/> instance representing the combination of the specified paths.
+    /// </returns>
+    public static EntryPath Combine(EntryPath path1, EntryPath path2, EntryPath path3)
+    {
+        return Create(Path.Combine(path1.StringPath, path2.StringPath, path3.StringPath));
+    }
+
+    /// <summary>
+    ///     Combines four <see cref="EntryPath"/> instances.
+    /// </summary>
+    /// <param name="path1">The first <see cref="EntryPath"/>.</param>
+    /// <param name="path2">The second <see cref="EntryPath"/>.</param>
+    /// <param name="path3">The third <see cref="EntryPath"/>.</param>
+    /// <param name="path4">The fourth <see cref="EntryPath"/>.</param>
+    /// <returns>
+    ///     A new <see cref="EntryPath"/> instance representing the combination of the specified paths.
+    /// </returns>
+    public static EntryPath Combine(EntryPath path1, EntryPath path2, EntryPath path3, EntryPath path4)
+    {
+        return Create(Path.Combine(path1.StringPath, path2.StringPath, path3.StringPath, path4.StringPath));
+    }
+
+    /// <summary>
+    ///     Combines multiple <see cref="EntryPath"/> instances.
+    /// </summary>
+    /// <param name="paths">An <see cref="IEnumerable{T}"/> of <see cref="EntryPath"/> instances to combine.</param>
+    /// <returns>
+    ///     A new <see cref="EntryPath"/> instance representing the combination of the specified paths.
+    /// </returns>
+    public static EntryPath Combine(IEnumerable<EntryPath> paths)
+    {
+        return Create(Path.Combine(paths.Select(x => x.StringPath).ToArray()));
+    }
+
+    /// <summary>
+    ///     Determines whether two <see cref="EntryPath"/> instances are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="EntryPath"/> to compare.</param>
+    /// <param name="right">The second <see cref="EntryPath"/> to compare.</param>
+    /// <returns>
+    ///     <see langword="true"/> if the two <see cref="EntryPath"/> instances are equal; otherwise, <see langword="false"/>.
+    /// </returns>
     public static Boolean operator ==(EntryPath left, EntryPath right)
     {
-        String[] routesOfLeft = left.GetRoutes();
-        String[] routesOfRight = right.GetRoutes();
+        String[] leftRoutes = left.GetRoutes();
+        String[] rightRoutes = right.GetRoutes();
 
-        if (routesOfLeft.Length != routesOfRight.Length)
+        if (leftRoutes.Length != rightRoutes.Length)
         {
             return false;
         }
 
-        for (Int32 i = 0; i < routesOfLeft.Length; i++)
+        for (Int32 i = 0; i < leftRoutes.Length; i++)
         {
-            if (routesOfLeft[i] != routesOfRight[i])
+            if (leftRoutes[i] != rightRoutes[i])
             {
                 return false;
             }
@@ -174,11 +388,23 @@ public readonly struct EntryPath :
         return true;
     }
 
+    /// <summary>
+    ///     Determines whether two <see cref="EntryPath"/> instances are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="EntryPath"/> to compare.</param>
+    /// <param name="right">The second <see cref="EntryPath"/> to compare.</param>
+    /// <returns>
+    ///     <see langword="true"/> if the two <see cref="EntryPath"/> instances are not equal; otherwise, <see langword="false"/>.
+    /// </returns>
     public static Boolean operator !=(EntryPath left, EntryPath right)
     {
-        return left == right;
+        return !(left == right);
     }
 
+    /// <summary>
+    ///     Do not call this default constructor as it will throw an <see cref="InvalidOperationException"/> if called, use <see cref="Create(String)"/> Instead.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown when an invalid operation is performed.</exception>
     public EntryPath()
     {
         throw new InvalidOperationException($"Unable to call default constructor of `{typeof(EntryPath)}`.");
@@ -186,23 +412,17 @@ public readonly struct EntryPath :
     #endregion
 
     #region NonPublic
+    private static Char[] PathSeparatorChars { get; } = [SystemPathSeparatorChar, AltPathSeparatorChar];
+    private static Char SystemPathSeparatorChar => Path.DirectorySeparatorChar;
+    private static Char AltPathSeparatorChar => Path.AltDirectorySeparatorChar;
     private readonly String _stringPath;
-    private static readonly Char[] s_pathSeparatorChar =
-    {
-        Path.DirectorySeparatorChar,
-        Path.AltDirectorySeparatorChar
-    };
     private EntryPath(String stringPath)
     {
         _stringPath = stringPath;
     }
-    private EntryPath(IEnumerable<String> routes)
-    {
-        _stringPath = String.Join(s_pathSeparatorChar[0], routes);
-    }
     private String[] GetRoutes()
     {
-        return _stringPath.Split(s_pathSeparatorChar);
+        return StringPath.Split(PathSeparatorChars);
     }
     #endregion
 }

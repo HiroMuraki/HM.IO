@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace LibraryTest;
 
 [TestClass]
-public partial class FilesProviderTest : TestClass
+public partial class FilesProviderTest : TestClassBase
 {
     public static string TestCasesBaseDirectory => Path.Combine(Environment.CurrentDirectory, "TestCases");
 

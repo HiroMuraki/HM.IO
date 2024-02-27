@@ -1,11 +1,12 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
 
 using HM.IO;
+using LibraryTest.Helpers;
 
 namespace LibraryTest;
 
 [TestClass]
-public class EntryPathTest : TestClass
+public class EntryPathTest : TestClassBase
 {
     [TestMethod]
     public void Create()
@@ -22,7 +23,7 @@ public class EntryPathTest : TestClass
         {
             var entryPath = EntryPath.Create(path);
             Assert.IsTrue(entryPath.StringPath == @"C:\Windows\System32");
-            Assert.IsTrue(entryPath.Length == 3);
+            Assert.IsTrue(entryPath.LengthOfRoutes == 3);
             Assert.IsTrue(entryPath[0] == "C:");
             Assert.IsTrue(entryPath[1] == "Windows");
             Assert.IsTrue(entryPath[2] == "System32");
@@ -48,37 +49,26 @@ public class EntryPathTest : TestClass
     }
 
     [TestMethod]
-    public void Comparer()
+    public void METHS_FullyEquality()
     {
-        var refPath = EntryPath.Create("C:\\Windows\\System32");
-        (EntryPath path, bool assertResult)[] testPaths =
-        {
-            (EntryPath.Create("C:\\Windows\\System32"), true),
-            (EntryPath.Create("C:/Windows/System32"), true),
-            (EntryPath.Create("C:/Windows\\System32"), true),
-            (EntryPath.Create("C:\\Windows/System32"), true),
-            (EntryPath.Create("C:/Windows\\System32\\"), true),
-
-            (EntryPath.Create("c:\\windows/system32"), false),
-            (EntryPath.Create("C:\\WINDOWS\\System32/"), false),
-            (EntryPath.Create("C:\\wIndows\\sYstem32"), false),
-            (EntryPath.Create("C:\\wIndows\\sYstem321"), false),
-            (EntryPath.Create("C:\\wIndows1\\sYstem321"), false),
-            (EntryPath.Create("C:\\users"), false),
-        };
-
-        foreach ((EntryPath path, Boolean assertResult) in testPaths)
-        {
-#pragma warning disable IDE0047 // 删除不必要的括号
-            Assert.IsTrue((refPath == path) == assertResult);
-            Assert.IsTrue((refPath.Equals(path)) == assertResult);
-            Assert.IsTrue((((object)refPath).Equals(path)) == assertResult);
-            if (assertResult)
-            {
-                Assert.IsTrue(refPath.GetHashCode() == refPath.GetHashCode());
-            }
-#pragma warning restore IDE0047 // 删除不必要的括号
-        }
+        EqualityTestHelper.Test_Fully(
+            equalValues: [
+                EntryPath.Create("C:\\Windows\\System32"),
+                EntryPath.Create("C:\\Windows\\System32"),
+                EntryPath.Create("C:/Windows/System32"),
+                EntryPath.Create("C:/Windows\\System32"),
+                EntryPath.Create("C:\\Windows/System32"),
+                EntryPath.Create("C:/Windows\\System32\\"),
+                EntryPath.Create("c:\\windows/system32"),
+                EntryPath.Create("C:\\WINDOWS\\System32/"),
+                EntryPath.Create("C:\\wIndows\\sYstem32"),
+            ],
+            notEqualValues: [
+                EntryPath.Create("C:\\wIndows\\sYstem321"),
+                EntryPath.Create("C:\\wIndows1\\sYstem321"),
+                EntryPath.Create("C:\\users"),
+            ]
+        );
     }
 
     [TestMethod]
@@ -133,7 +123,7 @@ public class EntryPathTest : TestClass
 
             Assert.AreEqual(eDirectoryName, refPath.DirectoryName.StringPath);
 
-            Assert.AreEqual(eEntryName, refPath.EntryName.StringPath);
+            Assert.AreEqual(eEntryName, refPath.EntryName);
         }
     }
 }

@@ -53,6 +53,8 @@ public readonly struct DirectoryPath :
 
     public DirectoryPath(String stringPath)
     {
+        ArgumentNullException.ThrowIfNull(stringPath);
+
         _filePath = stringPath;
     }
 

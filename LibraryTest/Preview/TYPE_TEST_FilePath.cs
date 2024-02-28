@@ -72,7 +72,7 @@ public class TYPE_TEST_FilePath : TestClassBase
     }
 
     [TestMethod]
-    public void EqualityComparison()
+    public void COMP_EqualityComparison()
     {
         EqualityTestHelper.Test_Fully(
             equalValues: [

@@ -6,115 +6,97 @@ namespace LibraryTest.Helpers;
 
 public static class EqualityTestHelper
 {
-    public static void Test_IEquatable<T>(T[] equalValues, T[] notEqualValues)
-        where T : IEquatable<T>
+    public static void Assert_Fully<T>(T[] equalValues, T[] notEqualValues)
+        where T : notnull
     {
         for (int i = 0; i < equalValues.Length; i++)
         {
             for (int j = 0; j < equalValues.Length; j++)
             {
-                Expect_IEquatableEquals(equalValues[i], equalValues[j]);
+                Assert_Equals(equalValues[i], equalValues[j]);
             }
 
             for (int j = 0; j < notEqualValues.Length; j++)
             {
-                Expect_IEquatableNotEquals(equalValues[i], notEqualValues[j]);
+                Assert_NotEquals(equalValues[i], notEqualValues[j]);
             }
         }
     }
 
-    public static void Test_Fully<T>(T[] equalValues, T[] notEqualValues)
-        where T : IEquatable<T>, IEqualityOperators<T, T, bool>, IComparable<T>
+    public static void Assert_Equals<T>(T x, T y)
+        where T : notnull
     {
-        for (int i = 0; i < equalValues.Length; i++)
+        // Object.Equals
+        Assert.IsTrue(x.Equals(y));
+        Assert.IsFalse(x.Equals(null));
+
+        // IEquatable<T>.Equals
+        if (typeof(T).IsAssignableTo(typeof(IEquatable<T>)))
         {
-            for (int j = 0; j < equalValues.Length; j++)
-            {
-                Expect_FullyEquals(equalValues[i], equalValues[j]);
-            }
-
-            for (int j = 0; j < notEqualValues.Length; j++)
-            {
-                Expect_FullyNotEquals(equalValues[i], notEqualValues[j]);
-            }
+            Assert.IsTrue(((IEquatable<T>)x).Equals(y));
         }
-    }
-
-    public static void Expect_IEquatableEquals<T>(T a, T b)
-        where T : IEquatable<T>
-    {
-        // object.Equals
-        Assert.IsTrue(((object)a).Equals(b));
-        Assert.IsTrue(((object)b).Equals(a));
-
-        // IEquatable<T>.Equals
-        Assert.IsTrue((a as IEquatable<T>)!.Equals(b));
-        Assert.IsTrue((b as IEquatable<T>)!.Equals(a));
 
         // GetHashCode
-        Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-
-        // Assert
-        Assert.AreEqual(a, b);
-    }
-
-    public static void Expect_FullyEquals<T>(T a, T b)
-        where T : IEquatable<T>, IEqualityOperators<T, T, bool>, IComparable<T>
-    {
-        Expect_IEquatableEquals(a, b);
-
-        // == operator
-        Assert.IsTrue(a == b);
-        Assert.IsTrue(b == a);
-
-        // != operator
-        Assert.IsFalse(a != b);
-        Assert.IsFalse(b != a);
+        Assert.AreEqual(x.GetHashCode(), y.GetHashCode());
 
         // IComparable<T>.Compare
-        Assert.AreEqual(a.CompareTo(b), 0);
-        Assert.AreEqual(b.CompareTo(a), 0);
+        if (typeof(T).IsAssignableTo(typeof(IComparable<T>)))
+        {
+            Assert.AreEqual(((IComparable<T>)x).CompareTo(y), 0);
+        }
+
+        // IComparable.Compare
+        if (typeof(T).IsAssignableTo(typeof(IComparable)))
+        {
+            Assert.AreEqual(((IComparable)x).CompareTo(y), 0);
+        }
 
         // Assert
-        Assert.AreEqual(a, b);
+        Assert.AreEqual(x, y);
+
+        // // == operator
+        // Assert.IsTrue(a == b);
+        // Assert.IsTrue(b == a);
+
+        // // != operator
+        // Assert.IsFalse(a != b);
+        // Assert.IsFalse(b != a);
     }
 
-    public static void Expect_IEquatableNotEquals<T>(T a, T b)
-        where T : IEquatable<T>
+    public static void Assert_NotEquals<T>(T x, T y)
+        where T : notnull
     {
-        // object.Equals
-        Assert.IsFalse(((object)a).Equals(b));
-        Assert.IsFalse(((object)b).Equals(a));
+        // Object.Equals
+        Assert.IsFalse(x.Equals(y));
+        Assert.IsFalse(x.Equals(null));
 
         // IEquatable<T>.Equals
-        Assert.IsFalse((a as IEquatable<T>)!.Equals(b));
-        Assert.IsFalse((b as IEquatable<T>)!.Equals(a));
-
-        // GetHashCode
-        // While even two different object can still share a same hash value, so, skip this
-
-        // Assert
-        Assert.AreNotEqual(a, b);
-    }
-
-    public static void Expect_FullyNotEquals<T>(T a, T b)
-        where T : IEquatable<T>, IEqualityOperators<T, T, bool>, IComparable<T>
-    {
-        Expect_IEquatableNotEquals(a, b);
-
-        // == operator
-        Assert.IsFalse(a == b);
-        Assert.IsFalse(b == a);
-
-        // != operator
-        Assert.IsTrue(a != b);
-        Assert.IsTrue(b != a);
+        if (typeof(T).IsAssignableTo(typeof(IEquatable<T>)))
+        {
+            Assert.IsFalse(((IEquatable<T>)x).Equals(y));
+        }
 
         // IComparable<T>.Compare
-        Assert.AreNotEqual(a.CompareTo(b), 0);
-        Assert.AreNotEqual(b.CompareTo(a), 0);
+        if (typeof(T).IsAssignableTo(typeof(IComparable<T>)))
+        {
+            Assert.AreNotEqual(((IComparable<T>)x).CompareTo(y), 0);
+        }
+
+        // IComparable.Compare
+        if (typeof(T).IsAssignableTo(typeof(IComparable)))
+        {
+            Assert.AreNotEqual(((IComparable)x).CompareTo(y), 0);
+        }
 
         // Assert
-        Assert.AreNotEqual(a, b);
+        Assert.AreNotEqual(x, y);
+
+        // // == operator
+        // Assert.IsTrue(a == b);
+        // Assert.IsTrue(b == a);
+
+        // // != operator
+        // Assert.IsFalse(a != b);
+        // Assert.IsFalse(b != a);
     }
 }

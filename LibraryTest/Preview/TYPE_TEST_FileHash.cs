@@ -11,7 +11,7 @@ public class TYPE_TEST_FileHash : TestClassBase
     [TestMethod]
     public void COMP_EqualityComparison()
     {
-        EqualityTestHelper.Test_Fully(
+        EqualityTestHelper.Assert_Fully(
             equalValues: [
                 new FileHash([0xaa, 0xbb, 0xcc, 0xdd, 0xee]),
                 new FileHash([0xaa, 0xbb, 0xcc, 0xdd, 0xee]),
@@ -29,6 +29,6 @@ public class TYPE_TEST_FileHash : TestClassBase
             binaryOfHash1[i] = 0xFF;
         }
 
-        EqualityTestHelper.Expect_FullyEquals(fileHash, new FileHash([0xaa, 0xbb, 0xcc, 0xdd, 0xee]));
+        EqualityTestHelper.Assert_Equals(fileHash, new FileHash([0xaa, 0xbb, 0xcc, 0xdd, 0xee]));
     }
 }

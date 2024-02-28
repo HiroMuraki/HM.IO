@@ -74,7 +74,7 @@ public class TYPE_TEST_FilePath : TestClassBase
     [TestMethod]
     public void COMP_EqualityComparison()
     {
-        EqualityTestHelper.Test_Fully(
+        EqualityTestHelper.Assert_Fully(
             equalValues: [
                 new FilePath(@"C:\Windows\system32\regedit.exe"),
                 new FilePath(@"C:\Windows\system32\regedit.exe"),

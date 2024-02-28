@@ -187,7 +187,7 @@ public class INTERFACE_TEST_IFile : TestClassBase
     [TestMethod]
     public void TYPE_LocalFile_IEquatable()
     {
-        EqualityTestHelper.Test_IEquatable(
+        EqualityTestHelper.Assert_Fully(
             equalValues: [
                 new LocalFile("path/to/same/file.exe"),
                 new LocalFile("path/to/same/file.exe"),

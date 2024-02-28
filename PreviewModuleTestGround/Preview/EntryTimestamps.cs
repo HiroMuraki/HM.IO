@@ -3,15 +3,15 @@ using System.Numerics;
 
 namespace HM.IO.Previews;
 
-public struct EntryTimestamps :
+public readonly struct EntryTimestamps :
     IEquatable<EntryTimestamps>,
     IEqualityOperators<EntryTimestamps, EntryTimestamps, Boolean>
 {
-    public DateTime CreationTime { get; set; }
+    public readonly DateTime CreationTime { get; init; }
 
-    public DateTime LastWriteTime { get; set; }
+    public readonly DateTime LastWriteTime { get; init; }
 
-    public DateTime LastAccessTime { get; set; }
+    public readonly DateTime LastAccessTime { get; init; }
 
     public readonly Boolean Equals(EntryTimestamps other)
     {

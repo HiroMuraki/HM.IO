@@ -57,7 +57,7 @@ public class TYPE_TEST_DirectoryPath : TestClassBase
     [TestMethod]
     public void COMP_EqualityComparison()
     {
-        EqualityTestHelper.Test_Fully(
+        EqualityTestHelper.Assert_Fully(
             equalValues: [
                 new DirectoryPath(@"C:\Windows\system32"),
                 new DirectoryPath(@"C:\Windows\system32"),

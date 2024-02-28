@@ -11,7 +11,7 @@ public class INTERFACE_TEST_IEntryPath : TestClassBase
     [TestMethod]
     public void TYPE_FilePath_EqualityTest()
     {
-        EqualityTestHelper.Test_Fully(
+        EqualityTestHelper.Assert_Fully(
             equalValues: [
                 new FilePath(@"C:\MyApps\MyProgram.exe"),
                 new FilePath(@"C:\MyApps\MyProgram.exe"),
@@ -29,7 +29,7 @@ public class INTERFACE_TEST_IEntryPath : TestClassBase
     [TestMethod]
     public void TYPE_DirectoryPath_EqualityTest()
     {
-        EqualityTestHelper.Test_Fully(
+        EqualityTestHelper.Assert_Fully(
             equalValues: [
                 new DirectoryPath(@"C:\MyApps\MyProgram"),
                 new DirectoryPath(@"C:\MyApps\MyProgram"),

@@ -8,8 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\HM.CommonComponent\HM.CommonComponent\HM.CommonComponent.csproj" />
-    <ProjectReference Include="..\HM.IO\HM.IO.csproj" />
+    <ProjectReference Include="..\..\HM.Common\HM.Common\HM.Common.csproj" />
   </ItemGroup>
 
 </Project>

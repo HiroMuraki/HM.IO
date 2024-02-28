@@ -1,4 +1,4 @@
-﻿using HM.CommonComponent;
+﻿using HM.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 

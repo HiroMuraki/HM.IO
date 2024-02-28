@@ -5,7 +5,8 @@ using LibraryTest.Helpers;
 namespace LibraryTest.Preview;
 
 [TestClass]
-public class FileHash_Test : TestClassBase
+[TestCategory("Struct Types")]
+public class TYPE_TEST_FileHash : TestClassBase
 {
     [TestMethod]
     public void EqualityComparison()

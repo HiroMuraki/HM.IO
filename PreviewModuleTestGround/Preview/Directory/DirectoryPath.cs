@@ -1,5 +1,4 @@
-﻿using HM.CommonComponent;
-using HM.IO.Previews;
+﻿using HM.Common;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HM.IO.Previews;

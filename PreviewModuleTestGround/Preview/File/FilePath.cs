@@ -1,4 +1,4 @@
-﻿using HM.CommonComponent;
+﻿using HM.Common;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HM.IO.Previews;
@@ -55,6 +55,7 @@ public readonly struct FilePath :
 
     public FilePath(String stringPath)
     {
+        ArgumentNullException.ThrowIfNull(stringPath);
         _filePath = stringPath;
     }
 

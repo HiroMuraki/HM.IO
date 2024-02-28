@@ -20,7 +20,7 @@ public static class IFileExtensions
 
         if (sourceFile.Path == destinationFile.Path)
         {
-            throw new InvalidOperationException($"The path of source file `{destinationFile.Path.StringPath}` can not equal to the path of destination path`{sourceFile.Path.StringPath}`.");
+            throw new InvalidOperationException($"The path of source file `{destinationFile.Path.StringPath}` can not equal to the path of destination path`{sourceFile.Path.StringPath}`");
         }
 
         if (destinationFile.Exists)
@@ -55,45 +55,43 @@ public static class IFileExtensions
 
     public static async Task MoveToAsync(this IFile self, IFile destinationFile, Boolean overwrite, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        throw new InvalidOperationException();
-        //if (!overwrite && destinationFile.Exists)
-        //{
-        //    throw new ArgumentException($"Can't move `{self.Path.StringPath}` to `{destinationFile.Path.StringPath}` already existed.");
-        //}
+        if (!overwrite && destinationFile.Exists)
+        {
+            throw new ArgumentException($"`{self.Path.StringPath}` to `{destinationFile.Path.StringPath}` already existed");
+        }
 
-        //if (self.Path == destinationFile.Path)
-        //{
-        //    throw new InvalidOperationException($"The `{destinationFile.Path.StringPath}` can be equal to `{self.Path.StringPath}`.");
-        //}
+        if (self.Path == destinationFile.Path)
+        {
+            throw new InvalidOperationException($"`{destinationFile.Path.StringPath}` can't equal to `{self.Path.StringPath}`");
+        }
 
-        //EntryTimestamps sourceFileTimeStamps = self.Timestamps;
-        //EntryAttributes sourceFileAttributes = self.Attributes;
+        EntryTimestamps sourceFileTimeStamps = self.Timestamps;
+        EntryAttributes sourceFileAttributes = self.Attributes;
 
-        //if (Path.GetPathRoot(sourceFilePath.StringPath) == Path.GetPathRoot(destinationFilePath.StringPath))
-        //{
-        //    if (destinationFile.Exists)
-        //    {
-        //        if (overwrite)
-        //        {
-        //            destinationFile.Delete();
-        //        }
-        //        else
-        //        {
-        //            throw new InvalidOperationException($"`Can't move `{self.Path.StringPath}` to `{destinationFile.Path.StringPath}` because `{destinationFile.Path.StringPath}` already existed but `{nameof(overwrite)}` set to false.");
-        //        }
-        //    }
+        if (Path.GetPathRoot(self.Path.StringPath) == Path.GetPathRoot(destinationFile.Path.StringPath))
+        {
+            if (destinationFile.Exists)
+            {
+                if (overwrite)
+                {
+                    destinationFile.Delete();
+                }
+                else
+                {
+                    throw new InvalidOperationException($"`{destinationFile.Path.StringPath}` already existed but `{nameof(overwrite)}` set to false");
+                }
+            }
 
-        //    _fileIO.Rename(sourceFilePath, destinationFilePath);
-        //}
-        //else
-        //{
-        //    await self.CopyToAsync(destinationFile, overwrite, cancellationToken);
-        //    self.Delete();
-        //}
+            throw new NotSupportedException();
+        }
+        else
+        {
+            await self.CopyToAsync(destinationFile, overwrite, cancellationToken);
+            self.Delete();
+        }
 
-        //destinationFile.Timestamps = sourceFileTimeStamps;
-        //destinationFile.Attributes = sourceFileAttributes;
+        destinationFile.Timestamps = sourceFileTimeStamps;
+        destinationFile.Attributes = sourceFileAttributes;
     }
 
     public static async Task<Boolean> CompareEqualityAsync(this IFile self, IFile other, CancellationToken cancellationToken)

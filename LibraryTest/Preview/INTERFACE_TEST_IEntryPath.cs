@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LibraryTest.Preview;
 
 [TestClass]
-public class IEntryPath_Test : TestClassBase
+public class INTERFACE_TEST_IEntryPath : TestClassBase
 {
     [TestMethod]
     public void TYPE_FilePath_EqualityTest()

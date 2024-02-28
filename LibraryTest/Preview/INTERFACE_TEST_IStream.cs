@@ -7,7 +7,7 @@ using System.Runtime.InteropServices.Marshalling;
 namespace LibraryTest.Preview;
 
 [TestClass]
-public class IStream_Test : TestClassBase
+public class INTERFACE_TEST_IStream : TestClassBase
 {
     [TestMethod]
     public void PROP_StreamMode()

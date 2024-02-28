@@ -9,7 +9,7 @@ public static class MemoryDisk
     {
         if (s_files.ContainsKey(path))
         {
-            throw new IOException($"Can't create `{path.StringPath}` because it's already existed.");
+            throw new IOException($"`{path.StringPath}` already exists");
         }
 
         var file = MemoryFile.Create(path, data);
@@ -33,7 +33,7 @@ public static class MemoryDisk
     {
         if (!s_files.ContainsKey(path))
         {
-            throw new InvalidOperationException($"Unable to change file `{path.StringPath}` because the original file does not exist.");
+            throw new InvalidOperationException($"The original file `{path.StringPath}` does not exist");
         }
 
         s_files[path] = file;

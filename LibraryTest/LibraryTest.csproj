@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HM.IO\HM.IO.csproj" />
     <ProjectReference Include="..\PreviewModuleTestGround\HM.IO.Previews.csproj" />
   </ItemGroup>
 

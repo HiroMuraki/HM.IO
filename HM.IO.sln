@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.IO.Previews", "PreviewMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.Tool", "..\HM.Tool\HM.Tool.csproj", "{213C41D1-483C-48E6-84F4-00D72DAEC5FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.CommonComponent", "..\HM.CommonComponent\HM.CommonComponent\HM.CommonComponent.csproj", "{823D832D-61CC-4732-B617-69608ACBB23F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.Common", "..\HM.Common\HM.Common\HM.Common.csproj", "{276277EC-4843-4A72-85E8-E35F988BF95A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{213C41D1-483C-48E6-84F4-00D72DAEC5FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{213C41D1-483C-48E6-84F4-00D72DAEC5FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{213C41D1-483C-48E6-84F4-00D72DAEC5FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{823D832D-61CC-4732-B617-69608ACBB23F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{823D832D-61CC-4732-B617-69608ACBB23F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{823D832D-61CC-4732-B617-69608ACBB23F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{823D832D-61CC-4732-B617-69608ACBB23F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{276277EC-4843-4A72-85E8-E35F988BF95A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{276277EC-4843-4A72-85E8-E35F988BF95A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{276277EC-4843-4A72-85E8-E35F988BF95A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{276277EC-4843-4A72-85E8-E35F988BF95A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

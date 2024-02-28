@@ -1,4 +1,4 @@
-﻿using HM.CommonComponent;
+﻿using HM.Common;
 using HM.IO.Previews;
 using System.Diagnostics.CodeAnalysis;
 
@@ -36,7 +36,7 @@ public sealed class LocalFile :
     public override Boolean Equals(Object? obj)
         => ComparisonHelper.ClassEquals(this, obj);
 
-    public override Int32 GetHashCode() 
+    public override Int32 GetHashCode()
         => LocalFileEqualityComparer.Instance.GetHashCode(this);
 
     public LocalFile(String path) : this(new FilePath(path))

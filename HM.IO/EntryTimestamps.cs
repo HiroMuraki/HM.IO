@@ -1,14 +1,31 @@
 ﻿namespace HM.IO;
 
-/// <include file='EntryTimestamps.xml' path='FileTimestamps/Class[@name="EntryTimestamps"]/*' />
+/// <summary>
+/// 	Represents the creation, last write, and last access timestamps of a file.
+/// </summary>
 public struct EntryTimestamps
 {
-    /// <include file='EntryTimestamps.xml' path='FileTimestamps/Properties/Instance[@name="CreationTime"]/*' />
+    /// <summary>
+    /// 	Gets or sets the timestamp when the file was created.
+    /// </summary>
+    /// <returns>
+    /// 	A <see cref="DateTime"/> object representing the creation time.
+    /// </returns>
     public DateTime CreationTime { get; set; }
 
-    /// <include file='EntryTimestamps.xml' path='FileTimestamps/Properties/Instance[@name="LastWriteTime"]/*' />
+    /// <summary>
+    /// 	Gets or sets the timestamp when the file was last written to.
+    /// </summary>
+    /// <returns>
+    /// 	A <see cref="DateTime"/> object representing the last write time.
+    /// </returns>
     public DateTime LastWriteTime { get; set; }
 
-    /// <include file='EntryTimestamps.xml' path='FileTimestamps/Properties/Instance[@name="LastAccessTime"]/*' />
+    /// <summary>
+    /// 	Gets or sets the timestamp when the file was last accessed.
+    /// </summary>
+    /// <returns>
+    /// 	A <see cref="DateTime"/> object representing the last access time.
+    /// </returns>
     public DateTime LastAccessTime { get; set; }
 }

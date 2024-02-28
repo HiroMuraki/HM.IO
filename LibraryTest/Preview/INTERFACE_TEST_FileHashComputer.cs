@@ -5,7 +5,7 @@ using FileSha256Computer = HM.IO.Previews.FileSha256Computer;
 namespace LibraryTest.Preview;
 
 [TestClass]
-public class FileHashComputer_Test : TestClassBase
+public class INTERFACE_TEST_FileHashComputer : TestClassBase
 {
     [TestMethod]
     public void TYPE_FileSha256Computer()

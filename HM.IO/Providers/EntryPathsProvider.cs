@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using HM.IO._old2;
+using System.Collections.Immutable;
 
 namespace HM.IO.Providers;
 
@@ -192,7 +193,6 @@ public sealed class EntryPathsProvider
     private readonly List<SearchingFile> _excludingFiles = [];
     private IDirectoryIO _directoryIO = DirectoryIO.Default;
     private IErrorHandler? _errorHandler;
-    private readonly List<IAsyncFileProcessor> _fileProcessors = [];
     private static EnumerationOptions GetDirectoriesEnumerationOptions() => new()
     {
         IgnoreInaccessible = true,

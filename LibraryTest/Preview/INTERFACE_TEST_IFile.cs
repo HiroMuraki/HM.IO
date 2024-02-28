@@ -8,7 +8,7 @@ using System.Text;
 namespace LibraryTest.Preview;
 
 [TestClass]
-public class IFile_Test : TestClassBase
+public class INTERFACE_TEST_IFile : TestClassBase
 {
     [TestInitialize]
     public void Initialize()

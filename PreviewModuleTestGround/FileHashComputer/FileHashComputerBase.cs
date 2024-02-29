@@ -1,6 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿using HM.IO.Previews.File;
+using HM.IO.Previews.Stream;
+using System.Security.Cryptography;
 
-namespace HM.IO.Previews;
+namespace HM.IO.Previews.FileHashComputer;
 
 public abstract class FileHashComputerBase : IFileHashComputer, IAsyncFileHashComputer
 {

@@ -1,8 +1,9 @@
 ﻿using HM.Common;
-using HM.IO.Previews;
+using HM.IO.Previews.Stream;
 using System.Diagnostics.CodeAnalysis;
+using BclFile = System.IO.File;
 
-namespace PreviewModuleTestGround.Preview;
+namespace HM.IO.Previews.File;
 
 public sealed class LocalFile :
     LocalEntryBase,
@@ -11,18 +12,18 @@ public sealed class LocalFile :
 {
     public FilePath Path => _filePath;
 
-    public override Boolean Exists => File.Exists(Path.StringPath);
+    public override Boolean Exists => BclFile.Exists(Path.StringPath);
 
     public Int64 SizeInBytes => new FileInfo(Path.StringPath).Length;
 
     public void Create()
     {
-        File.Create(Path.StringPath).Dispose();
+        BclFile.Create(Path.StringPath).Dispose();
     }
 
     public void Delete()
     {
-        File.Delete(Path.StringPath);
+        BclFile.Delete(Path.StringPath);
     }
 
     public IStream Open(StreamMode mode)

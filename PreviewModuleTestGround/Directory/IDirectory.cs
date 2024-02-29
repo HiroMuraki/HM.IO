@@ -1,6 +1,6 @@
-﻿using HM.IO.Previews;
+﻿using HM.IO.Previews.File;
 
-namespace PreviewModuleTestGround.Preview;
+namespace HM.IO.Previews.Directory;
 
 public interface IDirectory
 {

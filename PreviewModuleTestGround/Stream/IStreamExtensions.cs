@@ -1,4 +1,6 @@
-﻿namespace HM.IO.Previews;
+﻿using BclStream = System.IO.Stream;
+
+namespace HM.IO.Previews.Stream;
 
 public static class IStreamExtensions
 {
@@ -20,9 +22,9 @@ public static class IStreamExtensions
         await self.GetBclStream().CopyToAsync(destinationStream.GetBclStream(), cancellationToken);
     }
 
-    public static Stream GetBclStream(this IStream self)
+    public static BclStream GetBclStream(this IStream self)
     {
-        if (self is Stream stream)
+        if (self is BclStream stream)
         {
             return stream;
         }
@@ -33,7 +35,7 @@ public static class IStreamExtensions
     }
 
     #region NonPublic
-    private sealed class ProxyStream : Stream
+    private sealed class ProxyStream : BclStream
     {
         public override Boolean CanRead => _stream.Mode is StreamMode.ReadOnly or StreamMode.ReadWrite;
 

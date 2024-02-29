@@ -1,7 +1,7 @@
 ﻿using HM.Common;
 using System.Diagnostics.CodeAnalysis;
 
-namespace HM.IO.Previews;
+namespace HM.IO.Previews.Directory;
 
 public readonly struct DirectoryPath :
     IEntryPath<DirectoryPath>
@@ -43,6 +43,11 @@ public readonly struct DirectoryPath :
     public static Boolean operator !=(DirectoryPath left, DirectoryPath right)
     {
         return !(left == right);
+    }
+
+    public override String ToString()
+    {
+        return StringPath;
     }
 
     public DirectoryPath()

@@ -1,8 +1,6 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
-using HM.IO;
-using HM.IO.Previews;
+using HM.IO.Previews.Stream;
 using LibraryTest.Helpers;
-using System.Runtime.InteropServices.Marshalling;
 
 namespace LibraryTest.Preview;
 

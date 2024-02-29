@@ -1,7 +1,5 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
 
-using System.Numerics;
-
 namespace LibraryTest.Helpers;
 
 public static class EqualityTestHelper

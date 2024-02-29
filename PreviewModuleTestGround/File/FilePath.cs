@@ -1,7 +1,8 @@
 ﻿using HM.Common;
+using HM.IO.Previews.Directory;
 using System.Diagnostics.CodeAnalysis;
 
-namespace HM.IO.Previews;
+namespace HM.IO.Previews.File;
 
 public readonly struct FilePath :
     IEntryPath<FilePath>
@@ -45,6 +46,11 @@ public readonly struct FilePath :
     public static Boolean operator !=(FilePath left, FilePath right)
     {
         return !(left == right);
+    }
+
+    public override String ToString()
+    {
+        return StringPath;
     }
 
     public FilePath()

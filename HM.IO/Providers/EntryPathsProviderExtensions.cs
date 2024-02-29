@@ -1,6 +1,4 @@
-﻿using HM.IO._old2;
-
-namespace HM.IO.Providers;
+﻿namespace HM.IO.Providers;
 
 /// <include file='Providers/EntryPathsProviderExtensions.xml' path='EntryPathsProviderExtensions/Class[@name="EntryPathsProviderExtensions"]/*' />
 public static class EntryPathsProviderExtensions

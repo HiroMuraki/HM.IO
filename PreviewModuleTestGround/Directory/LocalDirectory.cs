@@ -1,8 +1,9 @@
 ﻿using HM.Common;
-using HM.IO.Previews;
+using HM.IO.Previews.File;
 using System.Diagnostics.CodeAnalysis;
+using BclDirectory = System.IO.Directory;
 
-namespace PreviewModuleTestGround.Preview;
+namespace HM.IO.Previews.Directory;
 
 public sealed class LocalDirectory :
     LocalEntryBase,
@@ -11,11 +12,11 @@ public sealed class LocalDirectory :
 {
     public DirectoryPath Path => _path;
 
-    public override Boolean Exists => Directory.Exists(Path.StringPath);
+    public override Boolean Exists => BclDirectory.Exists(Path.StringPath);
 
     public IEnumerable<LocalDirectory> EnumerateLocalDirectories(EnumerationOptions enumerationOptions)
     {
-        foreach (String path in Directory.EnumerateDirectories(Path.StringPath, "*", enumerationOptions))
+        foreach (String path in BclDirectory.EnumerateDirectories(Path.StringPath, "*", enumerationOptions))
         {
             yield return new LocalDirectory(new DirectoryPath(path));
         }
@@ -26,7 +27,7 @@ public sealed class LocalDirectory :
 
     public IEnumerable<LocalFile> EnumerateLocalFiles(EnumerationOptions enumerationOptions)
     {
-        foreach (String path in Directory.EnumerateFiles(Path.StringPath, "*", enumerationOptions))
+        foreach (String path in BclDirectory.EnumerateFiles(Path.StringPath, "*", enumerationOptions))
         {
             yield return new LocalFile(new FilePath(path));
         }

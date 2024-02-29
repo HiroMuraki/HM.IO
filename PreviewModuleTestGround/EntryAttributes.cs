@@ -38,6 +38,11 @@ public readonly struct EntryAttributes :
         return !(left == right);
     }
 
+    public override String ToString()
+    {
+        return Value.ToString();
+    }
+
     public static EntryAttributes Combine(FileAttributes[] fileAttributes)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(fileAttributes.Length);

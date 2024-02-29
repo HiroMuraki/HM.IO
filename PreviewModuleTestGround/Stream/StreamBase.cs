@@ -1,7 +1,9 @@
-﻿namespace HM.IO.Previews;
+﻿using BclStream = System.IO.Stream;
+
+namespace HM.IO.Previews.Stream;
 
 public abstract class StreamBase :
-    Stream,
+    BclStream,
     IStream,
     IAsyncStream
 {

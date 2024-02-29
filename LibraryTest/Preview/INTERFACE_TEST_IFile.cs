@@ -1,8 +1,7 @@
-﻿using HM.IO;
-using HM.IO.Previews;
+﻿using HM.IO.Previews;
+using HM.IO.Previews.File;
+using HM.IO.Previews.Stream;
 using LibraryTest.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PreviewModuleTestGround.Preview;
 using System.Text;
 #pragma warning disable IDE0049 // 使用框架类型
 namespace LibraryTest.Preview;

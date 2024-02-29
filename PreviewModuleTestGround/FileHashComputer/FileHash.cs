@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace HM.IO.Previews;
+namespace HM.IO.Previews.FileHashComputer;
 
 public readonly struct FileHash :
     IEquatable<FileHash>,
@@ -95,6 +95,11 @@ public readonly struct FileHash :
     public static Boolean operator !=(FileHash left, FileHash right)
     {
         return !(left == right);
+    }
+
+    public readonly override String ToString()
+    {
+        return StringValue;
     }
 
     public FileHash()

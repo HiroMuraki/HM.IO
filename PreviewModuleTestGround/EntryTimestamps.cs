@@ -37,4 +37,9 @@ public readonly struct EntryTimestamps :
     {
         return !(left == right);
     }
+
+    public override String ToString()
+    {
+        throw new NotSupportedException();
+    }
 }

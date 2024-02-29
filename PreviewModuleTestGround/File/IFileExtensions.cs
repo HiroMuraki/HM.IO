@@ -1,4 +1,7 @@
-﻿namespace HM.IO.Previews;
+﻿using HM.IO.Previews.File;
+using HM.IO.Previews.Stream;
+
+namespace HM.IO.Previews.File;
 
 public static class IFileExtensions
 {

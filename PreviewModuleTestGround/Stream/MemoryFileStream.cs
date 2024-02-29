@@ -1,4 +1,6 @@
-﻿namespace HM.IO.Previews;
+﻿using HM.IO.Previews.File;
+
+namespace HM.IO.Previews.Stream;
 
 public sealed class MemoryFileStream :
     StreamBase

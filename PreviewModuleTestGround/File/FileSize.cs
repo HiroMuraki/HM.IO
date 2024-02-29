@@ -2,11 +2,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace HM.IO.Previews;
+namespace HM.IO.Previews.File;
 
 public readonly struct FileSize :
     IEquatable<FileSize>,
-    IEqualityOperators<FileSize, FileSize, Boolean>
+    IEqualityOperators<FileSize, FileSize, Boolean>,
+    IComparable<FileSize>,
+    IComparable
 {
     public readonly Int64 SizeInBytes => _sizeInBytes;
 
@@ -24,9 +26,27 @@ public readonly struct FileSize :
     public override Boolean Equals([NotNullWhen(true)] Object? obj)
         => ComparisonHelper.StructEquals(this, obj);
 
+    public Int32 CompareTo(FileSize other)
+    {
+        return _sizeInBytes.CompareTo(other._sizeInBytes);
+    }
+
+    public Int32 CompareTo(Object? obj)
+        => ComparisonHelper.StructCompareTo(this, obj);
+
     public override Int32 GetHashCode()
     {
         return _sizeInBytes.GetHashCode();
+    }
+
+    public static Boolean operator ==(FileSize left, FileSize right)
+    {
+        return left.Equals(right);
+    }
+
+    public static Boolean operator !=(FileSize left, FileSize right)
+    {
+        return !(left == right);
     }
 
     public override String ToString()
@@ -54,14 +74,9 @@ public readonly struct FileSize :
         return FromMBytes(gBytes * 1024);
     }
 
-    public static Boolean operator ==(FileSize left, FileSize right)
+    public FileSize()
     {
-        return left.Equals(right);
-    }
-
-    public static Boolean operator !=(FileSize left, FileSize right)
-    {
-        return !(left == right);
+        ThrowHelper.ThrowUnableToCallDefaultConstructor(typeof(FileSize));
     }
 
     #region NonPublic

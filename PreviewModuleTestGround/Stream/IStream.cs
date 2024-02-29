@@ -1,4 +1,4 @@
-﻿namespace HM.IO.Previews;
+﻿namespace HM.IO.Previews.Stream;
 
 public interface IStream :
     IDisposable

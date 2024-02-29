@@ -1,6 +1,9 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
 using HM.IO.Previews;
-using FileSha256Computer = HM.IO.Previews.FileSha256Computer;
+using HM.IO.Previews.File;
+using HM.IO.Previews.FileHashComputer;
+using HM.IO.Previews.Stream;
+using FileSha256Computer = HM.IO.Previews.FileHashComputer.FileSha256Computer;
 
 namespace LibraryTest.Preview;
 
@@ -28,28 +31,6 @@ public class INTERFACE_TEST_FileHashComputer : TestClassBase
     }
 
     #region NonPublic
-    private static MemoryFile GetMemoryFile()
-    {
-        MemoryDisk.Clear();
-
-        MemoryFile file = MemoryDisk.CreateFile(new FilePath("path\\to\\file\\test.txt"));
-
-        using (IStream fs = file.Open(StreamMode.WriteOnly))
-        using (var writer = new StreamWriter(fs.GetBclStream()))
-        {
-            writer.Write("Hello World!");
-        }
-
-        //System.Diagnostics.Debug.WriteLine($"Bytes:"); // debug output
-        //System.Diagnostics.Debug.WriteLine($">>>"); // debug output
-        //BinaryFileHelper.Open(file).ForEachChunk(bytes =>
-        //{
-        //    System.Diagnostics.Debug.WriteLine(string.Join(' ', bytes.Select(x => x.ToString("X2"))));
-        //});
-        //System.Diagnostics.Debug.WriteLine($">>>"); // debug output
-
-        return file;
-    }
     private static void TestCoreHelper(
         IFileHashComputer hashComputer,
         IAsyncFileHashComputer asyncHashComputer,
@@ -70,6 +51,22 @@ public class INTERFACE_TEST_FileHashComputer : TestClassBase
         Assert.IsTrue(hash1.GetHashCode() == hash2.GetHashCode());
         Assert.IsFalse(hash1 != hash2);
         Assert.IsTrue(hash1.Equals(hash2));
+
+        static MemoryFile GetMemoryFile()
+        {
+            MemoryDisk.Clear();
+
+            MemoryFile file = MemoryDisk.CreateFile(new FilePath("path\\to\\file\\test.txt"));
+
+            using (IStream fs = file.Open(StreamMode.WriteOnly))
+            using (var writer = new StreamWriter(fs.GetBclStream()))
+            {
+                writer.Write("Hello World!");
+            }
+
+
+            return file;
+        }
     }
     #endregion
 }

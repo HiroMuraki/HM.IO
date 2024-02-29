@@ -1,13 +1,26 @@
 ﻿namespace HM.IO;
 
-/// <include file='DirectoryIO.xml' path='DirectoryIO/Class[@name="DirectoryIO"]/*' />
+/// <summary>
+/// 	Default implementation for <see cref="IDirectoryIO"/>.
+/// </summary>
 public sealed class DirectoryIO :
     IDirectoryIO
 {
-    /// <include file='DirectoryIO.xml' path='DirectoryIO/Properties/Static[@name="Default"]/*' />
+    /// <summary>
+    /// 	Instance of <see cref="DirectoryIO"/>.
+    /// </summary>
+    /// <value>
+    /// 	A <see cref="DirectoryIO"/> instance.
+    /// </value>
     public static DirectoryIO Default { get; } = new();
 
-    /// <include file='DirectoryIO.xml' path='DirectoryIO/Methods/Instance[@name="GetFileTimestamps[EntryPath]"]/*' />
+    /// <summary>
+    /// 	Checks if the specified directory or file exists at the given entry path.
+    /// </summary>
+    /// <param name="entryPath">The path of the directory or file to check for existence.</param>
+    /// <returns>
+    /// 	True if the directory or file exists; otherwise, false.
+    /// </returns>
     public EntryTimestamps GetFileTimestamps(EntryPath path)
     {
         var stringPath = path.StringPath;
@@ -26,7 +39,14 @@ public sealed class DirectoryIO :
         return Directory.Exists(entryPath.StringPath);
     }
 
-    /// <include file='DirectoryIO.xml' path='DirectoryIO/Methods/Instance[@name="EnumerateDirectories[EntryPath,EnumerationOptions]"]/*' />
+    /// <summary>
+    /// 	Returns an enumerable collection of directory names in the specified directory and matching the specified search pattern and options.
+    /// </summary>
+    /// <param name="path">The path to the directory to enumerate.</param>
+    /// <param name="enumerationOptions">An object that specifies options to control the search behavior, such as search pattern and recursion depth.</param>
+    /// <returns>
+    /// 	An enumerable collection of directory names that match the specified criteria.
+    /// </returns>
     public IEnumerable<EntryPath> EnumerateDirectoryPaths(EntryPath path, EnumerationOptions enumerationOptions)
     {
         return Directory
@@ -34,7 +54,14 @@ public sealed class DirectoryIO :
             .Select(EntryPath.Create);
     }
 
-    /// <include file='DirectoryIO.xml' path='DirectoryIO/Methods/Instance[@name="EnumerateFiles[EntryPath,EnumerationOptions]"]/*' />
+    /// <summary>
+    /// 	Returns an enumerable collection of file names in the specified directory and matching the specified search pattern and options.
+    /// </summary>
+    /// <param name="path">The path to the directory to enumerate.</param>
+    /// <param name="enumerationOptions">An object that specifies options to control the search behavior, such as search pattern and recursion depth.</param>
+    /// <returns>
+    /// 	An enumerable collection of file names that match the specified criteria.
+    /// </returns>
     public IEnumerable<EntryPath> EnumerateFilePaths(EntryPath path, EnumerationOptions enumerationOptions)
     {
         return Directory

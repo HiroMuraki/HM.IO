@@ -4,10 +4,18 @@ using System.Security.Cryptography;
 
 namespace HM.IO;
 
-/// <include file='FileSha256Computer.xml' path='FileSha256Computer/Class[@name="FileSha256Computer"]/*' />
+/// <summary>
+/// 	Default implementation for computing SHA-256 hash values for files.
+/// </summary>
 public sealed class FileSha256Computer : IFileHashComputer, IFileHashesComputer
 {
-    /// <include file='FileSha256Computer.xml' path='FileSha256Computer/Methods/Instance[@name="ComputeHashAsync[EntryPath]"]/*' />
+    /// <summary>
+    /// 	Computes the SHA-256 hash value for the specified file asynchronously.
+    /// </summary>
+    /// <param name="filePath">The path of the file for which to compute the hash.</param>
+    /// <returns>
+    /// 	A task representing the asynchronous operation. The task result is the computed SHA-256 hash value.
+    /// </returns>
     public async Task<String> ComputeHashAsync(EntryPath filePath)
     {
         using var sha256 = SHA256.Create();
@@ -15,13 +23,26 @@ public sealed class FileSha256Computer : IFileHashComputer, IFileHashesComputer
         return Convert.ToHexString(await sha256.ComputeHashAsync(fs));
     }
 
-    /// <include file='FileSha256Computer.xml' path='FileSha256Computer/Methods/Instance[@name="ComputeHashesAsync[IEnumerable&lt;EntryPath&gt;]"]/*' />
+    /// <summary>
+    /// 	Computes the SHA-256 hash values for the specified collection of files asynchronously.
+    /// </summary>
+    /// <param name="filePaths">The collection of file paths for which to compute the hash values.</param>
+    /// <returns>
+    /// 	A task representing the asynchronous operation. The task result is a dictionary mapping file paths to their respective computed SHA-256 hash values.
+    /// </returns>
     public Task<ImmutableDictionary<EntryPath, String>> ComputeHashesAsync(IEnumerable<EntryPath> filePaths)
     {
         return ComputeHashesAsync(filePaths, false);
     }
-
-    /// <include file='FileSha256Computer.xml' path='FileSha256Computer/Methods/Instance[@name="ComputeHashesAsync[IEnumerable&lt;EntryPath&gt;,Boolean]"]/*' />
+   
+    /// <summary>
+    /// 	Computes the SHA-256 hash values for the specified collection of files asynchronously, optionally using tasks for parallel processing.
+    /// </summary>
+    /// <param name="filePaths">The collection of file paths for which to compute the hash values.</param>
+    /// <param name="useTasks">A flag indicating whether to use tasks for parallel processing.</param>
+    /// <returns>
+    /// 	A task representing the asynchronous operation. The task result is a dictionary mapping file paths to their respective computed SHA-256 hash values.
+    /// </returns>
     public async Task<ImmutableDictionary<EntryPath, String>> ComputeHashesAsync(IEnumerable<EntryPath> filePaths, Boolean useTasks)
     {
         if (useTasks)

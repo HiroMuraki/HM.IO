@@ -5,7 +5,7 @@
 //using HM.IO.Providers;
 //using System.Runtime.CompilerServices;
 
-//namespace LibraryTest;
+//namespace HM.IO.UnitTest;
 
 //[TestClass]
 //public partial class FilesProviderTest : TestClassBase

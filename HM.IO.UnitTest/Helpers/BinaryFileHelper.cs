@@ -3,7 +3,7 @@
 using HM.IO.Previews.File;
 using HM.IO.Previews.Stream;
 
-namespace LibraryTest.Helpers;
+namespace HM.IO.UnitTest.Helpers;
 
 public class BinaryFileHelper
 {

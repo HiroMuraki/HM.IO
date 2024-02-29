@@ -5,7 +5,7 @@ using HM.IO.Previews.FileHashComputer;
 using HM.IO.Previews.Stream;
 using FileSha256Computer = HM.IO.Previews.FileHashComputer.FileSha256Computer;
 
-namespace LibraryTest.Preview;
+namespace HM.IO.UnitTest.Preview;
 
 [TestClass]
 public class INTERFACE_TEST_FileHashComputer : TestClassBase

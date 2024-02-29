@@ -1,9 +1,9 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
 using HM.IO.Previews.Directory;
 using HM.IO.Previews.File;
-using LibraryTest.Helpers;
+using HM.IO.UnitTest.Helpers;
 
-namespace LibraryTest.Preview;
+namespace HM.IO.UnitTest.Preview;
 
 [TestClass]
 public class INTERFACE_TEST_IEntryPath : TestClassBase

@@ -1,8 +1,8 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
 using HM.IO.Previews;
-using LibraryTest.Helpers;
+using HM.IO.UnitTest.Helpers;
 
-namespace LibraryTest.Preview;
+namespace HM.IO.UnitTest.Preview;
 
 [TestClass]
 [TestCategory("Struct Types")]

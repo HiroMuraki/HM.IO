@@ -2,7 +2,7 @@
 
 using System.Runtime.CompilerServices;
 
-namespace LibraryTest;
+namespace HM.IO.UnitTest;
 
 public abstract class TestClassBase
 {

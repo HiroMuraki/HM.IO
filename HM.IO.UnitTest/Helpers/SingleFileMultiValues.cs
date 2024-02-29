@@ -3,7 +3,7 @@
 using HM.IO.Previews;
 using HM.IO.Previews.File;
 
-namespace LibraryTest.Helpers;
+namespace HM.IO.UnitTest.Helpers;
 
 public static class SingleFileMultiValues
 {

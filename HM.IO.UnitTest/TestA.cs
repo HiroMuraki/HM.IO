@@ -1,7 +1,7 @@
 ﻿//#pragma warning disable IDE0049 // 使用框架类型
 //using System.Reflection;
 
-//namespace LibraryTest;
+//namespace HM.IO.UnitTest;
 
 //[TestClass]
 //public class RoutedItemsTest : TestClass

@@ -1,10 +1,10 @@
 ﻿using HM.IO.Previews;
 using HM.IO.Previews.File;
 using HM.IO.Previews.Stream;
-using LibraryTest.Helpers;
+using HM.IO.UnitTest.Helpers;
 using System.Text;
 #pragma warning disable IDE0049 // 使用框架类型
-namespace LibraryTest.Preview;
+namespace HM.IO.UnitTest.Preview;
 
 [TestClass]
 public class INTERFACE_TEST_IFile : TestClassBase

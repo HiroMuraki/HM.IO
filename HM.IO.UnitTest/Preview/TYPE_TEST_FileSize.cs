@@ -1,10 +1,10 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
 using HM.IO.Previews.File;
-using LibraryTest.Helpers;
+using HM.IO.UnitTest.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Drawing;
 
-namespace LibraryTest.Preview;
+namespace HM.IO.UnitTest.Preview;
 
 [TestClass]
 [TestCategory("Struct Types")]

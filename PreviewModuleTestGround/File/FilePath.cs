@@ -48,10 +48,8 @@ public readonly struct FilePath :
         return !(left == right);
     }
 
-    public override String ToString()
-    {
-        return StringPath;
-    }
+    public readonly override String ToString()
+        => ToStringHelper.Build(this);
 
     public FilePath()
     {

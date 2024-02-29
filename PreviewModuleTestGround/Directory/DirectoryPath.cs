@@ -46,9 +46,7 @@ public readonly struct DirectoryPath :
     }
 
     public override String ToString()
-    {
-        return StringPath;
-    }
+        => ToStringHelper.Build(this);
 
     public DirectoryPath()
     {

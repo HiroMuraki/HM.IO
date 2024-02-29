@@ -98,9 +98,7 @@ public readonly struct FileHash :
     }
 
     public readonly override String ToString()
-    {
-        return StringValue;
-    }
+        => ToStringHelper.Build(this);
 
     public FileHash()
     {

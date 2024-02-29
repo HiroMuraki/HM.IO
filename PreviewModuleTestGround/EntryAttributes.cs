@@ -15,15 +15,15 @@ public readonly struct EntryAttributes :
         return (Value & attribute) == attribute;
     }
 
-    public Boolean Equals(EntryAttributes other)
+    public readonly Boolean Equals(EntryAttributes other)
     {
         return Value == other.Value;
     }
 
-    public override Boolean Equals([NotNullWhen(true)] Object? obj)
+    public readonly override Boolean Equals([NotNullWhen(true)] Object? obj)
         => ComparisonHelper.StructEquals(this, obj);
 
-    public override Int32 GetHashCode()
+    public readonly override Int32 GetHashCode()
     {
         return Value.GetHashCode();
     }
@@ -38,10 +38,8 @@ public readonly struct EntryAttributes :
         return !(left == right);
     }
 
-    public override String ToString()
-    {
-        return Value.ToString();
-    }
+    public readonly override String ToString()
+        => ToStringHelper.Build(this);
 
     public static EntryAttributes Combine(FileAttributes[] fileAttributes)
     {

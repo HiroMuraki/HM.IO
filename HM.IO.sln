@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.IO", "HM.IO\HM.IO.csproj", "{08748F98-298F-420D-A281-132A79940067}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryTest", "LibraryTest\LibraryTest.csproj", "{8BFAF2F4-2770-4C55-94D1-F05CFFA93ACB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.IO.UnitTest", "HM.IO.UnitTest\HM.IO.UnitTest.csproj", "{8BFAF2F4-2770-4C55-94D1-F05CFFA93ACB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "Benchmark\Benchmark.csproj", "{CB3011D6-CC29-457D-98F6-AAB0FEC50F94}"
 EndProject

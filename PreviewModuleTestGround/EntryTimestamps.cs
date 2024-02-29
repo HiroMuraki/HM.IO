@@ -38,8 +38,6 @@ public readonly struct EntryTimestamps :
         return !(left == right);
     }
 
-    public override String ToString()
-    {
-        throw new NotSupportedException();
-    }
+    public readonly override String ToString()
+        => ToStringHelper.Build(this);
 }

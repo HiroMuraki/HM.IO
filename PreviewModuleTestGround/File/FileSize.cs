@@ -18,23 +18,23 @@ public readonly struct FileSize :
 
     public readonly Double SizeInGBytes => SizeInMBytes / 1024.0;
 
-    public Boolean Equals(FileSize other)
+    public readonly Boolean Equals(FileSize other)
     {
         return _sizeInBytes == other._sizeInBytes;
     }
 
-    public override Boolean Equals([NotNullWhen(true)] Object? obj)
+    public readonly override Boolean Equals([NotNullWhen(true)] Object? obj)
         => ComparisonHelper.StructEquals(this, obj);
 
-    public Int32 CompareTo(FileSize other)
+    public readonly Int32 CompareTo(FileSize other)
     {
         return _sizeInBytes.CompareTo(other._sizeInBytes);
     }
 
-    public Int32 CompareTo(Object? obj)
+    public readonly Int32 CompareTo(Object? obj)
         => ComparisonHelper.StructCompareTo(this, obj);
 
-    public override Int32 GetHashCode()
+    public readonly override Int32 GetHashCode()
     {
         return _sizeInBytes.GetHashCode();
     }
@@ -49,10 +49,8 @@ public readonly struct FileSize :
         return !(left == right);
     }
 
-    public override String ToString()
-    {
-        return _sizeInBytes.ToString();
-    }
+    public readonly override String ToString()
+        => ToStringHelper.Build(this);
 
     public static FileSize FromBytes(Int64 bytes)
     {

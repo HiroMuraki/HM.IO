@@ -10,8 +10,4 @@
     <ProjectReference Include="..\..\HM.Common\HM.Common\HM.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="_\" />
-  </ItemGroup>
-
 </Project>

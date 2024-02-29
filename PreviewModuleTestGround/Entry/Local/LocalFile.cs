@@ -3,7 +3,7 @@ using HM.IO.Previews.Stream;
 using System.Diagnostics.CodeAnalysis;
 using BclFile = System.IO.File;
 
-namespace HM.IO.Previews.File;
+namespace HM.IO.Previews.Entry.Local;
 
 public sealed class LocalFile :
     LocalEntryBase,

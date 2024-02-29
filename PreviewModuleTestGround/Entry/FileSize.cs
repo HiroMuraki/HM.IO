@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace HM.IO.Previews.File;
+namespace HM.IO.Previews.Entry;
 
 public readonly struct FileSize :
     IEquatable<FileSize>,

@@ -1,6 +1,6 @@
 ﻿using BclFile = System.IO.File;
 
-namespace HM.IO.Previews;
+namespace HM.IO.Previews.Entry;
 
 public abstract class LocalEntryBase
 {

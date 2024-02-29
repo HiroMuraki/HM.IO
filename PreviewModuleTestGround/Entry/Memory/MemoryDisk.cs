@@ -1,6 +1,4 @@
-﻿using HM.IO.Previews.File;
-
-namespace HM.IO.Previews;
+﻿namespace HM.IO.Previews.Entry.Memory;
 
 public static class MemoryDisk
 {

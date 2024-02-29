@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace HM.IO.Previews;
+namespace HM.IO.Previews.Entry;
 
 public readonly struct EntryAttributes :
     IEquatable<EntryAttributes>,

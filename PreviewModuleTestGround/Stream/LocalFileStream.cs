@@ -1,4 +1,4 @@
-﻿using HM.IO.Previews.File;
+﻿using HM.IO.Previews.Entry;
 
 namespace HM.IO.Previews.Stream;
 

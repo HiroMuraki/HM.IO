@@ -1,9 +1,8 @@
 ﻿using HM.Common;
-using HM.IO.Previews.File;
 using System.Diagnostics.CodeAnalysis;
 using BclDirectory = System.IO.Directory;
 
-namespace HM.IO.Previews.Directory;
+namespace HM.IO.Previews.Entry.Local;
 
 public sealed class LocalDirectory :
     LocalEntryBase,

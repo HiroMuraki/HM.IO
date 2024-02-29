@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace HM.IO.Previews;
+namespace HM.IO.Previews.Entry;
 
 public interface IEntryPath<TEntryName> :
     IEquatable<TEntryName>,

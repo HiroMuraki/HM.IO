@@ -1,23 +1,20 @@
 ﻿using HM.Common;
-using HM.IO.Previews.Directory;
 using System.Diagnostics.CodeAnalysis;
 
-namespace HM.IO.Previews.File;
+namespace HM.IO.Previews.Entry;
 
-public readonly struct FilePath :
-    IEntryPath<FilePath>
+public readonly struct DirectoryPath :
+    IEntryPath<DirectoryPath>
 {
-    public static FilePath Empty { get; }
+    public static DirectoryPath Empty { get; }
 
     public readonly String StringPath => _filePath;
 
     public readonly DirectoryPath ParentDirectory => new(Path.GetDirectoryName(StringPath) ?? String.Empty);
 
-    public readonly String FileName => Path.GetFileNameWithoutExtension(StringPath);
+    public readonly String DirectoryName => Path.GetFileNameWithoutExtension(StringPath);
 
-    public readonly String FileExtension => Path.GetExtension(StringPath);
-
-    public readonly Boolean Equals(FilePath other)
+    public readonly Boolean Equals(DirectoryPath other)
     {
         return StringPath == other.StringPath;
     }
@@ -25,7 +22,7 @@ public readonly struct FilePath :
     public readonly override Boolean Equals([NotNullWhen(true)] Object? obj)
         => ComparisonHelper.StructEquals(this, obj);
 
-    public readonly Int32 CompareTo(FilePath other)
+    public readonly Int32 CompareTo(DirectoryPath other)
     {
         return StringPath.CompareTo(other.StringPath);
     }
@@ -38,26 +35,26 @@ public readonly struct FilePath :
         return StringPath.GetHashCode();
     }
 
-    public static Boolean operator ==(FilePath left, FilePath right)
+    public static Boolean operator ==(DirectoryPath left, DirectoryPath right)
     {
         return left.Equals(right);
     }
 
-    public static Boolean operator !=(FilePath left, FilePath right)
+    public static Boolean operator !=(DirectoryPath left, DirectoryPath right)
     {
         return !(left == right);
     }
 
-    public readonly override String ToString()
+    public override String ToString()
         => ToStringHelper.Build(this);
 
-    public FilePath()
+    public DirectoryPath()
     {
-        ThrowHelper.ThrowUnableToCallDefaultConstructor(typeof(FilePath));
+        ThrowHelper.ThrowUnableToCallDefaultConstructor(typeof(DirectoryPath));
         _filePath = String.Empty;
     }
 
-    public FilePath(String stringPath)
+    public DirectoryPath(String stringPath)
     {
         ArgumentNullException.ThrowIfNull(stringPath);
 

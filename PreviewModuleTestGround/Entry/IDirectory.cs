@@ -1,6 +1,4 @@
-﻿using HM.IO.Previews.File;
-
-namespace HM.IO.Previews.Directory;
+﻿namespace HM.IO.Previews.Entry;
 
 public interface IDirectory
 {

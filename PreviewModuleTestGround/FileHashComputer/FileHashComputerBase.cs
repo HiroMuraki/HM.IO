@@ -1,4 +1,4 @@
-﻿using HM.IO.Previews.File;
+﻿using HM.IO.Previews.Entry;
 using HM.IO.Previews.Stream;
 using System.Security.Cryptography;
 

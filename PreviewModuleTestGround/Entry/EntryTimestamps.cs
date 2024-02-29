@@ -1,7 +1,7 @@
 ﻿using HM.Common;
 using System.Numerics;
 
-namespace HM.IO.Previews;
+namespace HM.IO.Previews.Entry;
 
 public readonly struct EntryTimestamps :
     IEquatable<EntryTimestamps>,

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\HM.IO\HM.IO\HM.IO.csproj" />
+    <ProjectReference Include="..\HM.IO\\HM.IO.csproj" />
   </ItemGroup>
 
 </Project>

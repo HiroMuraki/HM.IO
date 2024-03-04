@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppDataBase\HM.AppDatabase.csproj" />
+    <ProjectReference Include="..\HM.AppDatabase\HM.AppDatabase.csproj" />
   </ItemGroup>
 
   <ItemGroup>

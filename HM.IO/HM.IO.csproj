@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\HM.Common\HM.Common\HM.Common.csproj" />
+    <ProjectReference Include="..\HM.Common\HM.Common.csproj" />
   </ItemGroup>
 
 </Project>

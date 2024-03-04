@@ -1,4 +1,6 @@
-﻿namespace HM.IO;
+﻿using System.Drawing;
+
+namespace HM.IO;
 
 /// <summary>
 /// Represents a readonly structure for specifying a directory to be searched, including optional parameters.
@@ -16,6 +18,16 @@ public readonly struct SearchingDirectory
 
     /// <include file='Providers/SearchingDirectory.xml' path='SearchingDirectory/Properties/Instance[@name="IgnoreIfNotExists"]/*' />
     public Boolean IgnoreIfNotExists { get; init; } = false;
+
+
+    public SearchingDirectory(String path) : this(path, false)
+    {
+
+    }
+
+    public SearchingDirectory(String path, Boolean recurseSubdirectories) : this(EntryPath.Create(path), recurseSubdirectories)
+    {
+    }
 
     /// <include file='Providers/SearchingDirectory.xml' path='SearchingDirectory/Ctors/Ctor[@name="SearchingDirectory[EntryPath]"]/*' />
     public SearchingDirectory(EntryPath path) : this(path, false)

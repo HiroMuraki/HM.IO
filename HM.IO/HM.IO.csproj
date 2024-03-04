@@ -17,4 +17,8 @@
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\HM.Common\HM.Common\HM.Common.csproj" />
+  </ItemGroup>
+
 </Project>

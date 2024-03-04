@@ -1,6 +1,5 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
-using HM.IO.Previews.Directory;
-using HM.IO.Previews.File;
+using HM.IO.Previews.Entry;
 using HM.IO.UnitTest.Helpers;
 
 namespace HM.IO.UnitTest.Preview;

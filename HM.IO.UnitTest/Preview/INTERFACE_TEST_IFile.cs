@@ -1,5 +1,6 @@
 ﻿using HM.IO.Previews;
-using HM.IO.Previews.File;
+using HM.IO.Previews.Entry;
+using HM.IO.Previews.Entry.Local;
 using HM.IO.Previews.Stream;
 using HM.IO.UnitTest.Helpers;
 using System.Text;

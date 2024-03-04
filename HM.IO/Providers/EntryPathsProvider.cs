@@ -96,8 +96,7 @@ public sealed class EntryPathsProvider
 
             foreach (EntryPath directory in includedDirectories)
             {
-                foreach (EntryPath file in _directoryIO.EnumerateFilePaths(
-                    directory, GetFilesEnumerationOptions()))
+                foreach (EntryPath file in _directoryIO.EnumerateFilePaths(directory, GetFilesEnumerationOptions()))
                 {
                     if (CanInclude(file))
                     {
@@ -131,7 +130,6 @@ public sealed class EntryPathsProvider
 
                     EnumerationOptions enumerationOptions = GetDirectoriesEnumerationOptions();
                     enumerationOptions.RecurseSubdirectories = searchingDirectory.RecurseSubdirectories;
-                    enumerationOptions.MaxRecursionDepth = searchingDirectory.MaxRecursionDepth;
                     enumerationOptions.MaxRecursionDepth = searchingDirectory.MaxRecursionDepth - 1;
 
                     IEnumerable<EntryPath> directories = _directoryIO.EnumerateDirectoryPaths(
@@ -175,12 +173,12 @@ public sealed class EntryPathsProvider
             enumerationOptions.RecurseSubdirectories = directory.RecurseSubdirectories;
             enumerationOptions.MaxRecursionDepth = directory.MaxRecursionDepth;
 
-            IEnumerable<EntryPath> directories = _directoryIO.EnumerateDirectoryPaths(
+            IEnumerable<EntryPath> directoryPaths = _directoryIO.EnumerateDirectoryPaths(
                 directory.Path, enumerationOptions);
 
-            foreach (EntryPath dir in directories)
+            foreach (EntryPath path in directoryPaths)
             {
-                yield return dir;
+                yield return path;
             }
         }
     }

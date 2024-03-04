@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using HM.Common;
+using System.ComponentModel.Design;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace HM.IO;
@@ -196,50 +198,16 @@ public readonly struct EntryPath :
 
     public readonly Boolean Equals(EntryPath other)
     {
-        return this == other;
+        return StringPath == other.StringPath;
     }
 
     public readonly Int32 CompareTo(EntryPath other)
     {
-        String[] routes = GetRoutes();
-        String[] otherRoutes = other.GetRoutes();
-
-        Int32 minLength = Int32.Min(routes.Length, otherRoutes.Length);
-
-        for (Int32 i = 0; i < minLength; i++)
-        {
-            Int32 compareResult = routes[i].CompareTo(otherRoutes[i]);
-            if (compareResult < 0)
-            {
-                return -1;
-            }
-            else if (compareResult > 0)
-            {
-                return 1;
-            }
-        }
-
-        if (routes.Length < otherRoutes.Length)
-        {
-            return -1;
-        }
-        else if (routes.Length > otherRoutes.Length)
-        {
-            return 1;
-        }
-
-        return 0;
+        return StringPath.CompareTo(other.StringPath);
     }
 
     public readonly Int32 CompareTo(Object? obj)
-    {
-        if (obj is null)
-        {
-            return 1;
-        }
-
-        return CompareTo((EntryPath)obj);
-    }
+        => ComparisonHelper.StructCompareTo(this, obj);
 
     public readonly override String ToString()
     {
@@ -247,18 +215,7 @@ public readonly struct EntryPath :
     }
 
     public readonly override Boolean Equals([NotNullWhen(true)] Object? obj)
-    {
-        if (obj is null)
-        {
-            return false;
-        }
-        if (GetType() != obj.GetType())
-        {
-            return false;
-        }
-
-        return Equals((EntryPath)obj);
-    }
+        => ComparisonHelper.StructEquals(this, obj);
 
     public readonly override Int32 GetHashCode()
     {
@@ -406,7 +363,8 @@ public readonly struct EntryPath :
     /// <exception cref="InvalidOperationException">Thrown when an invalid operation is performed.</exception>
     public EntryPath()
     {
-        throw new InvalidOperationException($"Unable to call default constructor of `{typeof(EntryPath)}`.");
+        ThrowHelper.ThrowUnableToCallDefaultConstructor(typeof(EntryPath));
+        _stringPath = String.Empty;
     }
     #endregion
 

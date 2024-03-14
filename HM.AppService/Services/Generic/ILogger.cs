@@ -1,6 +1,6 @@
 ﻿namespace HM.AppService.Services.Generic;
 
-public interface ILogger<TArgs>
+public interface ILogger<TArg>
 {
-    void Log(TArgs args);
+    void WriteLine(TArg arg);
 }

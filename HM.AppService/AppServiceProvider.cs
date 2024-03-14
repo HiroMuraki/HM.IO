@@ -2,7 +2,8 @@
 
 namespace HM.AppService;
 
-public class ServiceProvider : IServiceProvider
+public class AppServiceProvider :
+    IServiceProvider
 {
     public void RegisterService<T>(T service)
         where T : class
@@ -49,7 +50,7 @@ public class ServiceProvider : IServiceProvider
         }
         else if (errorIfNotFound)
         {
-            throw new ServiceNotFoundException(serviceType);
+            throw new AppServiceNotFoundException(serviceType);
         }
         else
         {

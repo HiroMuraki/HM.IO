@@ -1,5 +1,6 @@
 ﻿namespace HM.AppService.Services.Generic;
-public interface IMessageNotifier<TArgs>
+
+public interface IMessageNotifier<TArg>
 {
-    void Notify(TArgs args);
+    void NotifyMessage(TArg arg);
 }

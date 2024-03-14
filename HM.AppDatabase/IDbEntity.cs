@@ -2,11 +2,11 @@
 
 public interface IDbEntity
 {
-    ulong Id { get; init; }
+    UInt64 Id { get; init; }
 
-    long CreateTime { get; set; }
+    Int64 CreateTime { get; set; }
 
-    long UpdateTime { get; set; }
+    Int64 UpdateTime { get; set; }
 
-    bool IsDeleted { get; set; }
+    Boolean IsDeleted { get; set; }
 }

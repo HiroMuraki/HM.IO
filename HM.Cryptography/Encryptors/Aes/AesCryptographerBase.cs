@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace HM.Cryptographers;
+namespace HM.Cryptography.Encryptors.Aes;
 
 public abstract class AesCryptographerBase : CryptographerBase
 {
@@ -42,6 +42,6 @@ public abstract class AesCryptographerBase : CryptographerBase
     {
         return ProcessCore(buffer.AsSpan(), transform);
     }
-    protected readonly Aes _aes = Aes.Create();
+    protected readonly System.Security.Cryptography.Aes _aes = System.Security.Cryptography.Aes.Create();
     #endregion
 }

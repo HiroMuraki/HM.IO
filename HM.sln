@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppDatabase", "HM.AppDat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppDatabase.Benchmark", "HM.AppDatabase.Benchmark\HM.AppDatabase.Benchmark.csproj", "{FC06C9BD-D52D-4792-BB35-1CFCCB0224D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppDatabase.Test", "HM.AppDatabase.Test\HM.AppDatabase.Test.csproj", "{916D892F-03A8-4F8B-88B3-0EC54BCD5F62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppDatabase.UnitTest", "HM.AppDatabase.UnitTest\HM.AppDatabase.UnitTest.csproj", "{916D892F-03A8-4F8B-88B3-0EC54BCD5F62}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppDataSerializer", "HM.AppDataSerializer\HM.AppDataSerializer.csproj", "{CDC119CE-B576-491E-9E26-CBC5C3835840}"
 EndProject

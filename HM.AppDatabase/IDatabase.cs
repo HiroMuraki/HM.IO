@@ -5,39 +5,39 @@ namespace HM.AppDatabase;
 public interface IDatabase<T>
     where T : class
 {
-    T? Query(Expression<Func<T, bool>> predicate);
+    T? Query(Expression<Func<T, Boolean>> predicate);
 
-    IEnumerable<T> QueryMany(Expression<Func<T, bool>> predicate);
+    IEnumerable<T> QueryMany(Expression<Func<T, Boolean>> predicate);
 
     void Add(T item);
 
-    bool Update(Expression<Func<T, bool>> predicate, Action<T> valueUpdater);
+    Boolean Update(Expression<Func<T, Boolean>> predicate, Action<T> valueUpdater);
 
-    int UpdateMany(Expression<Func<T, bool>> predicate, Action<T> valueUpdater);
+    Int32 UpdateMany(Expression<Func<T, Boolean>> predicate, Action<T> valueUpdater);
 
     void AddMany(IEnumerable<T> items);
 
-    bool Delete(Expression<Func<T, bool>> predicate);
+    Boolean Delete(Expression<Func<T, Boolean>> predicate);
 
-    int DeleteMany(Expression<Func<T, bool>> predicate);
+    Int32 DeleteMany(Expression<Func<T, Boolean>> predicate);
 }
 
 public interface IAsyncDatabase<T>
     where T : class
 {
-    Task<T?> QueryAsync(Expression<Func<T, bool>> predicate);
+    Task<T?> QueryAsync(Expression<Func<T, Boolean>> predicate);
 
-    IAsyncEnumerable<T> QueryManyAsync(Expression<Func<T, bool>> predicate);
+    IAsyncEnumerable<T> QueryManyAsync(Expression<Func<T, Boolean>> predicate);
 
     Task AddAsync(T item);
 
     Task AddManyAsync(IEnumerable<T> items);
 
-    Task<bool> UpdateAsync(Expression<Func<T, bool>> predicate, Action<T> valueUpdater);
+    Task<Boolean> UpdateAsync(Expression<Func<T, Boolean>> predicate, Action<T> valueUpdater);
 
-    Task<int> UpdateManyAsync(Expression<Func<T, bool>> predicate, Action<T> valueUpdater);
+    Task<Int32> UpdateManyAsync(Expression<Func<T, Boolean>> predicate, Action<T> valueUpdater);
 
-    Task<bool> DeleteAsync(Expression<Func<T, bool>> predicate);
+    Task<Boolean> DeleteAsync(Expression<Func<T, Boolean>> predicate);
 
-    Task<int> DeleteManyAsync(Expression<Func<T, bool>> predicate);
+    Task<Int32> DeleteManyAsync(Expression<Func<T, Boolean>> predicate);
 }

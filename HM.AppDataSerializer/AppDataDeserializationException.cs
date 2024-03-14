@@ -4,6 +4,8 @@
 public class AppDataDeserializationException : Exception
 {
     public AppDataDeserializationException() { }
-    public AppDataDeserializationException(string message) : base(message) { }
-    public AppDataDeserializationException(string message, Exception inner) : base(message, inner) { }
+
+    public AppDataDeserializationException(String message) : base(message) { }
+
+    public AppDataDeserializationException(String message, Exception inner) : base(message, inner) { }
 }

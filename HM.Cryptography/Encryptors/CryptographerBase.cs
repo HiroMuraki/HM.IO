@@ -1,4 +1,4 @@
-﻿namespace HM.Cryptographers;
+﻿namespace HM.Cryptography.Encryptors;
 
 public abstract class CryptographerBase
 {
@@ -22,3 +22,4 @@ public abstract class CryptographerBase
     protected Byte[] _originKey = Array.Empty<Byte>();
     #endregion
 }
+

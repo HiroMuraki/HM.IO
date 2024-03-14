@@ -2,29 +2,19 @@
 
 namespace HM.IO;
 
-/// <include file='FileUtility.xml' path='FileUtility/Class[@name="FileUtility"]/*' />
 public class FileUtility
 {
     #region ConstValues
-    /// <include file='FileUtility.xml' path='FileUtility/ConstValues/Static[@name="LargeFileThreshold"]/*' />
     public const Int32 LargeFileThreshold = 4096 * 1024;
 
-    /// <include file='FileUtility.xml' path='FileUtility/ConstValues/Static[@name="LargeFileBufferSize"]/*' />
     public const Int32 LargeFileBufferSize = 64 * 1024;
     #endregion
 
     #region Properties
-    /// <include file='FileUtility.xml' path='FileUtility/Properties/Static[@name="Default"]/*' />
-    public static FileUtility Default { get; } = new(FileIO.Default);
+    public static FileUtility Default { get; } = new(LocalFileIO.Default);
     #endregion
 
     #region Methods
-    #region CompareEquality
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="CompareEqualityAsync[EntryPath,EntryPath]"]/*' />
-    public async Task<Boolean> CompareEqualityAsync(EntryPath filePath1, EntryPath filePath2)
-        => await CompareEqualityAsync(filePath1, filePath2, CancellationToken.None);
-
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="CompareEqualityAsync[EntryPath,EntryPath,CancellationToken]"]/*' />
     public async Task<Boolean> CompareEqualityAsync(EntryPath filePath1, EntryPath filePath2, CancellationToken cancellationToken)
     {
         if (!_fileIO.Exists(filePath1))
@@ -113,22 +103,7 @@ public class FileUtility
             return false;
         }
     }
-    #endregion
 
-    #region Copy
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAsync[EntryPath,EntryPath]"]/*' />
-    public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
-        => await CopyAsync(sourceFilePath, destinationFilePath, false, CancellationToken.None);
-
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAsync[EntryPath,EntryPath,Boolean]"]/*' />
-    public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite)
-        => await CopyAsync(sourceFilePath, destinationFilePath, overwrite, CancellationToken.None);
-
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAsync[EntryPath,EntryPath,CancellationToken]"]/*' />
-    public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
-        => await CopyAsync(sourceFilePath, destinationFilePath, false, cancellationToken);
-
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAsync[EntryPath,EntryPath,Boolean,CancellationToken]"]/*' />
     public async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
     {
         if (!_fileIO.Exists(sourceFilePath))
@@ -170,22 +145,7 @@ public class FileUtility
             throw new IOException($"Error on copying `{sourceFilePath}` to `{destinationFilePath}`");
         }
     }
-    #endregion
 
-    #region Move
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="MoveAsync[EntryPath,EntryPath]"]/*' />
-    public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
-        => await MoveAsync(sourceFilePath, destinationFilePath, false, CancellationToken.None);
-
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="MoveAsync[EntryPath,EntryPath,Boolean]"]/*' />
-    public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite)
-        => await MoveAsync(sourceFilePath, destinationFilePath, overwrite, CancellationToken.None);
-
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="MoveAsync[EntryPath,EntryPath,CancellationToken]"]/*' />
-    public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
-        => await MoveAsync(sourceFilePath, destinationFilePath, false, cancellationToken);
-
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="MoveAsync[EntryPath,EntryPath,Boolean,CancellationToken]"]/*' />
     public async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
     {
         if (!overwrite && _fileIO.Exists(destinationFilePath))
@@ -227,47 +187,36 @@ public class FileUtility
             _fileIO.Delete(sourceFilePath);
         }
     }
-    #endregion
 
-    #region MetaData
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyTimestamps[EntryPath,EntryPath]"]/*' />
     public void CopyTimestamps(EntryPath sourceFilePath, EntryPath destinationFilePath)
     {
         _fileIO.SetFileTimestamps(destinationFilePath, _fileIO.GetFileTimestamps(sourceFilePath));
     }
 
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="CopyAttributes[EntryPath,EntryPath]"]/*' />
     public void CopyAttributes(EntryPath sourceFilePath, EntryPath destinationFilePath)
     {
         FileAttributes attributes = _fileIO.GetFileAttributes(sourceFilePath);
         _fileIO.SetFileAttributes(destinationFilePath, attributes);
     }
-    #endregion
 
-    #region ComputeHash
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="ComputeHashAsync[EntryPath]"]/*' />
-    public async Task<String> ComputeHashAsync(EntryPath filePath)
-        => await ComputeHashAsync(filePath, CancellationToken.None);
-
-    /// <include file='FileUtility.xml' path='FileUtility/Methods/Instance[@name="ComputeHashAsync[EntryPath,CancellationToken]"]/*' />
     public async Task<String> ComputeHashAsync(EntryPath filePath, CancellationToken cancellationToken)
     {
         using var sha256 = SHA256.Create();
         using Stream reader = _fileIO.OpenRead(filePath);
         return Convert.ToHexString(await sha256.ComputeHashAsync(reader, cancellationToken));
     }
-    #endregion
-    #endregion
 
-    #region Constructors
-    /// <include file='FileUtility.xml' path='FileUtility/Ctors/Ctor[@name="FileUtility[IFileIO]"]/*' />
-    public FileUtility(IFileIO fileIO)
+    public static FileUtility Create(IFileIO fileIO)
     {
-        _fileIO = fileIO;
+        return new FileUtility(fileIO);
     }
     #endregion
 
     #region NonPublic
     private readonly IFileIO _fileIO;
+    private FileUtility(IFileIO fileIO)
+    {
+        _fileIO = fileIO;
+    }
     #endregion
 }

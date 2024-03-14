@@ -1,14 +1,13 @@
 ﻿using HM.Common;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
-namespace HM.AppDatabase.Test;
+namespace HM.AppDatabase.UnitTest;
 
 [PrimaryKey(nameof(Id))]
-record class Student : DbEntity
+internal record class Student : DbEntity
 {
-    private readonly static (string StudentId, string Name, int Age, int Heigth, string Birthday, string Hobbies)[] _sampleRows =
+    private readonly static (String StudentId, String Name, Int32 Age, Int32 Heigth, String Birthday, String Hobbies)[] _sampleRows =
         [
             ("BA_68_1", "爱露", 16, 160, "3.12", "学习经营"),
             ("BA_GD_1", "日奈", 17, 142, "2.19", "睡眠、休息"),
@@ -29,24 +28,24 @@ record class Student : DbEntity
     }).ToArray();
 
     [Column("student_id", Order = 1)]
-    public string StudentId { get; set; } = string.Empty;
+    public String StudentId { get; set; } = String.Empty;
 
     [Column("name", Order = 2)]
-    public string Name { get; set; } = string.Empty;
+    public String Name { get; set; } = String.Empty;
 
     [Column("age", Order = 3)]
-    public int Age { get; set; }
+    public Int32 Age { get; set; }
 
     [Column("birthday", Order = 4)]
-    public long Birthday { get; set; }
+    public Int64 Birthday { get; set; }
 
     [Column("height", Order = 5)]
-    public int Height { get; set; }
+    public Int32 Height { get; set; }
 
     [Column("hobbies", Order = 6)]
-    public string Hobbies { get; set; } = string.Empty;
+    public String Hobbies { get; set; } = String.Empty;
 
-    public override string ToString()
+    public override String ToString()
         => ToStringHelper.Build(this, [
             nameof(Id),
             nameof(StudentId),

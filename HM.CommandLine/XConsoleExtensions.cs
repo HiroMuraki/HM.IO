@@ -32,7 +32,8 @@ public static class XConsoleExtensions
     {
         foreach (XConsoleArg arg in args)
         {
-            self.WriteLine(arg);
+            self.Write(arg);
         }
+        self.WriteLine();
     }
 }

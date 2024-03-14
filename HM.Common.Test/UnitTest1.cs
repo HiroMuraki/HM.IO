@@ -1,7 +1,5 @@
 #pragma warning disable IDE0049 // 使用框架类型
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace HM.Common.UnitTest;
 
 [TestClass]
@@ -30,7 +28,7 @@ public class UnitTest1
         System.Diagnostics.Debug.WriteLine(str3); // debug output
     }
 
-    class Foo
+    private class Foo
     {
         // Properties
         public static string StaticPublicProperty { get; set; } = "S-PublicProp";
@@ -60,7 +58,9 @@ public class UnitTest1
 #pragma warning restore IDE0044 // 添加只读修饰符
 #pragma warning disable IDE0044 // 添加只读修饰符
 #pragma warning disable IDE0051 // 删除未使用的私有成员
+#pragma warning disable CS0414 
         private string _privateField = "PriField";
+#pragma warning restore CS0414
 #pragma warning restore IDE0051 // 删除未使用的私有成员
 #pragma warning restore IDE0044 // 添加只读修饰符
     }

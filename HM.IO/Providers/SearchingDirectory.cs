@@ -1,35 +1,15 @@
-﻿using System.Drawing;
+﻿namespace HM.IO;
 
-namespace HM.IO;
-
-/// <summary>
-/// Represents a readonly structure for specifying a directory to be searched, including optional parameters.
-/// </summary>
 public readonly struct SearchingDirectory
 {
-    /// <include file='Providers/SearchingDirectory.xml' path='SearchingDirectory/Properties/Instance[@name="Path"]/*' />
     public EntryPath Path { get; init; }
 
-    /// <include file='Providers/SearchingDirectory.xml' path='SearchingDirectory/Properties/Instance[@name="RecurseSubdirectories"]/*' />
     public Boolean RecurseSubdirectories { get; init; } = false;
 
-    /// <include file='Providers/SearchingDirectory.xml' path='SearchingDirectory/Properties/Instance[@name="RecurseSubdirectories"]/*' />
     public Int32 MaxRecursionDepth { get; init; } = Int32.MaxValue;
 
-    /// <include file='Providers/SearchingDirectory.xml' path='SearchingDirectory/Properties/Instance[@name="IgnoreIfNotExists"]/*' />
     public Boolean IgnoreIfNotExists { get; init; } = false;
 
-
-    public SearchingDirectory(String path) : this(path, false)
-    {
-
-    }
-
-    public SearchingDirectory(String path, Boolean recurseSubdirectories) : this(EntryPath.Create(path), recurseSubdirectories)
-    {
-    }
-
-    /// <include file='Providers/SearchingDirectory.xml' path='SearchingDirectory/Ctors/Ctor[@name="SearchingDirectory[EntryPath]"]/*' />
     public SearchingDirectory(EntryPath path) : this(path, false)
     {
     }
@@ -42,5 +22,12 @@ public readonly struct SearchingDirectory
             RecurseSubdirectories = true;
             MaxRecursionDepth = Int32.MaxValue;
         }
+    }
+
+    public SearchingDirectory(EntryPath path, Int32 maxRecurseLevel)
+    {
+        Path = path;
+        RecurseSubdirectories = maxRecurseLevel > 0;
+        MaxRecursionDepth = maxRecurseLevel;
     }
 }

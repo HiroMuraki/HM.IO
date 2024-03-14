@@ -8,28 +8,12 @@ public class EntryPathEqualityComparer :
     public override Boolean Equals(EntryPath x, EntryPath y)
        => Equals(x, y, GetPlatformRelativeStringComparison());
 
-    public Boolean Equals(EntryPath x, EntryPath y, StringComparison routeStringComparison)
-        => Equals(x, y, GetStringComparer(routeStringComparison));
+    public Boolean Equals(EntryPath x, EntryPath y, StringComparison stringPathComparison)
+        => Equals(x, y, GetStringComparer(stringPathComparison));
 
-    public Boolean Equals(EntryPath x, EntryPath y, StringComparer routeStringComparer)
+    public Boolean Equals(EntryPath x, EntryPath y, StringComparer stringPathComparer)
     {
-        String[] routesOfLeft = x.Routes;
-        String[] routesOfRight = y.Routes;
-
-        if (routesOfLeft.Length != routesOfRight.Length)
-        {
-            return false;
-        }
-
-        for (Int32 i = 0; i < routesOfLeft.Length; i++)
-        {
-            if (routeStringComparer.Compare(routesOfLeft[i], routesOfRight[i]) != 0)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return stringPathComparer.Equals(x.StringPath, y.StringPath);
     }
 
     public override Int32 GetHashCode([DisallowNull] EntryPath obj)

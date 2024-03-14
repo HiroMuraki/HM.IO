@@ -12,7 +12,7 @@ public sealed partial class SqliteDatabase<T> :
     IDisposable
     where T : class
 {
-    public static SqliteDatabase<T> Create(string dbFilePath, string tableName)
+    public static SqliteDatabase<T> Create(String dbFilePath, String tableName)
     {
         var dbContext = SqliteContext.Create(dbFilePath, tableName);
         var sqliteDataBase = new SqliteDatabase<T>(dbContext);
@@ -53,19 +53,19 @@ public sealed partial class SqliteDatabase<T> :
     {
         _dbContext = dbContext;
     }
-    private bool _isInitialized;
-    private bool _isDisposed;
+    private Boolean _isInitialized;
+    private Boolean _isDisposed;
     private ReaderWriterLockSlim _readerWriterLockSlim = new();
     private DbContext _dbContext;
-    private T? QueryHelper(Expression<Func<T, bool>> predicate, bool asNoTracking)
+    private T? QueryHelper(Expression<Func<T, Boolean>> predicate, Boolean asNoTracking)
     {
         return QueryManyHelper(predicate, asNoTracking).SingleOrDefault();
     }
-    private async Task<T?> QueryHelperAsync(Expression<Func<T, bool>> predicate, bool asNoTracking)
+    private async Task<T?> QueryHelperAsync(Expression<Func<T, Boolean>> predicate, Boolean asNoTracking)
     {
         return await QueryManyHelper(predicate, asNoTracking).SingleOrDefaultAsync();
     }
-    private IQueryable<T> QueryManyHelper(Expression<Func<T, bool>> predicate, bool asNoTracking)
+    private IQueryable<T> QueryManyHelper(Expression<Func<T, Boolean>> predicate, Boolean asNoTracking)
     {
         CheckStates();
 
@@ -96,7 +96,7 @@ public sealed partial class SqliteDatabase<T> :
     {
         if (item is IDbEntity dbEntity)
         {
-            long createTime = DateTime.Now.Ticks;
+            Int64 createTime = DateTime.Now.Ticks;
             dbEntity.CreateTime = createTime;
             dbEntity.UpdateTime = createTime;
         }
@@ -107,7 +107,7 @@ public sealed partial class SqliteDatabase<T> :
     {
         if (item is IDbEntity dbEntity)
         {
-            long createTime = DateTime.Now.Ticks;
+            Int64 createTime = DateTime.Now.Ticks;
             dbEntity.CreateTime = createTime;
             dbEntity.UpdateTime = createTime;
         }
@@ -146,7 +146,7 @@ public sealed partial class SqliteDatabase<T> :
             throw new ObjectDisposedException(GetType().Name);
         }
     }
-    private void Dispose(bool disposing)
+    private void Dispose(Boolean disposing)
     {
         if (_isDisposed)
         {
@@ -165,7 +165,7 @@ public sealed partial class SqliteDatabase<T> :
     }
     private class SqliteContext : DbContext
     {
-        public static SqliteContext Create(string sqliteFilePath, string tableName)
+        public static SqliteContext Create(String sqliteFilePath, String tableName)
         {
             return new SqliteContext(tableName, sqliteFilePath);
         }
@@ -187,9 +187,9 @@ public sealed partial class SqliteDatabase<T> :
         {
             modelBuilder.Entity<T>().ToTable(_tableName);
         }
-        private readonly string _tableName;
+        private readonly String _tableName;
         private readonly SqliteConnection _conn;
-        private SqliteContext(string tableName, string sqliteFilePath)
+        private SqliteContext(String tableName, String sqliteFilePath)
         {
             _tableName = tableName;
             _conn = new SqliteConnection($"Data Source=\"{sqliteFilePath}\";Pooling=False;");
@@ -202,7 +202,7 @@ public sealed partial class SqliteDatabase<T> :
 /// Partial of Implying the <see cref="IDatabase{T}{T}"/>
 public sealed partial class SqliteDatabase<T>
 {
-    public T? Query(Expression<Func<T, bool>> predicate)
+    public T? Query(Expression<Func<T, Boolean>> predicate)
     {
         return ParallelSafe.Run(() =>
         {
@@ -212,7 +212,7 @@ public sealed partial class SqliteDatabase<T>
         }, _readerWriterLockSlim.EnterReadLock, _readerWriterLockSlim.ExitReadLock);
     }
 
-    public IEnumerable<T> QueryMany(Expression<Func<T, bool>> predicate)
+    public IEnumerable<T> QueryMany(Expression<Func<T, Boolean>> predicate)
     {
         return ParallelSafe.Run(() =>
         {
@@ -245,7 +245,7 @@ public sealed partial class SqliteDatabase<T>
         }, _readerWriterLockSlim.EnterWriteLock, _readerWriterLockSlim.ExitWriteLock);
     }
 
-    public bool Update(Expression<Func<T, bool>> predicate, Action<T> valueUpdater)
+    public Boolean Update(Expression<Func<T, Boolean>> predicate, Action<T> valueUpdater)
     {
         return ParallelSafe.Run(() =>
         {
@@ -263,14 +263,14 @@ public sealed partial class SqliteDatabase<T>
         }, _readerWriterLockSlim.EnterWriteLock, _readerWriterLockSlim.ExitWriteLock);
     }
 
-    public int UpdateMany(Expression<Func<T, bool>> predicate, Action<T> valueUpdater)
+    public Int32 UpdateMany(Expression<Func<T, Boolean>> predicate, Action<T> valueUpdater)
     {
         return ParallelSafe.Run(() =>
         {
             CheckStates();
 
             IQueryable<T> targetItems = QueryManyHelper(predicate, asNoTracking: false);
-            int count = 0;
+            Int32 count = 0;
 
             foreach (T targetItem in targetItems)
             {
@@ -282,7 +282,7 @@ public sealed partial class SqliteDatabase<T>
         }, _readerWriterLockSlim.EnterWriteLock, _readerWriterLockSlim.ExitWriteLock);
     }
 
-    public bool Delete(Expression<Func<T, bool>> predicate)
+    public Boolean Delete(Expression<Func<T, Boolean>> predicate)
     {
         return ParallelSafe.Run(() =>
         {
@@ -300,7 +300,7 @@ public sealed partial class SqliteDatabase<T>
         }, _readerWriterLockSlim.EnterWriteLock, _readerWriterLockSlim.ExitWriteLock);
     }
 
-    public int DeleteMany(Expression<Func<T, bool>> predicate)
+    public Int32 DeleteMany(Expression<Func<T, Boolean>> predicate)
     {
         return ParallelSafe.Run(() =>
         {
@@ -308,7 +308,7 @@ public sealed partial class SqliteDatabase<T>
 
             DbSet<T> dbSet = _dbContext.Set<T>();
             IQueryable<T> targetItems = QueryManyHelper(predicate, asNoTracking: false);
-            int count = 0;
+            Int32 count = 0;
 
             foreach (T item in targetItems)
             {
@@ -324,7 +324,7 @@ public sealed partial class SqliteDatabase<T>
 /// Partial of Implying the <see cref="IAsyncDatabase{T}"/>
 public sealed partial class SqliteDatabase<T>
 {
-    public async Task<T?> QueryAsync(Expression<Func<T, bool>> predicate)
+    public async Task<T?> QueryAsync(Expression<Func<T, Boolean>> predicate)
     {
         return await ParallelSafe.RunAsync(async () =>
         {
@@ -334,7 +334,7 @@ public sealed partial class SqliteDatabase<T>
         }, _readerWriterLockSlim.EnterReadLock, _readerWriterLockSlim.ExitReadLock);
     }
 
-    public async IAsyncEnumerable<T> QueryManyAsync(Expression<Func<T, bool>> predicate)
+    public async IAsyncEnumerable<T> QueryManyAsync(Expression<Func<T, Boolean>> predicate)
     {
         foreach (T item in QueryMany(predicate))
         {
@@ -367,22 +367,22 @@ public sealed partial class SqliteDatabase<T>
         }, _readerWriterLockSlim.EnterWriteLock, _readerWriterLockSlim.ExitWriteLock);
     }
 
-    public async Task<bool> UpdateAsync(Expression<Func<T, bool>> predicate, Action<T> valueUpdater)
+    public async Task<Boolean> UpdateAsync(Expression<Func<T, Boolean>> predicate, Action<T> valueUpdater)
     {
         return await Task.FromResult(Update(predicate, valueUpdater));
     }
 
-    public async Task<int> UpdateManyAsync(Expression<Func<T, bool>> predicate, Action<T> valueUpdater)
+    public async Task<Int32> UpdateManyAsync(Expression<Func<T, Boolean>> predicate, Action<T> valueUpdater)
     {
         return await Task.FromResult(UpdateMany(predicate, valueUpdater));
     }
 
-    public async Task<bool> DeleteAsync(Expression<Func<T, bool>> predicate)
+    public async Task<Boolean> DeleteAsync(Expression<Func<T, Boolean>> predicate)
     {
         return await Task.FromResult(Delete(predicate));
     }
 
-    public async Task<int> DeleteManyAsync(Expression<Func<T, bool>> predicate)
+    public async Task<Int32> DeleteManyAsync(Expression<Func<T, Boolean>> predicate)
     {
         return await Task.FromResult(DeleteMany(predicate));
     }

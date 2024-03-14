@@ -1,7 +1,6 @@
-﻿using HM.Cryptographers;
-using System.Text;
+﻿using System.Text;
 
-namespace HM.Cryptography.XOR;
+namespace HM.Cryptography.Encryptors.XOR;
 
 public class XORTextCryptographer : XORCryptographerBase, ITextCryptographer
 {

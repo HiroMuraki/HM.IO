@@ -6,39 +6,12 @@ public class EntryPathComparer :
     public override Int32 Compare(EntryPath x, EntryPath y)
         => Compare(x, y, GetPlatformRelativeStringComparison());
 
-    public Int32 Compare(EntryPath x, EntryPath y, StringComparison routeStringComparison)
-        => Compare(x, y, GetStringComparer(routeStringComparison));
+    public Int32 Compare(EntryPath x, EntryPath y, StringComparison stringPathComparison)
+        => Compare(x, y, GetStringComparer(stringPathComparison));
 
-    public Int32 Compare(EntryPath x, EntryPath y, StringComparer routeStringComparer)
+    public Int32 Compare(EntryPath x, EntryPath y, StringComparer stringPathComparer)
     {
-        String[] xRoutes = x.Routes;
-        String[] yRoutes = y.Routes;
-
-        Int32 minLength = xRoutes.Length < yRoutes.Length ? xRoutes.Length : yRoutes.Length;
-
-        for (Int32 i = 0; i < minLength; i++)
-        {
-            Int32 compareResult = routeStringComparer.Compare(xRoutes[i], yRoutes[i]);
-            if (compareResult < 0)
-            {
-                return -1;
-            }
-            else if (compareResult > 0)
-            {
-                return 1;
-            }
-        }
-
-        if (xRoutes.Length < yRoutes.Length)
-        {
-            return -1;
-        }
-        else if (xRoutes.Length > yRoutes.Length)
-        {
-            return 1;
-        }
-
-        return 0;
+        return stringPathComparer.Compare(x.StringPath, y.StringPath);
     }
 
     #region NonPublic

@@ -1,6 +1,4 @@
-﻿using HM.Cryptographers;
-
-namespace HM.Cryptography.XOR;
+﻿namespace HM.Cryptography.Encryptors.XOR;
 
 public abstract class XORCryptographerBase : CryptographerBase
 {

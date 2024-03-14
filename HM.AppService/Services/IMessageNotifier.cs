@@ -2,5 +2,5 @@
 
 public interface IMessageNotifier
 {
-    void Notify(string message);
+    void Notify(String message);
 }

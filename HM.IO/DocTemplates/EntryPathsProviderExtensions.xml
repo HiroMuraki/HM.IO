@@ -11,80 +11,73 @@
 
 	<Methods>
 		<Static name="Use[EntryPathsProvider,T]">
-			<summary>
-				Use a component.
-			</summary>
-			<param name="self">The instance of EntryPathsProvider.</param>
-			<param name="component"></param>
-			<returns>
-				The caller instance of the EntryPathsProvider.
-			</returns>
+		
 		</Static>
 
 		<Static name="IncludeDirectory[EntryPathsProvider,EntryPath]">
-			<summary>
-				IncludeDirectory[EntryPathsProvider,EntryPath]
-			</summary>
-			<param name="self">The instance of EntryPathsProvider.</param>
-			<param name="path"></param>
-			<returns>
-				The caller instance of the EntryPathsProvider.
-			</returns>
+			/// <summary>
+			/// 	IncludeDirectory[EntryPathsProvider,EntryPath]
+			/// </summary>
+			/// <param name="self">The instance of EntryPathsProvider.</param>
+			/// <param name="path"></param>
+			/// <returns>
+			/// 	The caller instance of the EntryPathsProvider.
+			/// </returns>
 		</Static>
 
 		<Static name="IncludeDirectory[EntryPathsProvider,String]">
-			<summary>
-				IncludeDirectory[EntryPathsProvider,String]
-			</summary>
-			<param name="self">The instance of EntryPathsProvider.</param>
-			<param name="path"></param>
-			<returns>
-				The caller instance of the EntryPathsProvider.
-			</returns>
+			/// <summary>
+			/// 	IncludeDirectory[EntryPathsProvider,String]
+			/// </summary>
+			/// <param name="self">The instance of EntryPathsProvider.</param>
+			/// <param name="path"></param>
+			/// <returns>
+			/// 	The caller instance of the EntryPathsProvider.
+			/// </returns>
 		</Static>
 
 		<Static name="IncludeDirectories[EntryPathsProvider,IEnumerable&lt;SearchingDirectory&gt;]">
-			<summary>
-				IncludeDirectories[EntryPathsProvider,IEnumerable&lt;SearchingDirectory&gt;]
-			</summary>
-			<param name="self">The instance of EntryPathsProvider.</param>
-			<param name="searchingDirectories"></param>
-			<returns>
-				The caller instance of the EntryPathsProvider.
-			</returns>
+			/// <summary>
+			/// 	IncludeDirectories[EntryPathsProvider,IEnumerable&lt;SearchingDirectory&gt;]
+			/// </summary>
+			/// <param name="self">The instance of EntryPathsProvider.</param>
+			/// <param name="searchingDirectories"></param>
+			/// <returns>
+			/// 	The caller instance of the EntryPathsProvider.
+			/// </returns>
 		</Static>
 
 		<Static name="IncludeDirectories[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]">
-			<summary>
-				IncludeDirectories[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]
-			</summary>
-			<param name="self">The instance of EntryPathsProvider.</param>
-			<param name="entryPaths"></param>
-			<returns>
-				The caller instance of the EntryPathsProvider.
-			</returns>
+			/// <summary>
+			/// 	IncludeDirectories[EntryPathsProvider,IEnumerable&lt;EntryPath&gt;]
+			/// </summary>
+			/// <param name="self">The instance of EntryPathsProvider.</param>
+			/// <param name="entryPaths"></param>
+			/// <returns>
+			/// 	The caller instance of the EntryPathsProvider.
+			/// </returns>
 		</Static>
 
 		<Static name="IncludeDirectories[EntryPathsProvider,IEnumerable&lt;String&gt;]">
-			<summary>
-				IncludeDirectories[EntryPathsProvider,IEnumerable&lt;String&gt;]
-			</summary>
-			<param name="self">The instance of EntryPathsProvider.</param>
-			<param name="paths"></param>
-			<returns>
-				The caller instance of the EntryPathsProvider.
-			</returns>
+			/// <summary>
+			/// 	IncludeDirectories[EntryPathsProvider,IEnumerable&lt;String&gt;]
+			/// </summary>
+			/// <param name="self">The instance of EntryPathsProvider.</param>
+			/// <param name="paths"></param>
+			/// <returns>
+			/// 	The caller instance of the EntryPathsProvider.
+			/// </returns>
 		</Static>
 
 		<Static name="IncludeFile[EntryPathsProvider,EntryPath]">
-			<summary>
-				IncludeFile[EntryPathsProvider,EntryPath]
-			</summary>
-			<param name="self">The instance of EntryPathsProvider.</param>
-			<param name="path"></param>
-			<returns>
-				The caller instance of the EntryPathsProvider.
-			</returns>
+			/// <summary>
+			/// 	IncludeFile[EntryPathsProvider,EntryPath]
+			/// </summary>
+			/// <param name="self">The instance of EntryPathsProvider.</param>
+			/// <param name="path"></param>
+			/// <returns>
+			/// 	The caller instance of the EntryPathsProvider.
+			/// </returns>
 		</Static>
 
 		<Static name="IncludeFile[EntryPathsProvider,String]">

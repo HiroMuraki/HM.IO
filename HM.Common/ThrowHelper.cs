@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace HM.Common;
+﻿namespace HM.Common;
 
 public static class ThrowHelper
 {

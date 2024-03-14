@@ -2,7 +2,7 @@
 
 public interface IErrorNotifier
 {
-    void NotifyError(string message);
+    void NotifyError(String message);
 
     void NotifyError(Exception exception);
 }

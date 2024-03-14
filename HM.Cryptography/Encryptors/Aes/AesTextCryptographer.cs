@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace HM.Cryptographers;
+namespace HM.Cryptography.Encryptors.Aes;
 
 public class AesTextCryptographer : AesCryptographerBase, ITextCryptographer
 {

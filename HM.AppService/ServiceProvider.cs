@@ -1,4 +1,6 @@
-﻿namespace HM.AppService;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace HM.AppService;
 
 public class ServiceProvider : IServiceProvider
 {
@@ -13,36 +15,46 @@ public class ServiceProvider : IServiceProvider
         _services[typeof(T)] = service;
     }
 
-    public void UnregisterSerivce<T>()
+    public void UnregisterService<T>()
     {
         _services.Remove(typeof(T));
     }
 
-    public bool TryGetService<T>(out T? service)
+    public Boolean TryGetService<T>([NotNullWhen(true)] out T? service)
         where T : class
     {
-        return (service = GetService<T>()) is not null;
+        service = GetServiceHelper(typeof(T), errorIfNotFound: false) as T;
+
+        return service is not null;
     }
 
-    public T? GetService<T>()
+    public T GetService<T>()
         where T : class
     {
-        return GetService(typeof(T)) as T;
+        return (T)GetService(typeof(T));
     }
 
-    public object? GetService(Type serviceType)
+    public Object GetService(Type serviceType)
     {
-        if (_services.TryGetValue(serviceType, out object? service))
-        {
-            return service;
-        }
-        else
-        {
-            throw new ServiceNotFoundException(serviceType);
-        }
+        return GetServiceHelper(serviceType, errorIfNotFound: true)!;
     }
 
     #region NonPublic
-    private readonly Dictionary<Type, object> _services = [];
+    private readonly Dictionary<Type, Object> _services = [];
+    private Object? GetServiceHelper(Type serviceType, Boolean errorIfNotFound)
+    {
+        if (_services.TryGetValue(serviceType, out Object? service))
+        {
+            return service;
+        }
+        else if (errorIfNotFound)
+        {
+            throw new ServiceNotFoundException(serviceType);
+        }
+        else
+        {
+            return null;
+        }
+    }
     #endregion
 }

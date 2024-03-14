@@ -1,8 +1,8 @@
 ﻿namespace HM.IO.Providers;
 
-public static class EntryPathsProviderExtensions
+public static class FilePathsProviderExtensions
 {
-    public static EntryPathsProvider Use<T>(this EntryPathsProvider self, T component)
+    public static LocalFilePathsProvider Use<T>(this LocalFilePathsProvider self, T component)
         where T : notnull
     {
         switch (typeof(T))
@@ -20,7 +20,7 @@ public static class EntryPathsProviderExtensions
         return self;
     }
 
-    public static EntryPathsProvider IncludeDirectories(this EntryPathsProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
+    public static LocalFilePathsProvider IncludeDirectories(this LocalFilePathsProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
     {
         foreach (SearchingDirectory path in searchingDirectories)
         {
@@ -30,7 +30,7 @@ public static class EntryPathsProviderExtensions
         return self;
     }
 
-    public static EntryPathsProvider IncludeFiles(this EntryPathsProvider self, IEnumerable<SearchingFile> searchingFiles)
+    public static LocalFilePathsProvider IncludeFiles(this LocalFilePathsProvider self, IEnumerable<SearchingFile> searchingFiles)
     {
         foreach (SearchingFile dir in searchingFiles)
         {
@@ -40,7 +40,7 @@ public static class EntryPathsProviderExtensions
         return self;
     }
 
-    public static EntryPathsProvider ExcludeDirectories(this EntryPathsProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
+    public static LocalFilePathsProvider ExcludeDirectories(this LocalFilePathsProvider self, IEnumerable<SearchingDirectory> searchingDirectories)
     {
         foreach (SearchingDirectory dir in searchingDirectories)
         {
@@ -50,7 +50,7 @@ public static class EntryPathsProviderExtensions
         return self;
     }
 
-    public static EntryPathsProvider ExcludeFiles(this EntryPathsProvider self, IEnumerable<SearchingFile> searchingFiles)
+    public static LocalFilePathsProvider ExcludeFiles(this LocalFilePathsProvider self, IEnumerable<SearchingFile> searchingFiles)
     {
         foreach (SearchingFile dir in searchingFiles)
         {

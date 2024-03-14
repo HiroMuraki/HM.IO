@@ -2,7 +2,7 @@
 
 using AppDatabase;
 
-namespace HM.AppDatabase.Test;
+namespace HM.AppDatabase.UnitTest;
 
 [TestClass]
 public class TYPE_TEST_Database
@@ -116,7 +116,7 @@ public class TYPE_TEST_Database
     }
 
     #region NonPublic
-    private static SqliteDatabase<Student> GetTestDb(string testFilePath, IEnumerable<Student>? initData, bool removeFile = false)
+    private static SqliteDatabase<Student> GetTestDb(String testFilePath, IEnumerable<Student>? initData, Boolean removeFile = false)
     {
         if (removeFile && File.Exists(testFilePath))
         {
@@ -135,7 +135,7 @@ public class TYPE_TEST_Database
 
         return db;
     }
-    private static Action<Action<SqliteDatabase<Student>>> CreateAsserter(string dbFileName, IEnumerable<Student> initData, IEnumerable<Student> expectingValues)
+    private static Action<Action<SqliteDatabase<Student>>> CreateAsserter(String dbFileName, IEnumerable<Student> initData, IEnumerable<Student> expectingValues)
     {
         void asserter(Action<SqliteDatabase<Student>> modifier)
         {
@@ -163,12 +163,12 @@ public class TYPE_TEST_Database
 
         Assert.AreEqual(expectingValueArray.Length, inDbValueArray.Length);
 
-        for (int i = 0; i < expectingValueArray.Length; i++)
+        for (Int32 i = 0; i < expectingValueArray.Length; i++)
         {
             Student inDbVal = inDbValueArray[i];
             Student eVal = expectingValueArray[i];
 
-            bool r = inDbVal.StudentId == eVal.StudentId
+            Boolean r = inDbVal.StudentId == eVal.StudentId
                 && inDbVal.Name == eVal.Name
                 && inDbVal.Age == eVal.Age
                 && inDbVal.Height == eVal.Height

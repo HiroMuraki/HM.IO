@@ -1,4 +1,4 @@
-﻿namespace HM.Cryptographers;
+﻿namespace HM.Cryptography.Encryptors;
 
 public interface ITextCryptographer
 {

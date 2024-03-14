@@ -1,12 +1,12 @@
 ﻿using System.Text;
 
-namespace HM.Cryptography.Encryptors.XOR;
+namespace HM.Cryptography.Encryptors.Xor;
 
-public class XORTextCryptographer : XORCryptographerBase, ITextCryptographer
+public class XorTextCryptographer : XorCryptographerBase, ITextCryptographer
 {
     public String Encrypt(String originText)
     {
-        if (_originKey.Length == 0)
+        if (Key.Length == 0)
         {
             return originText;
         }
@@ -17,7 +17,7 @@ public class XORTextCryptographer : XORCryptographerBase, ITextCryptographer
 
     public String Decrypt(String encryptedText)
     {
-        if (_originKey.Length == 0)
+        if (Key.Length == 0)
         {
             return encryptedText;
         }
@@ -26,5 +26,5 @@ public class XORTextCryptographer : XORCryptographerBase, ITextCryptographer
         return Encoding.UTF8.GetString(bytes);
     }
 
-    public XORTextCryptographer(Byte[] key) : base(key) { }
+    public XorTextCryptographer(Key key) : base(key) { }
 }

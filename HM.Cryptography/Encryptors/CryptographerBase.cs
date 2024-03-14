@@ -2,24 +2,20 @@
 
 public abstract class CryptographerBase
 {
-    public Byte[] Key
+    public Key Key
     {
         get
         {
-            _originKey.CopyTo(_copiedKey, 0);
-            return _copiedKey;
-        }
-        set
-        {
-            _originKey = new Byte[value.Length];
-            value.CopyTo(_originKey, 0);
-            value.CopyTo(_copiedKey, 0);
+            return _key;
         }
     }
 
     #region NonPublic
-    protected Byte[] _copiedKey = Array.Empty<Byte>();
-    protected Byte[] _originKey = Array.Empty<Byte>();
+    protected readonly Key _key;
+    protected CryptographerBase(Key key)
+    {
+        _key = key;
+    }
     #endregion
 }
 

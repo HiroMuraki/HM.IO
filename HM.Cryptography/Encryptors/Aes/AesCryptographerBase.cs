@@ -5,18 +5,20 @@ namespace HM.Cryptography.Encryptors.Aes;
 public abstract class AesCryptographerBase : CryptographerBase
 {
     public static readonly Int32 KeyLength = 256 / 8;
+
     public static readonly Int32 IVLength = 128 / 8;
 
-    internal AesCryptographerBase(Byte[] key)
+    internal AesCryptographerBase(Key key) : base(key)
     {
         if (key.Length != KeyLength)
         {
             throw new ArgumentException($"Requires a {KeyLength} length key");
         }
-        _aes.Key = key;
+        _aes.Key = key.BinaryValue;
         _aes.IV = new Byte[IVLength];
     }
-    internal AesCryptographerBase(Byte[] key, Byte[] iv) : this(key)
+
+    internal AesCryptographerBase(Key key, Byte[] iv) : this(key)
     {
         _aes.IV = iv;
     }

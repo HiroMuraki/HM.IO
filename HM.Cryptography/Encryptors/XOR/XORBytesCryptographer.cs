@@ -1,6 +1,6 @@
-﻿namespace HM.Cryptography.Encryptors.XOR;
+﻿namespace HM.Cryptography.Encryptors.Xor;
 
-public class XORBytesCryptographer : XORCryptographerBase, IBytesCryptographer
+public class XorBytesCryptographer : XorCryptographerBase, IBytesCryptographer
 {
     public ReadOnlySpan<Byte> Encrypt(ReadOnlySpan<Byte> bytes)
     {
@@ -12,5 +12,5 @@ public class XORBytesCryptographer : XORCryptographerBase, IBytesCryptographer
         return XOREncryptCore(bytes);
     }
 
-    public XORBytesCryptographer(Byte[] key) : base(key) { }
+    public XorBytesCryptographer(Key key) : base(key) { }
 }

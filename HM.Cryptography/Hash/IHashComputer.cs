@@ -2,5 +2,5 @@
 
 public interface IHashComputer
 {
-    Byte[] ComputeHash(Byte[] data);
+    Hash ComputeHash(Byte[] data);
 }

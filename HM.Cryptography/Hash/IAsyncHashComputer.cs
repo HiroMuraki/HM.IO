@@ -2,5 +2,5 @@
 
 public interface IAsyncHashComputer
 {
-    Task<Byte[]> ComputeHashAsync(Byte[] data);
+    Task<Hash> ComputeHashAsync(Byte[] data);
 }

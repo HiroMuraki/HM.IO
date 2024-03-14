@@ -6,18 +6,18 @@ public abstract class HashAlgorithmBasedComputer :
     IHashComputer,
     IAsyncHashComputer
 {
-    public Byte[] ComputeHash(Byte[] data)
+    public Hash ComputeHash(Byte[] data)
     {
         using HashAlgorithm hashAlgorithm = GetHashAlgorithm();
         using var memoryStream = new MemoryStream(data, writable: false);
-        return hashAlgorithm.ComputeHash(memoryStream);
+        return new Hash(hashAlgorithm.ComputeHash(memoryStream));
     }
 
-    public async Task<Byte[]> ComputeHashAsync(Byte[] data)
+    public async Task<Hash> ComputeHashAsync(Byte[] data)
     {
         using HashAlgorithm hashAlgorithm = GetHashAlgorithm();
         using var memoryStream = new MemoryStream(data, writable: false);
-        return await hashAlgorithm.ComputeHashAsync(memoryStream);
+        return new Hash(await hashAlgorithm.ComputeHashAsync(memoryStream));
     }
 
     #region NonPublic

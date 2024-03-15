@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace HM.IO.Previews.FileHashComputer;
+namespace HM.IO.Previews;
 
 public sealed class FileMD5Computer :
     FileHashComputerBase

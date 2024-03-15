@@ -1,7 +1,4 @@
-﻿using HM.IO.Previews;
-using HM.IO.Previews.Stream;
-
-namespace HM.IO.Previews;
+﻿namespace HM.IO.Previews;
 
 public static class IFileEntryExtensions
 {

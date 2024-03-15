@@ -1,6 +1,4 @@
-﻿using HM.IO.Previews.Stream;
-
-namespace HM.IO.Previews.Memory;
+﻿namespace HM.IO.Previews;
 
 public sealed class MemoryFile :
     IFileEntry

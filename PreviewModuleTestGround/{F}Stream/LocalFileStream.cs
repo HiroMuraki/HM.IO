@@ -1,4 +1,4 @@
-﻿namespace HM.IO.Previews.Stream;
+﻿namespace HM.IO.Previews;
 
 public sealed class LocalFileStream :
     StreamBase

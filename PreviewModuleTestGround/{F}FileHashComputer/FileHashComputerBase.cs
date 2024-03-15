@@ -1,11 +1,10 @@
 ﻿using HM.Cryptography.Hash;
-using HM.IO.Previews.Stream;
 using System.Security.Cryptography;
 
-namespace HM.IO.Previews.FileHashComputer;
+namespace HM.IO.Previews;
 
 public abstract class FileHashComputerBase :
-    IFileHashComputer, 
+    IFileHashComputer,
     IAsyncFileHashComputer
 {
     public Hash ComputeHash(IFileEntry file)

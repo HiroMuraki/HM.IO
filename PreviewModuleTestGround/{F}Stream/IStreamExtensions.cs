@@ -1,6 +1,6 @@
 ﻿using BclStream = System.IO.Stream;
 
-namespace HM.IO.Previews.Stream;
+namespace HM.IO.Previews;
 
 public static class IStreamExtensions
 {

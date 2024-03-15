@@ -1,4 +1,4 @@
-﻿namespace HM.IO.Previews.Memory;
+﻿namespace HM.IO.Previews;
 
 public static class MemoryDisk
 {

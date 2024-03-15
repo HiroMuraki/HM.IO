@@ -1,7 +1,8 @@
-﻿namespace HM.IO;
+﻿using HM.IO.Previews;
 
-public class LocalFileIO :
-    IFileIO
+namespace HM.IO;
+
+public class LocalFileIO
 {
     public static Boolean Exists(EntryPath filePath)
     {

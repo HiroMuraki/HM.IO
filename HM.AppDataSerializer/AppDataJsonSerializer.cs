@@ -6,23 +6,17 @@ namespace AppDataSerializer;
 public class AppDataJsonSerializer : IAsyncAppDataSerializer
 {
     public static AppDataJsonSerializer Create(String configFilePath)
-        => Create(configFilePath, LocalFileIO.Default);
-
-    public static AppDataJsonSerializer Create(String configFilePath, IFileIO fileIO)
-        => Create(EntryPath.Create(configFilePath), fileIO);
+        => Create(configFilePath);
 
     public static AppDataJsonSerializer Create(EntryPath configFilePath)
-        => Create(configFilePath, LocalFileIO.Default);
-
-    public static AppDataJsonSerializer Create(EntryPath configFilePath, IFileIO fileIO)
     {
-        return new AppDataJsonSerializer(configFilePath, fileIO);
+        return new AppDataJsonSerializer(configFilePath);
     }
 
     public async Task<Boolean> CreateDefaultAsync<T>(Func<T> defaultValueGetter)
         where T : class
     {
-        if (_fileIO.Exists(_configFilePath))
+        if (LocalFileIO.Exists(_configFilePath))
         {
             return false;
         }
@@ -36,12 +30,12 @@ public class AppDataJsonSerializer : IAsyncAppDataSerializer
     {
         try
         {
-            if (_fileIO.Exists(_configFilePath))
+            if (LocalFileIO.Exists(_configFilePath))
             {
-                _fileIO.Delete(_configFilePath);
+                LocalFileIO.Delete(_configFilePath);
             }
 
-            using Stream fs = _fileIO.OpenWrite(_configFilePath);
+            using Stream fs = LocalFileIO.OpenWrite(_configFilePath);
             await JsonSerializer.SerializeAsync(fs, data, GetJsonSerializerOptions());
         }
         catch (Exception e)
@@ -55,12 +49,12 @@ public class AppDataJsonSerializer : IAsyncAppDataSerializer
     {
         try
         {
-            if (!_fileIO.Exists(_configFilePath))
+            if (!LocalFileIO.Exists(_configFilePath))
             {
                 throw new AppDataDeserializationException($"Json file `{_configFilePath.StringPath}` not found", new FileNotFoundException(null, _configFilePath.StringPath));
             }
 
-            using Stream fs = _fileIO.OpenRead(_configFilePath);
+            using Stream fs = LocalFileIO.OpenRead(_configFilePath);
             T? data = await JsonSerializer.DeserializeAsync<T>(fs, GetJsonSerializerOptions())
                 ?? throw new JsonException("Deserialized data is null.");
 
@@ -73,7 +67,6 @@ public class AppDataJsonSerializer : IAsyncAppDataSerializer
     }
 
     #region NonPublic
-    private readonly IFileIO _fileIO;
     private readonly EntryPath _configFilePath;
     private static JsonSerializerOptions GetJsonSerializerOptions()
     {
@@ -83,9 +76,8 @@ public class AppDataJsonSerializer : IAsyncAppDataSerializer
             WriteIndented = true,
         };
     }
-    private AppDataJsonSerializer(EntryPath configFilePath, IFileIO fileIO)
+    private AppDataJsonSerializer(EntryPath configFilePath)
     {
-        _fileIO = fileIO;
         _configFilePath = configFilePath;
     }
     #endregion

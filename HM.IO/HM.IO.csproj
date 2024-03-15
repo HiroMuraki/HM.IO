@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HM.Common\HM.Common.csproj" />
+    <ProjectReference Include="..\HM.Cryptography\HM.Cryptography.csproj" />
   </ItemGroup>
 
 </Project>

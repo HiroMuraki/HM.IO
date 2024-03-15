@@ -1,7 +1,6 @@
 ﻿namespace HM.IO;
 
-public sealed class LocalDirectoryIO :
-    IDirectoryIO
+public sealed class LocalDirectoryIO
 {
     public static Boolean Exists(EntryPath entryPath)
     {

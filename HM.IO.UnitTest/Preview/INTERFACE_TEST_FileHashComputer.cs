@@ -1,9 +1,6 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
-using HM.IO.Previews.Entry;
-using HM.IO.Previews.FileHashComputer;
-using HM.IO.Previews.Memory;
-using HM.IO.Previews.Stream;
-using FileSha256Computer = HM.IO.Previews.FileHashComputer.FileSHA256Computer;
+using HM.Cryptography;
+using HM.IO.Previews;
 
 namespace HM.IO.UnitTest.Preview;
 
@@ -11,11 +8,11 @@ namespace HM.IO.UnitTest.Preview;
 public class INTERFACE_TEST_FileHashComputer : TestClassBase
 {
     [TestMethod]
-    public void TYPE_FileSha256Computer()
+    public void TYPE_FileSHA256Computer()
     {
         TestCoreHelper(
-            hashComputer: new FileSha256Computer(),
-            asyncHashComputer: new FileSha256Computer(),
+            hashComputer: new FileSHA256Computer(),
+            asyncHashComputer: new FileSHA256Computer(),
             expectedBinaryValue: Convert.FromHexString("7F83B1657FF1FC53B92DC18148A1D65DFC2D4B1FA3D677284ADDD200126D9069"),
             expectedStringValue: "7F83B1657FF1FC53B92DC18148A1D65DFC2D4B1FA3D677284ADDD200126D9069");
     }
@@ -39,11 +36,11 @@ public class INTERFACE_TEST_FileHashComputer : TestClassBase
     {
         MemoryFile file = GetMemoryFile();
 
-        FileHash hash1 = hashComputer.ComputeHash(file);
+        Hash hash1 = hashComputer.ComputeHash(file);
         CollectionAssert.AreEqual(expectedBinaryValue, hash1.BinaryValue);
         Assert.AreEqual(expectedStringValue, hash1.StringValue);
 
-        FileHash hash2 = asyncHashComputer.ComputeHashAsync(file).Result;
+        Hash hash2 = asyncHashComputer.ComputeHashAsync(file).Result;
         CollectionAssert.AreEqual(expectedBinaryValue, hash2.BinaryValue);
         Assert.AreEqual(expectedStringValue, hash2.StringValue);
 

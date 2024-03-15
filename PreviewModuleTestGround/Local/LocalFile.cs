@@ -3,11 +3,11 @@ using HM.IO.Previews.Stream;
 using System.Diagnostics.CodeAnalysis;
 using BclFile = System.IO.File;
 
-namespace HM.IO.Previews.Entry.Local;
+namespace HM.IO.Previews.Local;
 
 public sealed class LocalFile :
     LocalEntryBase,
-    IFile,
+    IFileEntry,
     IEquatable<LocalFile>
 {
     public FilePath Path => _filePath;

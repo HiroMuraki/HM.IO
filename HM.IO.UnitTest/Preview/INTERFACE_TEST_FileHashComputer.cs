@@ -1,7 +1,7 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
 using HM.IO.Previews.Entry;
-using HM.IO.Previews.Entry.Memory;
 using HM.IO.Previews.FileHashComputer;
+using HM.IO.Previews.Memory;
 using HM.IO.Previews.Stream;
 using FileSha256Computer = HM.IO.Previews.FileHashComputer.FileSHA256Computer;
 

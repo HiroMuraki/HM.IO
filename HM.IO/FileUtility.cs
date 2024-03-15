@@ -104,15 +104,9 @@ public static class FileUtility
     }
 
     public static async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
-        => await CopyAsync(sourceFilePath, destinationFilePath, false, CancellationToken.None);
-
-    public static async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite)
-        => await CopyAsync(sourceFilePath, destinationFilePath, overwrite, CancellationToken.None);
+        => await CopyAsync(sourceFilePath, destinationFilePath, CancellationToken.None);
 
     public static async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
-        => await CopyAsync(sourceFilePath, destinationFilePath, false, cancellationToken);
-
-    public static async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
     {
         if (!LocalFileIO.Exists(sourceFilePath))
         {
@@ -130,10 +124,6 @@ public static class FileUtility
             if (fileEqual)
             {
                 return;
-            }
-            else if (overwrite)
-            {
-                LocalFileIO.Delete(destinationFilePath);
             }
             else
             {
@@ -155,17 +145,11 @@ public static class FileUtility
     }
 
     public static async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
-        => await MoveAsync(sourceFilePath, destinationFilePath, false, CancellationToken.None);
-
-    public static async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite)
-        => await MoveAsync(sourceFilePath, destinationFilePath, overwrite, CancellationToken.None);
+        => await MoveAsync(sourceFilePath, destinationFilePath, CancellationToken.None);
 
     public static async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
-        => await MoveAsync(sourceFilePath, destinationFilePath, false, cancellationToken);
-
-    public static async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, Boolean overwrite, CancellationToken cancellationToken)
     {
-        if (!overwrite && LocalFileIO.Exists(destinationFilePath))
+        if (LocalFileIO.Exists(destinationFilePath))
         {
             throw new ArgumentException($"Can't move `{sourceFilePath.StringPath}` to `{destinationFilePath.StringPath}` already existed.");
         }
@@ -182,14 +166,7 @@ public static class FileUtility
         {
             if (LocalFileIO.Exists(destinationFilePath))
             {
-                if (overwrite)
-                {
-                    LocalFileIO.Delete(destinationFilePath);
-                }
-                else
-                {
-                    throw new InvalidOperationException($"`Can't move `{sourceFilePath.StringPath}` to `{destinationFilePath.StringPath}` because `{destinationFilePath.StringPath}` already existed but `{nameof(overwrite)}` set to false.");
-                }
+                throw new InvalidOperationException($"`Can't move `{sourceFilePath.StringPath}` to `{destinationFilePath.StringPath}` because `{destinationFilePath.StringPath}` already exists");
             }
 
             LocalFileIO.Rename(sourceFilePath, destinationFilePath);
@@ -198,7 +175,7 @@ public static class FileUtility
         }
         else
         {
-            await CopyAsync(sourceFilePath, destinationFilePath, overwrite, cancellationToken);
+            await CopyAsync(sourceFilePath, destinationFilePath, cancellationToken);
             LocalFileIO.SetFileTimestamps(destinationFilePath, sourceFileTimeStamps);
             LocalFileIO.SetFileAttributes(destinationFilePath, fileAttributes);
             LocalFileIO.Delete(sourceFilePath);
@@ -214,16 +191,6 @@ public static class FileUtility
     {
         FileAttributes attributes = LocalFileIO.GetFileAttributes(sourceFilePath);
         LocalFileIO.SetFileAttributes(destinationFilePath, attributes);
-    }
-
-    public static async Task<String> ComputeHashAsync(EntryPath filePath)
-        => await ComputeHashAsync(filePath, CancellationToken.None);
-
-    public static async Task<String> ComputeHashAsync(EntryPath filePath, CancellationToken cancellationToken)
-    {
-        using var sha256 = SHA256.Create();
-        using Stream reader = LocalFileIO.OpenRead(filePath);
-        return Convert.ToHexString(await sha256.ComputeHashAsync(reader, cancellationToken));
     }
     #endregion
 }

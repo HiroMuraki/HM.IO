@@ -1,9 +1,9 @@
 ﻿using HM.IO.Previews.Stream;
 
-namespace HM.IO.Previews.Entry.Memory;
+namespace HM.IO.Previews.Memory;
 
 public sealed class MemoryFile :
-    IFile
+    IFileEntry
 {
     public FilePath Path => _filePath;
 

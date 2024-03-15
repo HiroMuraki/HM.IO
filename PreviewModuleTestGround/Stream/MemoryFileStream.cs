@@ -1,4 +1,4 @@
-﻿using HM.IO.Previews.Entry.Memory;
+﻿using HM.IO.Previews.Memory;
 
 namespace HM.IO.Previews.Stream;
 

@@ -1,13 +1,13 @@
 ﻿#pragma warning disable IDE0049 // 使用框架类型
 
-using HM.IO.Previews.Entry;
+using HM.IO.Previews;
 using HM.IO.Previews.Stream;
 
 namespace HM.IO.UnitTest.Helpers;
 
 public class BinaryFileHelper
 {
-    public static BinaryFileHelper Open(IFile file)
+    public static BinaryFileHelper Open(IFileEntry file)
     {
         var item = new BinaryFileHelper(file);
 
@@ -46,8 +46,8 @@ public class BinaryFileHelper
     }
 
     #region NonPublic
-    private readonly IFile _file;
-    private BinaryFileHelper(IFile file)
+    private readonly IFileEntry _file;
+    private BinaryFileHelper(IFileEntry file)
     {
         _file = file;
     }

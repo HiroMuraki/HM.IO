@@ -2,11 +2,11 @@
 using System.Diagnostics.CodeAnalysis;
 using BclDirectory = System.IO.Directory;
 
-namespace HM.IO.Previews.Entry.Local;
+namespace HM.IO.Previews.Local;
 
 public sealed class LocalDirectory :
     LocalEntryBase,
-    IDirectory,
+    IDirectoryEntry,
     IEquatable<LocalDirectory>
 {
     public DirectoryPath Path => _path;
@@ -21,7 +21,7 @@ public sealed class LocalDirectory :
         }
     }
 
-    public IEnumerable<IDirectory> EnumerateDirectory(EnumerationOptions enumerationOptions)
+    public IEnumerable<IDirectoryEntry> EnumerateDirectory(EnumerationOptions enumerationOptions)
        => EnumerateLocalDirectories(enumerationOptions);
 
     public IEnumerable<LocalFile> EnumerateLocalFiles(EnumerationOptions enumerationOptions)
@@ -32,7 +32,7 @@ public sealed class LocalDirectory :
         }
     }
 
-    public IEnumerable<IFile> EnumerateFiles(EnumerationOptions enumerationOptions)
+    public IEnumerable<IFileEntry> EnumerateFiles(EnumerationOptions enumerationOptions)
         => EnumerateLocalFiles(enumerationOptions);
 
     public Boolean Equals(LocalDirectory? other)

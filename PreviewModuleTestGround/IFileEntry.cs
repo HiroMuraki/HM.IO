@@ -1,18 +1,14 @@
 ﻿using HM.IO.Previews.Stream;
 
-namespace HM.IO.Previews.Entry;
+namespace HM.IO.Previews;
 
-public interface IFile
+public interface IFileEntry
 {
     FilePath Path { get; }
 
     Boolean Exists { get; }
 
     Int64 SizeInBytes { get; }
-
-    EntryTimestamps Timestamps { get; set; }
-
-    EntryAttributes Attributes { get; set; }
 
     IStream Open(StreamMode mode);
 

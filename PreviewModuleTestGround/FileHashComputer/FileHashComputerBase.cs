@@ -1,5 +1,4 @@
 ﻿using HM.Cryptography.Hash;
-using HM.IO.Previews.Entry;
 using HM.IO.Previews.Stream;
 using System.Security.Cryptography;
 
@@ -9,7 +8,7 @@ public abstract class FileHashComputerBase :
     IFileHashComputer, 
     IAsyncFileHashComputer
 {
-    public Hash ComputeHash(IFile file)
+    public Hash ComputeHash(IFileEntry file)
     {
         using HashAlgorithm hashAlgorithm = GetHashAlgorithm();
         using IStream fs = file.Open(StreamMode.ReadOnly);
@@ -17,7 +16,7 @@ public abstract class FileHashComputerBase :
         return new Hash(fileHash);
     }
 
-    public async Task<Hash> ComputeHashAsync(IFile file)
+    public async Task<Hash> ComputeHashAsync(IFileEntry file)
     {
         using HashAlgorithm hashAlgorithm = GetHashAlgorithm();
         using IStream fs = file.Open(StreamMode.ReadOnly);

@@ -1,9 +1,9 @@
-﻿using HM.IO.Previews.Entry;
+﻿using HM.IO.Previews;
 using HM.IO.Previews.Stream;
 
-namespace HM.IO.Previews.Entry;
+namespace HM.IO.Previews;
 
-public static class IFileExtensions
+public static class IFileEntryExtensions
 {
     #region ConstValues
     public static readonly Int32 LargeFileThreshold = 4096 * 1024;
@@ -12,9 +12,9 @@ public static class IFileExtensions
     #endregion
 
     #region Methods
-    public static async Task CopyToAsync(this IFile self, IFile destinationFile, Boolean overwrite, CancellationToken cancellationToken)
+    public static async Task CopyToAsync(this IFileEntry self, IFileEntry destinationFile, CancellationToken cancellationToken)
     {
-        IFile sourceFile = self;
+        IFileEntry sourceFile = self;
 
         if (!sourceFile.Exists)
         {
@@ -32,10 +32,6 @@ public static class IFileExtensions
             if (fileEqual)
             {
                 return;
-            }
-            else if (overwrite)
-            {
-                destinationFile.Delete();
             }
             else
             {
@@ -56,48 +52,7 @@ public static class IFileExtensions
         }
     }
 
-    public static async Task MoveToAsync(this IFile self, IFile destinationFile, Boolean overwrite, CancellationToken cancellationToken)
-    {
-        if (!overwrite && destinationFile.Exists)
-        {
-            throw new ArgumentException($"`{self.Path.StringPath}` to `{destinationFile.Path.StringPath}` already existed");
-        }
-
-        if (self.Path == destinationFile.Path)
-        {
-            throw new InvalidOperationException($"`{destinationFile.Path.StringPath}` can't equal to `{self.Path.StringPath}`");
-        }
-
-        EntryTimestamps sourceFileTimeStamps = self.Timestamps;
-        EntryAttributes sourceFileAttributes = self.Attributes;
-
-        if (Path.GetPathRoot(self.Path.StringPath) == Path.GetPathRoot(destinationFile.Path.StringPath))
-        {
-            if (destinationFile.Exists)
-            {
-                if (overwrite)
-                {
-                    destinationFile.Delete();
-                }
-                else
-                {
-                    throw new InvalidOperationException($"`{destinationFile.Path.StringPath}` already existed but `{nameof(overwrite)}` set to false");
-                }
-            }
-
-            throw new NotSupportedException();
-        }
-        else
-        {
-            await self.CopyToAsync(destinationFile, overwrite, cancellationToken);
-            self.Delete();
-        }
-
-        destinationFile.Timestamps = sourceFileTimeStamps;
-        destinationFile.Attributes = sourceFileAttributes;
-    }
-
-    public static async Task<Boolean> CompareEqualityAsync(this IFile self, IFile other, CancellationToken cancellationToken)
+    public static async Task<Boolean> CompareEqualityAsync(this IFileEntry self, IFileEntry other, CancellationToken cancellationToken)
     {
         if (!self.Exists)
         {

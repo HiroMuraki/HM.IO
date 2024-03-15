@@ -10,6 +10,29 @@ public readonly struct EntryPath :
     IComparable<EntryPath>,
     IComparable
 {
+    public EntryPath()
+    {
+        ThrowHelper.ThrowUnableToCallDefaultConstructor(typeof(EntryPath));
+        _stringPath = String.Empty;
+    }
+
+    public EntryPath(String stringPath)
+    {
+        if (String.IsNullOrWhiteSpace(stringPath))
+        {
+            throw new ArgumentException($"{nameof(stringPath)} can't be null, empty or white space-only");
+        }
+
+        String normalizedPath = Path.TrimEndingDirectorySeparator(stringPath);
+
+        if (stringPath.Contains(AltPathSeparatorChar))
+        {
+            normalizedPath = normalizedPath.Replace(AltPathSeparatorChar, SystemPathSeparatorChar);
+        }
+
+        _stringPath = normalizedPath;
+    }
+
     #region Properties
     public static EntryPath Empty { get; } = new EntryPath(String.Empty);
 
@@ -51,7 +74,7 @@ public readonly struct EntryPath :
     {
         get
         {
-            return Create(Path.GetFullPath(StringPath));
+            return new EntryPath(Path.GetFullPath(StringPath));
         }
     }
 
@@ -156,41 +179,24 @@ public readonly struct EntryPath :
         }
     }
 
-    public static EntryPath Create(String stringPath)
-    {
-        if (String.IsNullOrWhiteSpace(stringPath))
-        {
-            throw new ArgumentException($"{nameof(stringPath)} can't be null, empty or white space-only");
-        }
-
-        String normalizedPath = Path.TrimEndingDirectorySeparator(stringPath);
-
-        if (stringPath.Contains(AltPathSeparatorChar))
-        {
-            normalizedPath = normalizedPath.Replace(AltPathSeparatorChar, SystemPathSeparatorChar);
-        }
-
-        return new EntryPath(normalizedPath);
-    }
-
     public static EntryPath Combine(EntryPath path1, EntryPath path2)
     {
-        return Create(Path.Combine(path1.StringPath, path2.StringPath));
+        return new EntryPath(Path.Combine(path1.StringPath, path2.StringPath));
     }
 
     public static EntryPath Combine(EntryPath path1, EntryPath path2, EntryPath path3)
     {
-        return Create(Path.Combine(path1.StringPath, path2.StringPath, path3.StringPath));
+        return new EntryPath(Path.Combine(path1.StringPath, path2.StringPath, path3.StringPath));
     }
 
     public static EntryPath Combine(EntryPath path1, EntryPath path2, EntryPath path3, EntryPath path4)
     {
-        return Create(Path.Combine(path1.StringPath, path2.StringPath, path3.StringPath, path4.StringPath));
+        return new EntryPath(Path.Combine(path1.StringPath, path2.StringPath, path3.StringPath, path4.StringPath));
     }
 
     public static EntryPath Combine(IEnumerable<EntryPath> paths)
     {
-        return Create(Path.Combine(paths.Select(x => x.StringPath).ToArray()));
+        return new EntryPath(Path.Combine(paths.Select(x => x.StringPath).ToArray()));
     }
 
     public static Boolean operator ==(EntryPath left, EntryPath right)
@@ -218,12 +224,6 @@ public readonly struct EntryPath :
     {
         return !(left == right);
     }
-
-    public EntryPath()
-    {
-        ThrowHelper.ThrowUnableToCallDefaultConstructor(typeof(EntryPath));
-        _stringPath = String.Empty;
-    }
     #endregion
 
     #region NonPublic
@@ -231,10 +231,6 @@ public readonly struct EntryPath :
     private static Char SystemPathSeparatorChar => Path.DirectorySeparatorChar;
     private static Char AltPathSeparatorChar => Path.AltDirectorySeparatorChar;
     private readonly String _stringPath;
-    private EntryPath(String stringPath)
-    {
-        _stringPath = stringPath;
-    }
     private String[] GetRoutes()
     {
         return StringPath.Split(PathSeparatorChars);

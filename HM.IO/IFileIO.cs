@@ -2,21 +2,21 @@
 
 public interface IFileIO
 {
-    Boolean Exists(EntryPath path);
+    static abstract Boolean Exists(EntryPath path);
 
-    Stream OpenRead(EntryPath path);
+    static abstract Stream OpenRead(EntryPath path);
 
-    Stream OpenWrite(EntryPath path);
+    static abstract Stream OpenWrite(EntryPath path);
 
-    void Rename(EntryPath sourceFilePath, EntryPath destinationFilePath);
+    static abstract void Rename(EntryPath sourceFilePath, EntryPath destinationFilePath);
 
-    void Delete(EntryPath path);
+    static abstract void Delete(EntryPath path);
 
-    EntryTimestamps GetFileTimestamps(EntryPath path);
+    static abstract EntryTimestamps GetFileTimestamps(EntryPath path);
 
-    void SetFileTimestamps(EntryPath path, EntryTimestamps timestamps);
+    static abstract void SetFileTimestamps(EntryPath path, EntryTimestamps timestamps);
 
-    FileAttributes GetFileAttributes(EntryPath path);
+    static abstract FileAttributes GetFileAttributes(EntryPath path);
 
-    void SetFileAttributes(EntryPath path, FileAttributes attributes);
+    static abstract void SetFileAttributes(EntryPath path, FileAttributes attributes);
 }

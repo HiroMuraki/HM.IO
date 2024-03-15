@@ -1,8 +1,9 @@
-﻿using HM.IO.Previews.Entry;
+﻿using HM.Cryptography.Hash;
+using HM.IO.Previews.Entry;
 
 namespace HM.IO.Previews.FileHashComputer;
 
 public interface IFileHashComputer
 {
-    FileHash ComputeHash(IFile file);
+    Hash ComputeHash(IFile file);
 }

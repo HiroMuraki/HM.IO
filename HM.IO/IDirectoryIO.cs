@@ -2,11 +2,9 @@
 
 public interface IDirectoryIO
 {
-    EntryTimestamps GetFileTimestamps(EntryPath path);
+    static abstract Boolean Exists(EntryPath path);
 
-    Boolean Exists(EntryPath path);
+    static abstract IEnumerable<EntryPath> EnumerateFilePaths(EntryPath path, EnumerationOptions enumerationOptions);
 
-    IEnumerable<EntryPath> EnumerateFilePaths(EntryPath path, EnumerationOptions enumerationOptions);
-
-    IEnumerable<EntryPath> EnumerateDirectoryPaths(EntryPath path, EnumerationOptions enumerationOptions);
+    static abstract IEnumerable<EntryPath> EnumerateDirectoryPaths(EntryPath path, EnumerationOptions enumerationOptions);
 }

@@ -3,7 +3,7 @@ using HM.IO.Previews.Entry;
 using HM.IO.Previews.Entry.Memory;
 using HM.IO.Previews.FileHashComputer;
 using HM.IO.Previews.Stream;
-using FileSha256Computer = HM.IO.Previews.FileHashComputer.FileSha256Computer;
+using FileSha256Computer = HM.IO.Previews.FileHashComputer.FileSHA256Computer;
 
 namespace HM.IO.UnitTest.Preview;
 
@@ -24,8 +24,8 @@ public class INTERFACE_TEST_FileHashComputer : TestClassBase
     public void TYPE_FileMd5Computer()
     {
         TestCoreHelper(
-            hashComputer: new FileMd5Computer(),
-            asyncHashComputer: new FileMd5Computer(),
+            hashComputer: new FileMD5Computer(),
+            asyncHashComputer: new FileMD5Computer(),
             expectedBinaryValue: Convert.FromHexString("ED076287532E86365E841E92BFC50D8C"),
             expectedStringValue: "ED076287532E86365E841E92BFC50D8C");
     }

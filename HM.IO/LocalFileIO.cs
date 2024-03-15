@@ -1,35 +1,34 @@
 ﻿namespace HM.IO;
 
-public class LocalFileIO : IFileIO
+public class LocalFileIO :
+    IFileIO
 {
-    public static LocalFileIO Default { get; } = new();
-
-    public Boolean Exists(EntryPath filePath)
+    public static Boolean Exists(EntryPath filePath)
     {
         return File.Exists(filePath.StringPath);
     }
 
-    public void Rename(EntryPath sourceFilePath, EntryPath destinationFilePath)
+    public static void Rename(EntryPath sourceFilePath, EntryPath destinationFilePath)
     {
         File.Move(sourceFilePath.StringPath, destinationFilePath.StringPath);
     }
 
-    public void Delete(EntryPath filePath)
+    public static void Delete(EntryPath filePath)
     {
         File.Delete(filePath.StringPath);
     }
 
-    public Stream OpenRead(EntryPath filePath)
+    public static Stream OpenRead(EntryPath filePath)
     {
         return File.OpenRead(filePath.StringPath);
     }
 
-    public Stream OpenWrite(EntryPath filePath)
+    public static Stream OpenWrite(EntryPath filePath)
     {
         return File.OpenWrite(filePath.StringPath);
     }
 
-    public EntryTimestamps GetFileTimestamps(EntryPath path)
+    public static EntryTimestamps GetFileTimestamps(EntryPath path)
     {
         String filePath = path.StringPath;
 
@@ -41,7 +40,7 @@ public class LocalFileIO : IFileIO
         };
     }
 
-    public void SetFileTimestamps(EntryPath path, EntryTimestamps timestamps)
+    public static void SetFileTimestamps(EntryPath path, EntryTimestamps timestamps)
     {
         String filePath = path.StringPath;
 
@@ -50,12 +49,12 @@ public class LocalFileIO : IFileIO
         File.SetLastAccessTime(filePath, timestamps.LastAccessTime);
     }
 
-    public FileAttributes GetFileAttributes(EntryPath path)
+    public static FileAttributes GetFileAttributes(EntryPath path)
     {
         return File.GetAttributes(path.StringPath);
     }
 
-    public void SetFileAttributes(EntryPath path, FileAttributes attributes)
+    public static void SetFileAttributes(EntryPath path, FileAttributes attributes)
     {
         File.SetAttributes(path.StringPath, attributes);
     }

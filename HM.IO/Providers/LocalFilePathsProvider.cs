@@ -10,42 +10,49 @@ public sealed class LocalFilePathsProvider :
         return new LocalFilePathsProvider();
     }
 
-    public LocalFilePathsProvider UseDirectoryIO(IDirectoryIO directoryIO)
+    public LocalFilePathsProvider Include(IEnumerable<SearchingDirectory> searchingDirectories)
     {
-        ArgumentNullException.ThrowIfNull(directoryIO, nameof(directoryIO));
-
-        _directoryIO = directoryIO;
+        foreach (SearchingDirectory searchingDirectory in searchingDirectories)
+        {
+            SearchingDirectory copy = searchingDirectory;
+            AddOptionHelper(_includingDirectories, ref copy);
+        }
 
         return this;
     }
 
-    public LocalFilePathsProvider UseErrorHandler(IErrorHandler errorHandler)
+    public LocalFilePathsProvider Exclude(IEnumerable<SearchingDirectory> searchingDirectories)
     {
-        ArgumentNullException.ThrowIfNull(errorHandler, nameof(errorHandler));
-
-        _errorHandler = errorHandler;
+        foreach (SearchingDirectory searchingDirectory in searchingDirectories)
+        {
+            SearchingDirectory copy = searchingDirectory;
+            AddOptionHelper(_excludingDirectories, ref copy);
+        }
 
         return this;
     }
 
-    public LocalFilePathsProvider IncludeDirectory(SearchingDirectory entryPath)
+    public LocalFilePathsProvider Include(IEnumerable<SearchingFile> searchingFiles)
     {
-        return AddOptionHelper(_includingDirectories, ref entryPath);
+        foreach (SearchingFile searchingDirectory in searchingFiles)
+        {
+            SearchingFile copy = searchingDirectory;
+            AddOptionHelper(_includingFiles, ref copy);
+        }
+
+        return this;
     }
 
-    public LocalFilePathsProvider ExcludeDirectory(SearchingDirectory entryPath)
+    public LocalFilePathsProvider Exclude(IEnumerable<SearchingFile> searchingFiles)
     {
-        return AddOptionHelper(_excludingDirectories, ref entryPath);
-    }
+        foreach (SearchingFile searchingDirectory in searchingFiles)
+        {
+            SearchingFile copy = searchingDirectory;
+            AddOptionHelper(_excludingFiles, ref copy);
 
-    public LocalFilePathsProvider IncludeFile(SearchingFile entryPath)
-    {
-        return AddOptionHelper(_includingFiles, ref entryPath);
-    }
+        }
 
-    public LocalFilePathsProvider ExcludeFile(SearchingFile entryPath)
-    {
-        return AddOptionHelper(_excludingFiles, ref entryPath);
+        return this;
     }
 
     public IEnumerable<EntryPath> EnumerateFilePaths()
@@ -87,7 +94,7 @@ public sealed class LocalFilePathsProvider :
 
             foreach (EntryPath directory in includedDirectories)
             {
-                foreach (EntryPath file in _directoryIO.EnumerateFilePaths(directory, GetFilesEnumerationOptions()))
+                foreach (EntryPath file in LocalDirectoryIO.EnumerateFilePaths(directory, GetFilesEnumerationOptions()))
                 {
                     if (CanInclude(file))
                     {
@@ -107,7 +114,7 @@ public sealed class LocalFilePathsProvider :
 
                 if (searchingDirectory.RecurseSubdirectories && searchingDirectory.MaxRecursionDepth > 0)
                 {
-                    if (!_directoryIO.Exists(searchingDirectory.Path))
+                    if (!LocalDirectoryIO.Exists(searchingDirectory.Path))
                     {
                         if (searchingDirectory.IgnoreIfNotExists)
                         {
@@ -115,7 +122,7 @@ public sealed class LocalFilePathsProvider :
                         }
                         else
                         {
-                            HandleOrThrow(new DirectoryNotFoundException(searchingDirectory.Path.StringPath));
+                            throw new DirectoryNotFoundException(searchingDirectory.Path.StringPath);
                         }
                     }
 
@@ -123,7 +130,7 @@ public sealed class LocalFilePathsProvider :
                     enumerationOptions.RecurseSubdirectories = searchingDirectory.RecurseSubdirectories;
                     enumerationOptions.MaxRecursionDepth = searchingDirectory.MaxRecursionDepth - 1;
 
-                    IEnumerable<EntryPath> directories = _directoryIO.EnumerateDirectoryPaths(
+                    IEnumerable<EntryPath> directories = LocalDirectoryIO.EnumerateDirectoryPaths(
                         searchingDirectory.Path, enumerationOptions);
 
                     foreach (EntryPath directory in directories)
@@ -140,16 +147,6 @@ public sealed class LocalFilePathsProvider :
     private readonly List<SearchingDirectory> _excludingDirectories = [];
     private readonly List<SearchingFile> _includingFiles = [];
     private readonly List<SearchingFile> _excludingFiles = [];
-    private IDirectoryIO _directoryIO = LocalDirectoryIO.Default;
-    private IErrorHandler? _errorHandler;
-    private void HandleOrThrow<TException>(TException exception)
-        where TException : Exception
-    {
-        if (_errorHandler?.Handle(exception) ?? false)
-        {
-            throw exception;
-        }
-    }
     private static EnumerationOptions GetDirectoriesEnumerationOptions() => new()
     {
         IgnoreInaccessible = true,
@@ -162,14 +159,12 @@ public sealed class LocalFilePathsProvider :
         MatchType = MatchType.Simple,
         AttributesToSkip = (FileAttributes)Int32.MinValue,
     };
-    private LocalFilePathsProvider AddOptionHelper<T>(List<T> list, ref T item)
+    private void AddOptionHelper<T>(List<T> list, ref T item)
     {
         if (!list.Contains(item))
         {
             list.Add(item);
         }
-
-        return this;
     }
     #endregion
 }

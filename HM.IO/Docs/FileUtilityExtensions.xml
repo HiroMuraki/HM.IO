@@ -1,8 +1,6 @@
 ﻿<FileUtilityExtensions>
 	<Class name="FileUtilityExtensions">
-		<summary>
-			Provides extension methods for the FileUtility class for additional file-related operations.
-		</summary>
+
 	</Class>
 
 	<Properties>
@@ -11,151 +9,59 @@
 
 	<Methods>
 		<Instance name="CompareEqualityAsync[FileUtility,String,String]">
-			<summary>
-				Compares the contents of two files asynchronously for equality.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="filePath1">The path of the first file to compare.</param>
-			<param name="filePath2">The path of the second file to compare.</param>
-			<returns>A task representing the asynchronous operation. The task result is true if the files are equal; otherwise, false.</returns>
+			
 		</Instance>
 
 		<Instance name="CompareEqualityAsync[FileUtility,String,String,CancellationToken]">
-			<summary>
-				Compares the contents of two files asynchronously for equality with cancellation support.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="filePath1">The path of the first file to compare.</param>
-			<param name="filePath2">The path of the second file to compare.</param>
-			<param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-			<returns>A task representing the asynchronous operation. The task result is true if the files are equal; otherwise, false.</returns>
+			
 		</Instance>
 
 		<Instance name="CopyAsync[FileUtility,String,String]">
-			<summary>
-				Copies a file asynchronously to a specified destination.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file to copy.</param>
-			<param name="destinationFilePath">The destination path where the file should be copied.</param>
-			<returns>A task representing the asynchronous operation.</returns>
+
 		</Instance>
 
 		<Instance name="CopyAsync[FileUtility,String,String,Boolean]">
-			<summary>
-				Copies a file asynchronously to a specified destination with an option to overwrite an existing file.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file to copy.</param>
-			<param name="destinationFilePath">The destination path where the file should be copied.</param>
-			<param name="overwrite">True to overwrite an existing file; otherwise, false.</param>
-			<returns>A task representing the asynchronous operation.</returns>
+	
 		</Instance>
 
 		<Instance name="CopyAsync[FileUtility,String,String,CancellationToken]">
-			<summary>
-				Copies a file asynchronously to a specified destination with cancellation support.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file to copy.</param>
-			<param name="destinationFilePath">The destination path where the file should be copied.</param>
-			<param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-			<returns>A task representing the asynchronous operation.</returns>
+	
 		</Instance>
 
 		<Instance name="CopyAsync[FileUtility,String,String,Boolean,CancellationToken]">
-			<summary>
-				Copies a file asynchronously to a specified destination with an option to overwrite an existing file and cancellation support.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file to copy.</param>
-			<param name="destinationFilePath">The destination path where the file should be copied.</param>
-			<param name="overwrite">True to overwrite an existing file; otherwise, false.</param>
-			<param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-			<returns>A task representing the asynchronous operation.</returns>
+		
 		</Instance>
 
 		<Instance name="MoveAsync[FileUtility,String,String]">
-			<summary>
-				Moves a file asynchronously to a specified destination.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file to move.</param>
-			<param name="destinationFilePath">The destination path where the file should be moved.</param>
-			<returns>A task representing the asynchronous operation.</returns>
+	
 		</Instance>
 
 		<Instance name="MoveAsync[FileUtility,String,String,Boolean]">
-			<summary>
-				Moves a file asynchronously to a specified destination with an option to overwrite an existing file.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file to move.</param>
-			<param name="destinationFilePath">The destination path where the file should be moved.</param>
-			<param name="overwrite">True to overwrite an existing file; otherwise, false.</param>
-			<returns>A task representing the asynchronous operation.</returns>
+		
 		</Instance>
 
 		<Instance name="MoveAsync[FileUtility,String,String,CancellationToken]">
-			<summary>
-				Moves a file asynchronously to a specified destination with cancellation support.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file to move.</param>
-			<param name="destinationFilePath">The destination path where the file should be moved.</param>
-			<param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-			<returns>A task representing the asynchronous operation.</returns>
+		
 		</Instance>
 
 		<Instance name="MoveAsync[FileUtility,String,String,Boolean,CancellationToken]">
-			<summary>
-				Moves a file asynchronously to a specified destination with an option to overwrite an existing file and cancellation support.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file to move.</param>
-			<param name="destinationFilePath">The destination path where the file should be moved.</param>
-			<param name="overwrite">True to overwrite an existing file; otherwise, false.</param>
-			<param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-			<returns>A task representing the asynchronous operation.</returns>
+			
 		</Instance>
 
 		<Instance name="CopyTimestamps[FileUtility,String,String]">
-			<summary>
-				Copies the timestamps (creation, last access, last write) from one file to another.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file.</param>
-			<param name="destinationFilePath">The path of the destination file.</param>
-			<returns>True if the timestamps were successfully copied; otherwise, false.</returns>
+		
 		</Instance>
 
 		<Instance name="CopyAttributes[FileUtility,String,String]">
-			<summary>
-				Copies the file attributes (e.g., read-only, hidden) from one file to another.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="sourceFilePath">The path of the source file.</param>
-			<param name="destinationFilePath">The path of the destination file.</param>
-			<returns>True if the attributes were successfully copied; otherwise, false.</returns>
+	
 		</Instance>
 
 		<Instance name="ComputeHashAsync[FileUtility,String]">
-			<summary>
-				Computes the hash value of a file asynchronously.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="filePath">The path of the file for which to compute the hash.</param>
-			<returns>A task representing the asynchronous operation. The task result is the computed hash value.</returns>
+			
 		</Instance>
 
 		<Instance name="ComputeHashAsync[FileUtility,String,CancellationToken]">
-			<summary>
-				Computes the hash value of a file asynchronously with cancellation support.
-			</summary>
-			<param name="self">The FileUtility instance.</param>
-			<param name="filePath">The path of the file for which to compute the hash.</param>
-			<param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-			<returns>A task representing the asynchronous operation. The task result is the computed hash value.</returns>
+		
 		</Instance>
 	</Methods>
 </FileUtilityExtensions>

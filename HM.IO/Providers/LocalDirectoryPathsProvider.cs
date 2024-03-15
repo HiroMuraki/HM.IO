@@ -10,24 +10,6 @@ public sealed class LocalDirectoryPathsProvider
         return new LocalDirectoryPathsProvider();
     }
 
-    public LocalDirectoryPathsProvider UseDirectoryIO(IDirectoryIO directoryIO)
-    {
-        ArgumentNullException.ThrowIfNull(directoryIO, nameof(directoryIO));
-
-        _directoryIO = directoryIO;
-
-        return this;
-    }
-
-    public LocalDirectoryPathsProvider UseErrorHandler(IErrorHandler errorHandler)
-    {
-        ArgumentNullException.ThrowIfNull(errorHandler, nameof(errorHandler));
-
-        _errorHandler = errorHandler;
-
-        return this;
-    }
-
     public LocalDirectoryPathsProvider IncludeDirectory(SearchingDirectory entryPath)
     {
         return AddOptionHelper(_includingDirectories, ref entryPath);
@@ -48,9 +30,9 @@ public sealed class LocalDirectoryPathsProvider
             .SelectMany(EnumerateDirectories)
             .SkipWhile(excludedDirectories.Contains);
 
-        IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory directory)
+        static IEnumerable<EntryPath> EnumerateDirectories(SearchingDirectory directory)
         {
-            if (!_directoryIO.Exists(directory.Path))
+            if (!LocalDirectoryIO.Exists(directory.Path))
             {
                 if (directory.IgnoreIfNotExists)
                 {
@@ -58,7 +40,7 @@ public sealed class LocalDirectoryPathsProvider
                 }
                 else
                 {
-                    HandleOrThrow(new DirectoryNotFoundException(directory.Path.StringPath));
+                    throw new DirectoryNotFoundException(directory.Path.StringPath);
                 }
             }
 
@@ -70,7 +52,7 @@ public sealed class LocalDirectoryPathsProvider
                 enumerationOptions.RecurseSubdirectories = directory.RecurseSubdirectories;
                 enumerationOptions.MaxRecursionDepth = directory.MaxRecursionDepth - 1;
 
-                IEnumerable<EntryPath> directoryPaths = _directoryIO.EnumerateDirectoryPaths(
+                IEnumerable<EntryPath> directoryPaths = LocalDirectoryIO.EnumerateDirectoryPaths(
                     directory.Path, enumerationOptions);
 
                 foreach (EntryPath path in directoryPaths)
@@ -84,8 +66,6 @@ public sealed class LocalDirectoryPathsProvider
     #region NonPublic
     private readonly List<SearchingDirectory> _includingDirectories = [];
     private readonly List<SearchingDirectory> _excludingDirectories = [];
-    private IDirectoryIO _directoryIO = LocalDirectoryIO.Default;
-    private IErrorHandler? _errorHandler;
     private static EnumerationOptions GetDirectoriesEnumerationOptions() => new()
     {
         IgnoreInaccessible = true,
@@ -100,14 +80,6 @@ public sealed class LocalDirectoryPathsProvider
         }
 
         return this;
-    }
-    private void HandleOrThrow<TException>(TException exception)
-        where TException : Exception
-    {
-        if (_errorHandler?.Handle(exception) ?? false)
-        {
-            throw exception;
-        }
     }
     private LocalDirectoryPathsProvider()
     {

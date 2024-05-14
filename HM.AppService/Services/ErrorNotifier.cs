@@ -15,7 +15,7 @@ public sealed class ErrorNotifier :
 
     #region NonPublic
     private readonly Action<String> _action;
-    public ErrorNotifier(Action<String> action)
+    private ErrorNotifier(Action<String> action)
     {
         _action = action;
     }

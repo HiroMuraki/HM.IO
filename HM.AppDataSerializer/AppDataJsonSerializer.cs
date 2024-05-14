@@ -1,12 +1,14 @@
 ﻿using HM.IO;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Unicode;
 
 namespace AppDataSerializer;
 
 public class AppDataJsonSerializer : IAsyncAppDataSerializer
 {
     public static AppDataJsonSerializer Create(String configFilePath)
-        => Create(configFilePath);
+        => Create(new EntryPath(configFilePath));
 
     public static AppDataJsonSerializer Create(EntryPath configFilePath)
     {
@@ -74,6 +76,7 @@ public class AppDataJsonSerializer : IAsyncAppDataSerializer
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = true,
+            Encoder = JavaScriptEncoder.Create([UnicodeRanges.All]),
         };
     }
     private AppDataJsonSerializer(EntryPath configFilePath)

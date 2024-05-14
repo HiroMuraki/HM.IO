@@ -15,7 +15,7 @@ public sealed class ProcessNotifier :
 
     #region NonPublic
     private readonly Action<Int32, Int32, String> _action;
-    public ProcessNotifier(Action<Int32, Int32, String> action)
+    private ProcessNotifier(Action<Int32, Int32, String> action)
     {
         _action = action;
     }

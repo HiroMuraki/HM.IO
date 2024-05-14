@@ -24,7 +24,7 @@ public static class MyDirectories
 
     public static MyDirectory AppLog => Application.GetPath(@"Log");
 
-    public static MyDirectory AppDataBase => Application.GetPath(@"DataBase");
+    public static MyDirectory AppDatabase => Application.GetPath(@"DataBase");
 
     public static MyDirectory AppTempFile => Application.GetPath(@"TempFile");
 

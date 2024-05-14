@@ -17,22 +17,57 @@ public class XConsole : IConsole
 
     public Boolean IsInputRedirected => Console.IsInputRedirected;
 
-    public void Write(XConsoleArg arg)
+    public static void Write(XConsoleArg arg)
         => WriteCore(arg);
 
-    public void WriteLine(XConsoleArg arg)
+    public static void Write(XConsoleArg[] args)
+    {
+        foreach (XConsoleArg arg in args)
+        {
+            Write(arg);
+        }
+    }
+
+    public static void Write()
+        => Write(String.Empty, Console.ForegroundColor);
+
+    public static void Write(String message)
+        => Write(message, Console.ForegroundColor);
+
+    public static void Write(String message, ConsoleColor textColor)
+        => WriteCore(new XConsoleArg(message, textColor));
+
+    public static void WriteLine()
+        => WriteLine(String.Empty, Console.ForegroundColor);
+
+    public static void WriteLine(String message)
+        => WriteLine(message, Console.ForegroundColor);
+
+    public static void WriteLine(String message, ConsoleColor textColor)
+        => WriteCore(new XConsoleArg(message + "\n", textColor));
+
+    public static void WriteLineSuccess(String message)
+        => WriteLine(message, ConsoleColor.Green);
+
+    public static void WriteLineWarning(String message)
+        => WriteLine(message, ConsoleColor.Yellow);
+
+    public static void WriteLineError(String message)
+        => WriteLine(message, ConsoleColor.Red);
+
+    public static void WriteLine(XConsoleArg arg)
         => WriteCore(arg with { Text = arg.Text + "\n" });
 
-    public void WriteLineSuccess(String message)
-    => WriteLine(new XConsoleArg(message) { TextColor = ConsoleColor.Green });
+    public static void WriteLine(XConsoleArg[] args)
+    {
+        foreach (XConsoleArg arg in args)
+        {
+            Write(arg);
+        }
+        WriteLine("");
+    }
 
-    public void WriteLineWarning(String message)
-        => WriteLine(new XConsoleArg(message) { TextColor = ConsoleColor.Yellow });
-
-    public void WriteLineError(String message)
-        => WriteLine(new XConsoleArg(message) { TextColor = ConsoleColor.Red });
-
-    public void RegisterCancelEvent(Action action)
+    public static void RegisterCancelEvent(Action action)
     {
         Console.CancelKeyPress += (s, e) =>
         {
@@ -40,13 +75,13 @@ public class XConsole : IConsole
         };
     }
 
-    public void NotifyPressEnterToContinue(String tip = "Press Enter to continue...")
+    public static void NotifyPressEnterToContinue(String tip = "Press Enter to continue...")
     {
         Write(new XConsoleArg(tip));
         Console.ReadLine();
     }
 
-    public Boolean NotifyConfirmAction(String tip = "Confirm listed actions?")
+    public static Boolean NotifyConfirmAction(String tip = "Confirm listed actions?")
     {
         Write(new XConsoleArg($"{tip}(Y/N): "));
 
@@ -55,8 +90,17 @@ public class XConsole : IConsole
         return userInput == "Y";
     }
 
+    public static void Wait(Int32 seconds)
+    {
+        for (Int32 i = 0; i < seconds; i++)
+        {
+            WriteLine($"Wait {seconds - i} seconds...");
+            Thread.Sleep(1000);
+        }
+    }
+
     #region NonPublic
-    private void WriteCore(XConsoleArg arg)
+    private static void WriteCore(XConsoleArg arg)
     {
         ConsoleColor preForegroundColor = Console.ForegroundColor;
         ConsoleColor preBackgroundColor = Console.BackgroundColor;
@@ -66,7 +110,7 @@ public class XConsole : IConsole
         Console.ForegroundColor = preForegroundColor;
         Console.BackgroundColor = preBackgroundColor;
     }
-    private async Task WriteCoreAsync(String? message, ConsoleColor textColor)
+    private static async Task WriteCoreAsync(String? message, ConsoleColor textColor)
     {
         ConsoleColor preColor = Console.ForegroundColor;
         Console.ForegroundColor = textColor;

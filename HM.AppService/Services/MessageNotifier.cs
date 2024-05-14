@@ -15,7 +15,7 @@ public sealed class MessageNotifier :
 
     #region NonPublic
     private readonly Action<String> _action;
-    public MessageNotifier(Action<String> action)
+    private MessageNotifier(Action<String> action)
     {
         _action = action;
     }

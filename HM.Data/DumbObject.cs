@@ -97,7 +97,7 @@ public sealed class DumbObject
 
     public Boolean TryGetProperty(String propertyName, [NotNullWhen(true)] out DumbObject? value)
     {
-        if (_rawObject is Dictionary<Object, Object> dictObj && dictObj.TryGetValue(propertyName, out Object? result))
+        if (AsDictionaryOrNull()?.TryGetValue(propertyName, out Object? result) ?? false)
         {
             value = new DumbObject(result);
             return true;
@@ -111,7 +111,7 @@ public sealed class DumbObject
 
     public Boolean TryGetProperty<T>(String propertyName, [NotNullWhen(true)] out T? value)
     {
-        if (_rawObject is Dictionary<Object, Object> dictObj && dictObj.TryGetValue(propertyName, out Object? result))
+        if (AsDictionaryOrNull()?.TryGetValue(propertyName, out Object? result) ?? false)
         {
             if (result is T t)
             {

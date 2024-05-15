@@ -1,4 +1,7 @@
-﻿namespace HM.Data;
+﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+
+namespace HM.Data;
 
 public class DumbObject
 {
@@ -6,6 +9,8 @@ public class DumbObject
     {
         _obj = obj;
     }
+
+    public Object? RawObject => _obj;
 
     public Boolean IsNull => _obj is null;
 
@@ -19,9 +24,26 @@ public class DumbObject
 
     public Boolean IsBoolean => _obj is Boolean;
 
-    public Boolean IsArray => _obj is IEnumerable<Object>;
+    public Boolean IsCollection
+    {
+        get
+        {
+            if (_obj is null)
+            {
+                return false;
+            }
+            if (!IsDictionary)
+            {
+                return false;
+            }
+
+            return _obj.GetType().IsAssignableTo(typeof(ICollection));
+        }
+    }
 
     public Boolean IsDictionary => _obj is Dictionary<Object, Object>;
+
+    public Int32 PropertyCount => IsDictionary ? -1 : ToDictionary().Keys.Count;
 
     public DumbObject this[String propertyName] => GetProperty(propertyName);
 
@@ -51,7 +73,28 @@ public class DumbObject
         }
     }
 
-    public Boolean TryGetProperty(String propertyName, out DumbObject? value)
+    public T GetProperty<T>(String propertyName)
+    {
+        Dictionary<String, DumbObject> dictObj = ToDictionary();
+
+        if (dictObj.TryGetValue(propertyName, out DumbObject? value))
+        {
+            if (value._obj is T result)
+            {
+                return result;
+            }
+            else
+            {
+                throw new InvalidCastException($"Unable to cast {value._obj} to {typeof(T)}");
+            }
+        }
+        else
+        {
+            throw new KeyNotFoundException($"Can't get property `{propertyName}`");
+        }
+    }
+
+    public Boolean TryGetProperty(String propertyName, [NotNullWhen(true)] out DumbObject? value)
     {
         if (_obj is Dictionary<Object, Object> dictObj && dictObj.TryGetValue(propertyName, out Object? result))
         {
@@ -65,28 +108,26 @@ public class DumbObject
         }
     }
 
-    public Dictionary<String, DumbObject> ToDictionary()
+    public Boolean TryGetProperty<T>(String propertyName, [NotNullWhen(true)] out T? value)
     {
-        if (_obj is not Dictionary<Object, Object> dictObj)
+        if (_obj is Dictionary<Object, Object> dictObj && dictObj.TryGetValue(propertyName, out Object? result))
         {
-            throw new InvalidOperationException($"Unable to cast current Object `{_obj}` to {typeof(Dictionary<,>)}");
+            if (result is T t)
+            {
+                value = t;
+                return true;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
         }
-
-        return dictObj.ToDictionary(
-            k => k.Key.ToString() ?? throw new ArgumentNullException(),
-            v => new DumbObject(v.Value));
-    }
-
-    public Dictionary<String, T> ToDictionary<T>()
-    {
-        if (_obj is not Dictionary<Object, Object> dictObj)
+        else
         {
-            throw new InvalidOperationException($"Unable to cast current Object `{_obj}` to {typeof(Dictionary<,>)}");
+            value = default;
+            return false;
         }
-
-        return dictObj.ToDictionary(
-            k => k.Key.ToString() ?? throw new ArgumentNullException(),
-            v => (T)v.Value);
     }
 
     public override String? ToString()
@@ -178,7 +219,7 @@ public class DumbObject
         }
     }
 
-    public DumbObject[] ToArray()
+    public ICollection<DumbObject> ToCollection()
     {
         if (_obj is IEnumerable<Object> enumerable)
         {
@@ -190,11 +231,23 @@ public class DumbObject
         }
     }
 
-    public Boolean TryToArray(out DumbObject[]? value)
+    public ICollection<T> ToCollection<T>()
     {
-        if (IsArray)
+        if (_obj is IEnumerable<Object> enumerable)
         {
-            value = ToArray();
+            return enumerable.Select(x => (T)x).ToArray();
+        }
+        else
+        {
+            throw new InvalidOperationException($"Unable to cast current Object `{_obj}` to {typeof(DumbObject[])}");
+        }
+    }
+
+    public Boolean TryToCollection(out ICollection<DumbObject>? value)
+    {
+        if (IsCollection)
+        {
+            value = ToCollection();
             return true;
         }
         else
@@ -204,21 +257,42 @@ public class DumbObject
         }
     }
 
-    public T[] ToArray<T>()
+    public Boolean TryToCollection<T>(out ICollection<T>? value)
     {
-        if (_obj is IEnumerable<Object> enumerable)
+        if (IsCollection)
         {
-            return enumerable.Cast<T>().ToArray();
+            value = ToCollection<T>();
+            return true;
         }
         else
         {
-            throw new InvalidOperationException($"Unable to cast current Object `{_obj}` to {typeof(DumbObject[])}");
+            value = null;
+            return false;
         }
     }
 
-    public static explicit operator String?(DumbObject dumbObject)
+    public Dictionary<String, DumbObject> ToDictionary()
     {
-        return dumbObject.ToString();
+        if (_obj is not Dictionary<Object, Object> dictObj)
+        {
+            throw new InvalidOperationException($"Unable to cast current Object `{_obj}` to {typeof(Dictionary<,>)}");
+        }
+
+        return dictObj.ToDictionary(
+            k => k.Key.ToString() ?? throw new ArgumentNullException(),
+            v => new DumbObject(v.Value));
+    }
+
+    public Dictionary<String, T> ToDictionary<T>()
+    {
+        if (_obj is not Dictionary<Object, Object> dictObj)
+        {
+            throw new InvalidOperationException($"Unable to cast current Object `{_obj}` to {typeof(Dictionary<,>)}");
+        }
+
+        return dictObj.ToDictionary(
+            k => k.Key.ToString() ?? throw new ArgumentNullException(),
+            v => (T)v.Value);
     }
 
     #region NonPublic

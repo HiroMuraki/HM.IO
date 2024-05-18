@@ -1,4 +1,4 @@
-﻿namespace HM.AppService;
+﻿namespace HM.AppComponents.AppService;
 
 public class AppServiceNotFoundException : Exception
 {

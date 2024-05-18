@@ -1,4 +1,4 @@
-﻿namespace HM.AppService.Services.Generic;
+﻿namespace HM.AppComponents.AppService.Services.Generic;
 
 public sealed class MessageNotifier<TArg> :
      IMessageNotifier<TArg>

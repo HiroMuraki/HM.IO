@@ -1,4 +1,4 @@
-﻿namespace HM.AppService.Services;
+﻿namespace HM.AppComponents.AppService.Services;
 
 public enum LogSeverity
 {

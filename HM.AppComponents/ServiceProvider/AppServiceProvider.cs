@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace HM.AppService;
+namespace HM.AppComponents.AppService;
 
 public class AppServiceProvider :
     IServiceProvider

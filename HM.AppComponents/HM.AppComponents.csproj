@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ServiceProvider\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\HM.Common\HM.Common.csproj" />
   </ItemGroup>
 

@@ -3,19 +3,19 @@
 public sealed class ErrorNotifier :
     IErrorNotifier
 {
-    public static ErrorNotifier Create(Action<String> action)
+    public static ErrorNotifier Create(Action<Exception> action)
     {
         return new ErrorNotifier(action);
     }
 
-    public void NotifyError(String message)
+    public void NotifyError(Exception exception)
     {
-        _action(message);
+        _action(exception);
     }
 
     #region NonPublic
-    private readonly Action<String> _action;
-    private ErrorNotifier(Action<String> action)
+    private readonly Action<Exception> _action;
+    private ErrorNotifier(Action<Exception> action)
     {
         _action = action;
     }

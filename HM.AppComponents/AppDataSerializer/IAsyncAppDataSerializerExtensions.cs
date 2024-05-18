@@ -1,4 +1,4 @@
-﻿namespace AppDataSerializer;
+﻿namespace HM.AppComponents.AppDataSerializer;
 
 public static class IAsyncAppDataSerializerExtensions
 {

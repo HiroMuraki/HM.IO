@@ -1,4 +1,4 @@
-﻿namespace AppDataSerializer;
+﻿namespace HM.AppComponents.AppDataSerializer;
 
 [Serializable]
 public class AppDataDeserializationException : Exception

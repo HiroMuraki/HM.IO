@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppDatabase.Benchmark", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppDatabase.UnitTest", "HM.AppDatabase.UnitTest\HM.AppDatabase.UnitTest.csproj", "{916D892F-03A8-4F8B-88B3-0EC54BCD5F62}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppDataSerializer", "HM.AppDataSerializer\HM.AppDataSerializer.csproj", "{CDC119CE-B576-491E-9E26-CBC5C3835840}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppService", "HM.AppService\HM.AppService.csproj", "{C7508582-BBEC-4E4B-A379-74ACB0495BB3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.CommandLine", "HM.CommandLine\HM.CommandLine.csproj", "{4B8FC625-F59E-48F2-A1BE-B8847D17B7FF}"
@@ -31,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.IO.Previews", "PreviewMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.Data", "HM.Data\HM.Data.csproj", "{9D869353-CFB5-4849-A9BF-888B9D703434}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HM.AppComponents", "HM.AppComponents\HM.AppComponents.csproj", "{51633C7D-DCD7-47EB-8F4B-0E98D223799D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.AppComponents", "HM.AppComponents\HM.AppComponents.csproj", "{51633C7D-DCD7-47EB-8F4B-0E98D223799D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +57,6 @@ Global
 		{916D892F-03A8-4F8B-88B3-0EC54BCD5F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{916D892F-03A8-4F8B-88B3-0EC54BCD5F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{916D892F-03A8-4F8B-88B3-0EC54BCD5F62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDC119CE-B576-491E-9E26-CBC5C3835840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDC119CE-B576-491E-9E26-CBC5C3835840}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDC119CE-B576-491E-9E26-CBC5C3835840}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDC119CE-B576-491E-9E26-CBC5C3835840}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C7508582-BBEC-4E4B-A379-74ACB0495BB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C7508582-BBEC-4E4B-A379-74ACB0495BB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7508582-BBEC-4E4B-A379-74ACB0495BB3}.Release|Any CPU.ActiveCfg = Release|Any CPU

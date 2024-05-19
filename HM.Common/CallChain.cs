@@ -7,6 +7,7 @@ public enum CallChainState
     Stop,
 }
 
+
 public readonly struct CallChain<T>
 {
     public CallChain(T value, CallChainState state)
@@ -26,24 +27,35 @@ public readonly struct CallChain<T>
         return new CallChain<T>(_value, CallChainState.Continue);
     }
 
-    public CallChain<T> Continue(Func<CallChainState> func)
+    public CallChain<T> Continue(Action<T> action)
     {
         if (SkipContinue())
         {
             return new CallChain<T>(_value, _state);
         }
 
-        return new CallChain<T>(_value, func());
+        action(_value);
+        return new CallChain<T>(_value, CallChainState.Continue);
     }
 
-    public CallChain<T> Continue(Func<T, CallChainState> func)
+    public CallChain<T> Continue(Func<CallChainState> action)
     {
         if (SkipContinue())
         {
             return new CallChain<T>(_value, _state);
         }
 
-        return new CallChain<T>(_value, func(_value));
+        return new CallChain<T>(_value, action());
+    }
+
+    public CallChain<T> Continue(Func<T, CallChainState> action)
+    {
+        if (SkipContinue())
+        {
+            return new CallChain<T>(_value, _state);
+        }
+
+        return new CallChain<T>(_value, action(_value));
     }
 
     public CallChain<T> ElseIf(Boolean condition, Action action)
@@ -75,6 +87,40 @@ public readonly struct CallChain<T>
         {
             action(_value);
             return new CallChain<T>(_value, CallChainState.Stop);
+        }
+        else
+        {
+            return new CallChain<T>(_value, CallChainState.Continue);
+        }
+    }
+
+    public CallChain<T> ElseIf(Boolean condition, Func<CallChainState> action)
+    {
+        if (SkipElse())
+        {
+            return new CallChain<T>(_value, _state);
+        }
+
+        if (condition)
+        {
+            return new CallChain<T>(_value, action());
+        }
+        else
+        {
+            return new CallChain<T>(_value, CallChainState.Continue);
+        }
+    }
+
+    public CallChain<T> ElseIf(Boolean condition, Func<T, CallChainState> action)
+    {
+        if (SkipElse())
+        {
+            return new CallChain<T>(_value, _state);
+        }
+
+        if (condition)
+        {
+            return new CallChain<T>(_value, action(_value));
         }
         else
         {

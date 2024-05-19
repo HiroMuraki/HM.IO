@@ -8,7 +8,7 @@ public struct Option<T> :
     IEqualityOperators<Option<T>, Option<T>, Boolean>
     where T : class
 {
-    public Option(T value)
+    public Option(T? value)
     {
         _value = value;
     }
@@ -63,9 +63,32 @@ public struct Option<T> :
         return new CallChain<Option<T>>(this, state);
     }
 
+    public readonly async Task<CallChain<Option<T>>> GetThenAsync(Func<T, Task> asyncFunc)
+    {
+        if (HasValue)
+        {
+            await asyncFunc(_value);
+        }
+
+        CallChainState state = HasValue ? CallChainState.SkipElse : CallChainState.Continue;
+        return new CallChain<Option<T>>(this, state);
+    }
+
     public readonly CallChain<Option<T>> GetThen(Func<T, CallChainState> func)
     {
-        CallChainState state = HasValue ? func(_value) : CallChainState.Continue;
+        CallChainState state = HasValue
+            ? func(_value)
+            : CallChainState.Continue;
+
+        return new CallChain<Option<T>>(this, state);
+    }
+
+    public readonly async Task<CallChain<Option<T>>> GetThenAsync(Func<T, Task<CallChainState>> asyncFunc)
+    {
+        CallChainState state = HasValue
+            ? (await asyncFunc(_value))
+            : CallChainState.Continue;
+
         return new CallChain<Option<T>>(this, state);
     }
 

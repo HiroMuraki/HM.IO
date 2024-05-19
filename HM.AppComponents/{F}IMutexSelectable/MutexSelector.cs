@@ -1,4 +1,6 @@
-﻿namespace HM.AppComponents;
+﻿using HM.Common;
+
+namespace HM.AppComponents;
 
 public sealed class MutexSelector
 {

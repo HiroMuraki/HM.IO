@@ -1,4 +1,4 @@
-﻿namespace HM.AppComponents;
+﻿namespace HM.Common;
 
 public enum CallChainState
 {

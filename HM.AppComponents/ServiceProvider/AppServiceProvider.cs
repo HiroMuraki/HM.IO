@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using HM.Common;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HM.AppComponents.AppService;
 
@@ -29,10 +30,10 @@ public class AppServiceProvider :
         return service is not null;
     }
 
-    public T GetService<T>()
+    public Option<T> GetService<T>()
         where T : class
     {
-        return (T)GetService(typeof(T));
+        return GetServiceHelper(typeof(T), errorIfNotFound: false) as T;
     }
 
     public Object GetService(Type serviceType)

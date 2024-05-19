@@ -1,8 +1,7 @@
-﻿using HM.Common;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace HM.AppComponents;
+namespace HM.Common;
 
 public struct Option<T> :
     IEquatable<Option<T>>,
@@ -16,6 +15,42 @@ public struct Option<T> :
 
     [MemberNotNullWhen(true, nameof(_value))]
     public readonly Boolean HasValue => _value is not null;
+
+    public readonly T GetOr(T orValue)
+    {
+        if (HasValue)
+        {
+            return _value;
+        }
+        else
+        {
+            return orValue;
+        }
+    }
+
+    public readonly TValue GetMemberValueOr<TValue>(Func<T, TValue> memberValueGetter, TValue orValue)
+    {
+        if (HasValue)
+        {
+            return memberValueGetter(_value);
+        }
+        else
+        {
+            return orValue;
+        }
+    }
+
+    public readonly T GetOr(Func<T> orValueGetter)
+    {
+        if (HasValue)
+        {
+            return _value;
+        }
+        else
+        {
+            return orValueGetter();
+        }
+    }
 
     public readonly CallChain<Option<T>> GetThen(Action<T> func)
     {
@@ -45,18 +80,6 @@ public struct Option<T> :
     {
         _value = value;
         return new CallChain<Option<T>>(this, func(_value));
-    }
-
-    public readonly TValue GetOr<TValue>(Func<T, TValue> func, TValue orValue)
-    {
-        if (HasValue)
-        {
-            return func(_value);
-        }
-        else
-        {
-            return orValue;
-        }
     }
 
     public readonly override Boolean Equals([NotNullWhen(true)] Object? obj)

@@ -1,4 +1,5 @@
-﻿using System.Text.Encodings.Web;
+﻿using HM.Common;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 
@@ -6,61 +7,63 @@ namespace HM.AppComponents.AppDataSerializer;
 
 public class AppDataJsonSerializer : IAsyncAppDataSerializer
 {
+    public String ConfigFilePath => _configFilePath;
+
+    public Boolean ConfigFileExists => File.Exists(ConfigFilePath);
+
     public static AppDataJsonSerializer Create(String configFilePath)
     {
         return new AppDataJsonSerializer(configFilePath);
     }
 
-    public async Task<Boolean> CreateDefaultAsync<T>(Func<T> defaultValueGetter)
+    public async Task CreateDefaultIfNotExistsAsync<T>(Func<T> defaultValueGetter)
         where T : class
     {
-        if (File.Exists(_configFilePath))
+        if (ConfigFileExists)
         {
-            return false;
+            return;
         }
 
-        await SerializeAsync(defaultValueGetter());
-        return true;
+        await SaveAsync(defaultValueGetter());
     }
 
-    public async Task SerializeAsync<T>(T data)
+    public async Task SaveAsync<T>(T data)
         where T : class
     {
         try
         {
-            if (File.Exists(_configFilePath))
+            if (ConfigFileExists)
             {
-                File.Delete(_configFilePath);
+                File.Delete(ConfigFilePath);
             }
 
-            using Stream fs = File.OpenWrite(_configFilePath);
+            using Stream fs = File.OpenWrite(ConfigFilePath);
             await JsonSerializer.SerializeAsync(fs, data, GetJsonSerializerOptions());
         }
         catch (Exception e)
         {
-            throw new AppDataSerializationException($"Unable to serialize data to json file `{_configFilePath}`, because {e.Message}.", e);
+            throw new AppDataSerializationException($"Unable to serialize data to json file `{ConfigFilePath}`, because {e.Message}.", e);
         }
     }
 
-    public async Task<T> DeserializeAsync<T>()
+    public async Task<Option<T>> LoadAsync<T>()
         where T : class
     {
+        if (!ConfigFileExists)
+        {
+            return null;
+        }
+
         try
         {
-            if (!File.Exists(_configFilePath))
-            {
-                throw new AppDataDeserializationException($"Json file `{_configFilePath}` not found", new FileNotFoundException(null, _configFilePath));
-            }
-
-            using Stream fs = File.OpenRead(_configFilePath);
-            T? data = await JsonSerializer.DeserializeAsync<T>(fs, GetJsonSerializerOptions())
-                ?? throw new JsonException("Deserialized data is null.");
+            using Stream fs = File.OpenRead(ConfigFilePath);
+            T? data = await JsonSerializer.DeserializeAsync<T>(fs, GetJsonSerializerOptions());
 
             return data;
         }
-        catch (Exception e)
+        catch
         {
-            throw new AppDataDeserializationException($"Unable to deserialize data from json file `{_configFilePath}`, because {e.Message}", e);
+            return null;
         }
     }
 

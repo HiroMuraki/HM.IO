@@ -22,14 +22,6 @@ public class AppServiceProvider :
         _services.Remove(typeof(T));
     }
 
-    public Boolean TryGetService<T>([NotNullWhen(true)] out T? service)
-        where T : class
-    {
-        service = GetServiceHelper(typeof(T), errorIfNotFound: false) as T;
-
-        return service is not null;
-    }
-
     public Option<T> GetService<T>()
         where T : class
     {

@@ -10,17 +10,21 @@ public readonly struct AppPath :
     IComparable,
     IEqualityOperators<AppPath, AppPath, Boolean>
 {
-    public AppPath(String path)
+    public AppPath(String path, AppPathType pathType)
     {
         Path = path;
+        PathType = pathType;
     }
 
-    public AppPath(String[] paths)
+    public AppPath(String[] paths, AppPathType pathType)
     {
         Path = System.IO.Path.Combine(paths);
+        PathType = pathType;
     }
 
     public String Path { get; } = String.Empty;
+
+    public AppPathType PathType { get; }
 
     public String GetSubPath(String path)
     {

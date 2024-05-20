@@ -77,3 +77,4 @@ public readonly struct AppPath :
         return !(left == right);
     }
 }
+

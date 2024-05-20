@@ -2,24 +2,24 @@
 
 public static class CallChainExtensions
 {
-    public static async Task<CallChain<T>> ContinueAsync<T>(this Task<CallChain<T>> self, Action action)
+    public static async Task<CallChain<T>> ThenAsync<T>(this Task<CallChain<T>> self, Action action)
     {
-        return (await self).Continue(action);
+        return (await self).Then(action);
     }
 
-    public static async Task<CallChain<T>> ContinueAsync<T>(this Task<CallChain<T>> self, Action<T> action)
+    public static async Task<CallChain<T>> ThenAsync<T>(this Task<CallChain<T>> self, Action<T> action)
     {
-        return (await self).Continue(action);
+        return (await self).Then(action);
     }
 
-    public static async Task<CallChain<T>> ContinueAsync<T>(this Task<CallChain<T>> self, Func<CallChainState> action)
+    public static async Task<CallChain<T>> ThenAsync<T>(this Task<CallChain<T>> self, Func<CallChainState> action)
     {
-        return (await self).Continue(action);
+        return (await self).Then(action);
     }
 
-    public static async Task<CallChain<T>> ContinueAsync<T>(this Task<CallChain<T>> self, Func<T, CallChainState> func)
+    public static async Task<CallChain<T>> ThenAsync<T>(this Task<CallChain<T>> self, Func<T, CallChainState> func)
     {
-        return (await self).Continue(func);
+        return (await self).Then(func);
     }
 
     public static async Task<CallChain<T>> ElseIfAsync<T>(this Task<CallChain<T>> self, Boolean condition, Action action)

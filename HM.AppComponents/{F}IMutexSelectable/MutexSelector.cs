@@ -21,7 +21,7 @@ public sealed class MutexSelector
                 ps.IsMutexSelected = false;
                 return CallChainState.Continue;
             }
-        }).Continue(() =>
+        }).Then(() =>
         {
             item.IsMutexSelected = true;
         });
@@ -43,7 +43,7 @@ public sealed class MutexSelector
             }
 
             return CallChainState.Continue;
-        }).Continue(() =>
+        }).Then(() =>
         {
             item.IsMutexSelected = false;
         });

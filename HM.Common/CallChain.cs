@@ -16,7 +16,7 @@ public readonly struct CallChain<T>
         _state = state;
     }
 
-    public CallChain<T> Continue(Action action)
+    public CallChain<T> Then(Action action)
     {
         if (SkipContinue())
         {
@@ -27,7 +27,7 @@ public readonly struct CallChain<T>
         return new CallChain<T>(_value, CallChainState.Continue);
     }
 
-    public CallChain<T> Continue(Action<T> action)
+    public CallChain<T> Then(Action<T> action)
     {
         if (SkipContinue())
         {
@@ -38,7 +38,7 @@ public readonly struct CallChain<T>
         return new CallChain<T>(_value, CallChainState.Continue);
     }
 
-    public CallChain<T> Continue(Func<CallChainState> action)
+    public CallChain<T> Then(Func<CallChainState> action)
     {
         if (SkipContinue())
         {
@@ -48,7 +48,7 @@ public readonly struct CallChain<T>
         return new CallChain<T>(_value, action());
     }
 
-    public CallChain<T> Continue(Func<T, CallChainState> action)
+    public CallChain<T> Then(Func<T, CallChainState> action)
     {
         if (SkipContinue())
         {

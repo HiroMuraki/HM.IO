@@ -3,6 +3,21 @@ using System.Numerics;
 
 namespace HM.Common;
 
+public static class Option
+{
+    public static void AllThen<T1, T2>(Option<T1> option1, Option<T2> option2, Action<T1, T2> action)
+        where T1 : class
+        where T2 : class
+    {
+        if (option1.HasValue && option1.HasValue)
+        {
+            action(
+                option1.Get() ?? throw new NullReferenceException(),
+                option2.Get() ?? throw new NullReferenceException());
+        }
+    }
+}
+
 public struct Option<T> :
     IEquatable<Option<T>>,
     IEqualityOperators<Option<T>, Option<T>, Boolean>
@@ -15,6 +30,11 @@ public struct Option<T> :
 
     [MemberNotNullWhen(true, nameof(_value))]
     public readonly Boolean HasValue => _value is not null;
+
+    public readonly T? Get()
+    {
+        return _value;
+    }
 
     public readonly T GetOr(T orValue)
     {
@@ -90,19 +110,6 @@ public struct Option<T> :
             : CallChainState.Continue;
 
         return new CallChain<Option<T>>(this, state);
-    }
-
-    public CallChain<Option<T>> WithValue(T value, Action<T> func)
-    {
-        _value = value;
-        func(_value);
-        return new CallChain<Option<T>>(this, CallChainState.Continue);
-    }
-
-    public CallChain<Option<T>> WithValue(T value, Func<T, CallChainState> func)
-    {
-        _value = value;
-        return new CallChain<Option<T>>(this, func(_value));
     }
 
     public readonly override Boolean Equals([NotNullWhen(true)] Object? obj)

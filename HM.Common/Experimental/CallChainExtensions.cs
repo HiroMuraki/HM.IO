@@ -1,4 +1,5 @@
-﻿namespace HM.Common;
+﻿#if EXPERIEMENTAL
+namespace HM.Common.Experimental;
 
 public static class CallChainExtensions
 {
@@ -52,3 +53,4 @@ public static class CallChainExtensions
         (await self).Else(action);
     }
 }
+#endif

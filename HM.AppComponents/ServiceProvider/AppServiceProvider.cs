@@ -1,6 +1,4 @@
-﻿using HM.Common;
-
-namespace HM.AppComponents.AppService;
+﻿namespace HM.AppComponents.AppService;
 
 public class AppServiceProvider :
     IServiceProvider
@@ -21,7 +19,7 @@ public class AppServiceProvider :
         _services.Remove(typeof(T));
     }
 
-    public Option<T> GetService<T>()
+    public T? GetService<T>()
         where T : class
     {
         return GetServiceHelper(typeof(T), errorIfNotFound: false) as T;

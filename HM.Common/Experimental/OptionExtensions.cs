@@ -1,4 +1,5 @@
-﻿namespace HM.Common;
+﻿#if EXPERIEMENTAL
+namespace HM.Common.Experimental;
 
 public static class OptionExtensions
 {
@@ -8,3 +9,4 @@ public static class OptionExtensions
         return new Option<T>(obj);
     }
 }
+#endif

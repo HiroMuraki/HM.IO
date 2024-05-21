@@ -1,5 +1,4 @@
-﻿using HM.Common;
-using System.Text.Encodings.Web;
+﻿using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 
@@ -46,7 +45,7 @@ public class AppDataJsonSerializer : IAsyncAppDataSerializer
         }
     }
 
-    public async Task<Option<T>> LoadAsync<T>()
+    public async Task<T?> LoadAsync<T>()
         where T : class
     {
         if (!ConfigFileExists)

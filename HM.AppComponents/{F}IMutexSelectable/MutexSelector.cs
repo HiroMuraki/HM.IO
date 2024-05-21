@@ -1,6 +1,4 @@
-﻿using HM.Common;
-
-namespace HM.AppComponents;
+﻿namespace HM.AppComponents;
 
 public sealed class MutexSelector
 {
@@ -8,48 +6,43 @@ public sealed class MutexSelector
 
     internal void SetSelected(IMutexSelectable item)
     {
-        Option<IMutexSelectable> previousSelected = _currentSelected;
-        _currentSelected = new Option<IMutexSelectable>(item);
-        previousSelected.GetThen(ps =>
+        IMutexSelectable? previousSelected = _currentSelected;
+        _currentSelected = item;
+        if (previousSelected is not null)
         {
-            if (ReferenceEquals(ps, item))
+            if (ReferenceEquals(previousSelected, item))
             {
-                return CallChainState.Stop;
+                return;
             }
             else
             {
-                ps.IsMutexSelected = false;
-                return CallChainState.Continue;
+                previousSelected.IsMutexSelected = false;
             }
-        }).Then(() =>
-        {
-            item.IsMutexSelected = true;
-        });
+        }
+
+        item.IsMutexSelected = true;
     }
 
     internal void SetUnselected(IMutexSelectable item)
     {
-        _currentSelected.GetThen(currentSelected =>
+        if (_currentSelected is not null)
         {
-            if (ReferenceEquals(currentSelected, item))
+            if (ReferenceEquals(_currentSelected, item))
             {
                 if (!AllowUnselectAll)
                 {
-                    return CallChainState.Stop;
+                    return;
                 }
 
-                currentSelected.IsMutexSelected = false;
+                _currentSelected.IsMutexSelected = false;
                 _currentSelected = null;
             }
+        }
 
-            return CallChainState.Continue;
-        }).Then(() =>
-        {
-            item.IsMutexSelected = false;
-        });
+        item.IsMutexSelected = false;
     }
 
     #region NonPublic
-    private Option<IMutexSelectable> _currentSelected;
+    private IMutexSelectable? _currentSelected;
     #endregion
 }

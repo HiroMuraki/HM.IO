@@ -1,7 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#if EXPERIEMENTAL
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace HM.Common;
+namespace HM.Common.Experimental;
 
 public static class Option
 {
@@ -106,7 +107,7 @@ public struct Option<T> :
     public readonly async Task<CallChain<Option<T>>> GetThenAsync(Func<T, Task<CallChainState>> asyncFunc)
     {
         CallChainState state = HasValue
-            ? (await asyncFunc(_value))
+            ? await asyncFunc(_value)
             : CallChainState.Continue;
 
         return new CallChain<Option<T>>(this, state);
@@ -189,3 +190,4 @@ public struct Option<T> :
     }
     #endregion
 }
+#endif

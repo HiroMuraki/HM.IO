@@ -1,4 +1,5 @@
-﻿namespace HM.Common;
+﻿#if EXPERIEMENTAL
+namespace HM.Common.Experimental;
 
 public enum CallChainState
 {
@@ -161,3 +162,4 @@ public readonly struct CallChain<T>
     }
     #endregion
 }
+#endif

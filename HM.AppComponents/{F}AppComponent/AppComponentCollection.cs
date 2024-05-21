@@ -2,20 +2,23 @@
 
 namespace HM.AppComponents;
 
-public sealed class AppComponentCollection :
+public sealed class AppComponents :
     IEnumerable<IAppComponent>
 {
-    public Boolean Contains(IAppComponent component)
+    public TComponent[] GetComponents<TComponent>()
+        where TComponent : class, IAppComponent
     {
-        return _components.Contains(component);
+        return GetComponents(typeof(TComponent)).Cast<TComponent>().ToArray();
     }
 
-    public void Add(IAppComponent component)
+    public void AddComponent<TComponent>(TComponent component)
+        where TComponent : class, IAppComponent
     {
         _components.Add(component);
     }
 
-    public void Remove(IAppComponent component)
+    public void RemoveComponent<TComponent>(TComponent component)
+        where TComponent : class, IAppComponent
     {
         _components.Remove(component);
     }
@@ -32,5 +35,15 @@ public sealed class AppComponentCollection :
 
     #region NonPublic
     private readonly List<IAppComponent> _components = [];
+    private IEnumerable<IAppComponent> GetComponents(Type componentType)
+    {
+        foreach (IAppComponent component in _components)
+        {
+            if (component.GetType() == componentType || component.GetType().IsAssignableTo(componentType))
+            {
+                yield return component;
+            }
+        }
+    }
     #endregion
 }

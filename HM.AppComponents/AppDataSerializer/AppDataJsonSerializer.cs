@@ -4,19 +4,21 @@ using System.Text.Unicode;
 
 namespace HM.AppComponents.AppDataSerializer;
 
-public class AppDataJsonSerializer : IAsyncAppDataSerializer
+public sealed class AppDataJsonSerializer<T> :
+    IAppDataSerializer<T>,
+    IAsyncAppDataSerializer<T>
+    where T : class
 {
     public String ConfigFilePath => _configFilePath;
 
     public Boolean ConfigFileExists => File.Exists(ConfigFilePath);
 
-    public static AppDataJsonSerializer Create(String configFilePath)
+    public static AppDataJsonSerializer<T> Create(String configFilePath)
     {
-        return new AppDataJsonSerializer(configFilePath);
+        return new AppDataJsonSerializer<T>(configFilePath);
     }
 
-    public async Task CreateDefaultIfNotExistsAsync<T>(Func<T> defaultValueGetter)
-        where T : class
+    public async Task CreateDefaultIfNotExistsAsync(Func<T> defaultValueGetter)
     {
         if (ConfigFileExists)
         {
@@ -26,8 +28,63 @@ public class AppDataJsonSerializer : IAsyncAppDataSerializer
         await SaveAsync(defaultValueGetter());
     }
 
-    public async Task SaveAsync<T>(T data)
-        where T : class
+    public T Load()
+    {
+        AppDataDeserializationException.ThrowIfConfigFileNotExists(ConfigFilePath);
+
+        try
+        {
+            using Stream fs = File.OpenRead(ConfigFilePath);
+            T? data = JsonSerializer.Deserialize<T>(fs, GetJsonSerializerOptions());
+
+            AppDataDeserializationException.ThrowIfDataIsNull(data);
+
+            return data;
+        }
+        catch (Exception e)
+        {
+            throw new AppDataDeserializationException(e);
+        }
+    }
+
+    public async Task<T> LoadAsync()
+    {
+        AppDataDeserializationException.ThrowIfConfigFileNotExists(ConfigFilePath);
+
+        try
+        {
+            using Stream fs = File.OpenRead(ConfigFilePath);
+            T? data = await JsonSerializer.DeserializeAsync<T>(fs, GetJsonSerializerOptions());
+
+            AppDataDeserializationException.ThrowIfDataIsNull(data);
+
+            return data;
+        }
+        catch (Exception e)
+        {
+            throw new AppDataDeserializationException(e);
+        }
+    }
+
+    public void Save(T data)
+    {
+        try
+        {
+            if (ConfigFileExists)
+            {
+                File.Delete(ConfigFilePath);
+            }
+
+            using Stream fs = File.OpenWrite(ConfigFilePath);
+            JsonSerializer.Serialize(fs, data, GetJsonSerializerOptions());
+        }
+        catch (Exception e)
+        {
+            throw new AppDataSerializationException(e);
+        }
+    }
+
+    public async Task SaveAsync(T data)
     {
         try
         {
@@ -41,28 +98,7 @@ public class AppDataJsonSerializer : IAsyncAppDataSerializer
         }
         catch (Exception e)
         {
-            throw new AppDataSerializationException($"Unable to serialize data to json file `{ConfigFilePath}`, because {e.Message}.", e);
-        }
-    }
-
-    public async Task<T?> LoadAsync<T>()
-        where T : class
-    {
-        if (!ConfigFileExists)
-        {
-            return null;
-        }
-
-        try
-        {
-            using Stream fs = File.OpenRead(ConfigFilePath);
-            T? data = await JsonSerializer.DeserializeAsync<T>(fs, GetJsonSerializerOptions());
-
-            return data;
-        }
-        catch
-        {
-            return null;
+            throw new AppDataSerializationException(e);
         }
     }
 

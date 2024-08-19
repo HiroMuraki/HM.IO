@@ -1,22 +1,7 @@
-﻿using System.CommandLine;
-using System.CommandLine.IO;
+﻿namespace HM.CommandLine;
 
-namespace HM.CommandLine;
-
-public class XConsole : IConsole
+public static class XConsole
 {
-    public static XConsole Instance { get; } = new();
-
-    public IStandardStreamWriter Out { get; } = new StandardStreamWriter(Console.Out);
-
-    public Boolean IsOutputRedirected => Console.IsOutputRedirected;
-
-    public IStandardStreamWriter Error { get; } = new StandardStreamWriter(Console.Error);
-
-    public Boolean IsErrorRedirected => Console.IsErrorRedirected;
-
-    public Boolean IsInputRedirected => Console.IsInputRedirected;
-
     public static void Write(XConsoleArg arg)
         => WriteCore(arg);
 
@@ -116,26 +101,6 @@ public class XConsole : IConsole
         Console.ForegroundColor = textColor;
         await Console.Out.WriteAsync(message);
         Console.ForegroundColor = preColor;
-    }
-    private XConsole()
-    {
-
-    }
-    private class StandardStreamWriter : IStandardStreamWriter
-    {
-        public void Write(String? value)
-        {
-            _textWriter.Write(value);
-        }
-
-        public StandardStreamWriter(TextWriter textWriter)
-        {
-            _textWriter = textWriter;
-        }
-
-        #region NonPublic
-        private readonly TextWriter _textWriter;
-        #endregion
     }
     #endregion
 }

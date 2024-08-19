@@ -1,13 +1,26 @@
 ﻿using HM.Common;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace HM.Environment;
 
 public readonly struct MyDirectory :
     IEquatable<MyDirectory>,
     IComparable<MyDirectory>,
+    IEqualityOperators<MyDirectory, MyDirectory, Boolean>,
     IComparable
 {
+    public MyDirectory()
+    {
+        ThrowHelper.ThrowUnableToCallDefaultConstructor(typeof(MyDirectory));
+        Path = String.Empty;
+    }
+
+    public MyDirectory(String path)
+    {
+        Path = path;
+    }
+
     public String Path { get; }
 
     public readonly MyDirectory GetPath(String pathName)
@@ -36,14 +49,13 @@ public readonly struct MyDirectory :
         return Path.GetHashCode();
     }
 
-    public MyDirectory()
+    public static Boolean operator ==(MyDirectory left, MyDirectory right)
     {
-        ThrowHelper.ThrowUnableToCallDefaultConstructor(typeof(MyDirectory));
-        Path = String.Empty;
+        return left.Equals(right);
     }
 
-    public MyDirectory(String path)
+    public static Boolean operator !=(MyDirectory left, MyDirectory right)
     {
-        Path = path;
+        return !(left == right);
     }
 }

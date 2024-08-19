@@ -1,8 +1,9 @@
 ﻿namespace HM.AppComponents.AppDataSerializer;
 
-public interface IAsyncAppDataSerializer
+public interface IAsyncAppDataSerializer<T>
+    where T : class
 {
-    Task SaveAsync<T>(T data) where T : class;
+    Task SaveAsync(T data);
 
-    Task<T?> LoadAsync<T>() where T : class;
+    Task<T> LoadAsync();
 }

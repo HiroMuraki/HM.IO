@@ -2,25 +2,33 @@
 
 public static class IAsyncAppDataSerializerExtensions
 {
-    public static async Task LoadAsync<T>(this IAsyncAppDataSerializer self, Action<T?> dataHandler)
+    public static async Task<Boolean> LoadAsync<T>(this IAsyncAppDataSerializer<T> self, Action<T?> dataHandler)
         where T : class
     {
-        T? data = await self.LoadAsync<T>(); ;
-
-        dataHandler(data);
+        try
+        {
+            T data = await self.LoadAsync();
+            dataHandler(data);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
-    public static async Task LoadAsync<T>(this IAsyncAppDataSerializer self, Func<T?, Task> asyncDataHandler)
+    public static async Task<Boolean> LoadAsync<T>(this IAsyncAppDataSerializer<T> self, Func<T?, Task> asyncDataHandler)
         where T : class
     {
-        T? data = await self.LoadAsync<T>();
-
-        await asyncDataHandler(data);
-    }
-
-    public static void Load<T>(this IAsyncAppDataSerializer self, Action<T?> dataHandler)
-        where T : class
-    {
-        self.LoadAsync(dataHandler).Wait();
+        try
+        {
+            T data = await self.LoadAsync();
+            await asyncDataHandler(data);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

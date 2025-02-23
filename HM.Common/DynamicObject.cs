@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections;
 using System.Reflection;
 
 namespace HM.Common;
@@ -59,6 +60,57 @@ public sealed class DynamicObject
             }
 
             return new DynamicObject(((Array)_value).GetValue(index));
+        }
+    }
+
+    public static DynamicObject? CreateFromJObject(JObject? jsonObject)
+    {
+        if (jsonObject is null)
+        {
+            return null;
+        }
+
+        return new DynamicObject(JsonObjToDict(jsonObject));
+
+        static Dictionary<String, Object?> JsonObjToDict(JObject jsonObject)
+        {
+            var result = new Dictionary<String, Object?>();
+            foreach (KeyValuePair<String, JToken?> item in jsonObject)
+            {
+                result[item.Key] = ConvertValue(item.Value);
+            }
+            return result;
+
+        }
+        static Object? ConvertValue(JToken? token)
+        {
+            if (token is null)
+            {
+                return null;
+            }
+
+            if (token.GetType() == typeof(JValue))
+            {
+                return ((JValue)token).Value;
+            }
+            else if (token.GetType() == typeof(JObject))
+            {
+                return JsonObjToDict((JObject)token);
+            }
+            else if (token.GetType() == typeof(JArray))
+            {
+                var jArray = (JArray)token;
+                var arr = new Object?[jArray.Count];
+                for (Int32 i = 0; i < jArray.Count; i++)
+                {
+                    arr[i] = ConvertValue(jArray[i]);
+                }
+                return arr;
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
     }
 

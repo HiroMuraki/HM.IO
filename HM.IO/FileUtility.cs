@@ -11,18 +11,15 @@ public static class FileUtility
     #endregion
 
     #region Methods
-    public static async Task<Boolean> CompareEqualityAsync(EntryPath filePath1, EntryPath filePath2)
-        => await CompareEqualityAsync(filePath1, filePath2, CancellationToken.None);
-
-    public static async Task<Boolean> CompareEqualityAsync(EntryPath filePath1, EntryPath filePath2, CancellationToken cancellationToken)
+    public static Boolean CompareEquality(String filePath1, String filePath2)
     {
-        if (!LocalFileIO.Exists(filePath1))
+        if (!File.Exists(filePath1))
         {
-            throw new FileNotFoundException($"{nameof(filePath1)} not found", filePath1.StringPath);
+            throw new FileNotFoundException($"{nameof(filePath1)} not found", filePath1);
         }
-        if (!LocalFileIO.Exists(filePath2))
+        if (!File.Exists(filePath2))
         {
-            throw new FileNotFoundException($"{nameof(filePath2)} not found", filePath2.StringPath);
+            throw new FileNotFoundException($"{nameof(filePath2)} not found", filePath2);
         }
 
         if (filePath1 == filePath2)
@@ -32,8 +29,8 @@ public static class FileUtility
 
         try
         {
-            using Stream fs1 = LocalFileIO.OpenRead(filePath1);
-            using Stream fs2 = LocalFileIO.OpenRead(filePath2);
+            using Stream fs1 = File.OpenRead(filePath1);
+            using Stream fs2 = File.OpenRead(filePath2);
             if (fs1.Length != fs2.Length)
             {
                 return false;
@@ -72,8 +69,8 @@ public static class FileUtility
 
                 while (true)
                 {
-                    readCount1 = await bf1.ReadAsync(block1.AsMemory(0, LargeFileBufferSize), cancellationToken);
-                    readCount2 = await bf2.ReadAsync(block2.AsMemory(0, LargeFileBufferSize), cancellationToken);
+                    readCount1 = bf1.Read(block1, 0, LargeFileBufferSize);
+                    readCount2 = bf2.Read(block2, 0, LargeFileBufferSize);
 
                     if (readCount1 != readCount2)
                     {
@@ -103,24 +100,21 @@ public static class FileUtility
         }
     }
 
-    public static async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
-        => await CopyAsync(sourceFilePath, destinationFilePath, CancellationToken.None);
-
-    public static async Task CopyAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
+    public static void Copy(String sourceFilePath, String destinationFilePath)
     {
-        if (!LocalFileIO.Exists(sourceFilePath))
+        if (!File.Exists(sourceFilePath))
         {
-            throw new FileNotFoundException($"Source file `{sourceFilePath.StringPath}` not found", sourceFilePath.StringPath);
+            throw new FileNotFoundException($"Source file `{sourceFilePath}` not found", sourceFilePath);
         }
 
         if (sourceFilePath == destinationFilePath)
         {
-            throw new InvalidOperationException($"The `{destinationFilePath.StringPath}` can be equal to `{sourceFilePath.StringPath}`.");
+            throw new InvalidOperationException($"The `{destinationFilePath}` can be equal to `{sourceFilePath}`.");
         }
 
-        if (LocalFileIO.Exists(destinationFilePath))
+        if (File.Exists(destinationFilePath))
         {
-            Boolean fileEqual = await CompareEqualityAsync(sourceFilePath, destinationFilePath, cancellationToken);
+            Boolean fileEqual = CompareEquality(sourceFilePath, destinationFilePath);
             if (fileEqual)
             {
                 return;
@@ -131,66 +125,62 @@ public static class FileUtility
             }
         }
 
-        using (Stream sourceFS = LocalFileIO.OpenRead(sourceFilePath))
-        using (Stream destinationFS = LocalFileIO.OpenWrite(destinationFilePath))
+        using (Stream sourceFS = File.OpenRead(sourceFilePath))
+        using (Stream destinationFS = File.OpenWrite(destinationFilePath))
         {
-            await sourceFS.CopyToAsync(destinationFS, cancellationToken);
+            sourceFS.CopyTo(destinationFS);
         }
 
-        Boolean isOk = await CompareEqualityAsync(sourceFilePath, destinationFilePath, cancellationToken);
+        Boolean isOk = CompareEquality(sourceFilePath, destinationFilePath);
         if (!isOk)
         {
             throw new IOException($"Error on copying `{sourceFilePath}` to `{destinationFilePath}`");
         }
     }
 
-    public static async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath)
-        => await MoveAsync(sourceFilePath, destinationFilePath, CancellationToken.None);
-
-    public static async Task MoveAsync(EntryPath sourceFilePath, EntryPath destinationFilePath, CancellationToken cancellationToken)
+    public static void Move(String sourceFilePath, String destinationFilePath)
     {
-        if (LocalFileIO.Exists(destinationFilePath))
+        if (File.Exists(destinationFilePath))
         {
-            throw new ArgumentException($"Can't move `{sourceFilePath.StringPath}` to `{destinationFilePath.StringPath}` already existed.");
+            throw new ArgumentException($"Can't move `{sourceFilePath}` to `{destinationFilePath}` already existed.");
         }
 
         if (sourceFilePath == destinationFilePath)
         {
-            throw new InvalidOperationException($"The `{destinationFilePath.StringPath}` can be equal to `{sourceFilePath.StringPath}`.");
+            throw new InvalidOperationException($"The `{destinationFilePath}` can be equal to `{sourceFilePath}`.");
         }
 
-        EntryTimestamps sourceFileTimeStamps = LocalFileIO.GetFileTimestamps(sourceFilePath);
-        FileAttributes fileAttributes = LocalFileIO.GetFileAttributes(sourceFilePath);
+        EntryTimestamps sourceFileTimeStamps = LocalFileIO.GetFileTimestamps(new(sourceFilePath));
+        FileAttributes fileAttributes = LocalFileIO.GetFileAttributes(new(sourceFilePath));
 
-        if (Path.GetPathRoot(sourceFilePath.StringPath) == Path.GetPathRoot(destinationFilePath.StringPath))
+        if (Path.GetPathRoot(sourceFilePath) == Path.GetPathRoot(destinationFilePath))
         {
-            if (LocalFileIO.Exists(destinationFilePath))
+            if (File.Exists(destinationFilePath))
             {
-                throw new InvalidOperationException($"`Can't move `{sourceFilePath.StringPath}` to `{destinationFilePath.StringPath}` because `{destinationFilePath.StringPath}` already exists");
+                throw new InvalidOperationException($"`Can't move `{sourceFilePath}` to `{destinationFilePath}` because `{destinationFilePath}` already exists");
             }
 
-            LocalFileIO.Rename(sourceFilePath, destinationFilePath);
-            LocalFileIO.SetFileTimestamps(destinationFilePath, sourceFileTimeStamps);
-            LocalFileIO.SetFileAttributes(destinationFilePath, fileAttributes);
+            LocalFileIO.Rename(new(sourceFilePath), new(destinationFilePath));
+            LocalFileIO.SetFileTimestamps(new(destinationFilePath), sourceFileTimeStamps);
+            LocalFileIO.SetFileAttributes(new(destinationFilePath), fileAttributes);
         }
         else
         {
-            await CopyAsync(sourceFilePath, destinationFilePath, cancellationToken);
-            LocalFileIO.SetFileTimestamps(destinationFilePath, sourceFileTimeStamps);
-            LocalFileIO.SetFileAttributes(destinationFilePath, fileAttributes);
-            LocalFileIO.Delete(sourceFilePath);
+            Copy(sourceFilePath, new(destinationFilePath));
+            LocalFileIO.SetFileTimestamps(new(destinationFilePath), sourceFileTimeStamps);
+            LocalFileIO.SetFileAttributes(new(destinationFilePath), fileAttributes);
+            LocalFileIO.Delete(new(sourceFilePath));
         }
     }
 
-    public static void CopyTimestamps(EntryPath sourceFilePath, EntryPath destinationFilePath)
+    public static void CopyTimestamps(String sourceFilePath, String destinationFilePath)
     {
-        LocalFileIO.SetFileTimestamps(destinationFilePath, LocalFileIO.GetFileTimestamps(sourceFilePath));
+        LocalFileIO.SetFileTimestamps(new(destinationFilePath), LocalFileIO.GetFileTimestamps(new(sourceFilePath)));
     }
 
-    public static void CopyAttributes(EntryPath sourceFilePath, EntryPath destinationFilePath)
+    public static void CopyAttributes(String sourceFilePath, String destinationFilePath)
     {
-        FileAttributes attributes = LocalFileIO.GetFileAttributes(sourceFilePath);
-        LocalFileIO.SetFileAttributes(destinationFilePath, attributes);
+        File.SetAttributes(destinationFilePath, File.GetAttributes(sourceFilePath));
     }
     #endregion
 }
